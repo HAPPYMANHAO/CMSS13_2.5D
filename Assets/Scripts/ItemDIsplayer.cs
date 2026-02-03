@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ItemDIsplayer : MonoBehaviour
+public class ItemDisplayer : MonoBehaviour
 {
     private SpriteRenderer spriteRenderer;
     private float randomMoveUp;

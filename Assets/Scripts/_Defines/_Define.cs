@@ -60,6 +60,6 @@ public struct ArmorStats
 [System.Serializable]
 public class HealthBarEntry
 {
-    public int healthThreshold;   // АэИз 100, 90, 80, 65, 0, -50
+    public float healthThreshold;   // АэИз 1.0(100%),0.63(63%),-0.5(-50%)
     public Sprite sprite;
 }
