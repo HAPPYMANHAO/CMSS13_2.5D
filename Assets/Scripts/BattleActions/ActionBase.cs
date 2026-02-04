@@ -2,8 +2,10 @@ using UnityEngine;
 
 public abstract class ActionBase : ScriptableObject, IBattleAction
 {
-    public string actionName { get; }
+    [SerializeField] private string _actionName;
+    [SerializeField] private int _costAP;
 
+    public string actionName { get; }
     public int costAP { get; }
 
     public abstract bool CanExecute(IBattleEntity user, IBattleEntity[] target);

@@ -16,7 +16,7 @@ public enum EnemyMaturityLevel
 };
 
 //----------/装甲类型ArmorType
-public enum ArmorType
+public enum DamageType
 {
     Melee,      // 近战
     Projectile, // 射弹
@@ -50,7 +50,7 @@ public enum SkillType
 [System.Serializable]
 public struct ArmorStats
 {
-    public ArmorType armorType;
+    public DamageType armorType;
     public int armorValue;        // 护甲值armor value
     [Range(0f, 1f)]
     public float armorStrength;   // 护甲强度（0%~100%）armor strength（0%~100%）

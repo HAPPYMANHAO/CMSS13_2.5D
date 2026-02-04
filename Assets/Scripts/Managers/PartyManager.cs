@@ -27,6 +27,11 @@ public class PartyManager : MonoBehaviour
             }
         }
     }
+
+    public List<CurrentPartyMemberInfo> GetCurrentPartyMember()
+    {
+        return currentPartyMember;
+    }
 }
 
 [System.Serializable]
@@ -37,7 +42,7 @@ public class CurrentPartyMemberInfo
     public int currentHealth;
     public int maxHealth;
     public int maxAP;
-    public int eathTurnRecoveredAP;
+    public int eachTurnRecoveredAP;
     public int currentAP;
     public int currentEXP;
     public int maxEXP;
@@ -47,8 +52,8 @@ public class CurrentPartyMemberInfo
     public GameObject memberBattleVisualPerfab;
     public GameObject memberOverworldVisualPerfab;
 
-    Dictionary<SkillType, int> skills;
-    Dictionary<ArmorType, ArmorStats> armorStats;
+    public Dictionary<SkillType, int> skills;
+    public Dictionary<DamageType, ArmorStats> armorStats;
 
     public CurrentPartyMemberInfo(PartyMemberInfo partyMember)
     {
@@ -57,7 +62,7 @@ public class CurrentPartyMemberInfo
         this.maxHealth = partyMember.baseHealth;
         this.currentHealth = this.maxHealth; 
         this.maxAP = partyMember.MaxAP;
-        this.eathTurnRecoveredAP = partyMember.eathTurnRecoveredAP;
+        this.eachTurnRecoveredAP = partyMember.eachTurnRecoveredAP;
         this.currentAP = (maxAP / 2);
         this.healthCRIT = partyMember.healthCRIT;
         this.healthCRITShock = partyMember.healthCRITShock;

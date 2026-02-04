@@ -11,7 +11,7 @@ public class PartyMemberInfo : ScriptableObject
     public int startLevel;
     public int baseHealth;
     public int MaxAP;
-    public int eathTurnRecoveredAP;
+    public int eachTurnRecoveredAP;
     public int healthCRIT = 0;
     public int healthCRITShock = -50;
     public int healthDead = -100;
@@ -64,9 +64,9 @@ public class PartyMemberInfo : ScriptableObject
         return dict;
     }
 
-    public Dictionary<ArmorType, ArmorStats> GetArmorDictionary()
+    public Dictionary<DamageType, ArmorStats> GetArmorDictionary()
     {
-        Dictionary<ArmorType, ArmorStats> dict = new Dictionary<ArmorType, ArmorStats>();
+        Dictionary<DamageType, ArmorStats> dict = new Dictionary<DamageType, ArmorStats>();
         foreach (var armor in armorStats)
         {
             dict[armor.armorType] = armor;

@@ -1,9 +1,8 @@
 using UnityEngine;
-
 public interface IBattleEntity 
 {
-        int CurrentAP { get; set; }
+        int currentAP { get; set; }
 
-        void ExecuteAction(int actionIndex, IBattleEntity target);
-        void TakeDamage(int amount, ArmorType type);
+        void ExecuteAction(IBattleAction battleAction, IBattleEntity target);
+        void TakeDamage(int amount, DamageType type);
 }

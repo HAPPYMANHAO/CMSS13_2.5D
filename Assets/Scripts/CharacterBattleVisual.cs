@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class PlayerBattleVisual : MonoBehaviour
+public class CharacterBattleVisual : MonoBehaviour
 {
     Animator PlayerBattleAnimator;
     [SerializeField] private SpriteRenderer mainBodyRenderer;
@@ -9,8 +9,6 @@ public class PlayerBattleVisual : MonoBehaviour
     [SerializeField] private SpriteRenderer[] overlayRenderer;
     [SerializeField] private SpriteRenderer[] mainRenderers;
     [SerializeField] private Light rightLight;
-
-    [SerializeField] private bool testBool;
 
     Color flashStartColor = new Color(1, 0, 0, 1f);   // 初始红色（带透明）
     Color flashEndColor = new Color(1, 0, 0, 0f);     // 最终变为完全透明
@@ -40,11 +38,6 @@ public class PlayerBattleVisual : MonoBehaviour
 
     void Update()
     {
-        if (testBool)
-        {
-            PlayHurt();
-            testBool = false;
-        }
     }
 
     public void RightLightOn()
@@ -68,7 +61,6 @@ public class PlayerBattleVisual : MonoBehaviour
             overlayRenderer[i].gameObject.SetActive(true);
             overlayRenderer[i].sprite = mainRenderers[i].sprite;
         }
-        Debug.Log("启动携程");
 
         while (currentTimer < FLASH_DURATION)
         {
@@ -78,7 +70,6 @@ public class PlayerBattleVisual : MonoBehaviour
             {
                 overlayRenderer[i].color = Color.Lerp(flashStartColor, flashEndColor, progress);
             }
-            Debug.Log("运行渐变");
             yield return null;         
         }
 

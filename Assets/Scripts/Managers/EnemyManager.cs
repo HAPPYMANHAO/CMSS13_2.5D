@@ -24,10 +24,10 @@ public class EnemyManager : MonoBehaviour
                 enemyDatabase.Add(fullName, info);
         }
 
-        SpawnEnemy(EnemyMaturityLevel.Young, EnemyName[0]);
+        AddEnemy(EnemyMaturityLevel.Young, EnemyName[0]);
     }
 
-    public void SpawnEnemy(EnemyMaturityLevel level, string baseName)
+    public void AddEnemy(EnemyMaturityLevel level, string baseName)
     {
         string lookupName = $"{level} {baseName}";
 
@@ -40,6 +40,11 @@ public class EnemyManager : MonoBehaviour
             Debug.LogError($"’“≤ªµΩµ–»À: {lookupName}");
         }
     }
+
+    public List<CurrentEnemyInfo> GetCurrentEnemy()
+    {
+        return currentEnemiesInfo;
+    }
 }
 
 [System.Serializable]
@@ -51,12 +56,12 @@ public class CurrentEnemyInfo
     public int maxHealth;
     public int healthDead;
     public int maxAP;
-    public int eathTurnRecoveredAP;
+    public int eachTurnRecoveredAP;
     public int currentAP;
     public int meleeStrenth;
     public GameObject enemyBattleVisualPerfab;
 
-    Dictionary<ArmorType, ArmorStats> armorStats;
+    public Dictionary<DamageType, ArmorStats> armorStats;
     public CurrentEnemyInfo(EnemyInfo enemy)
     {
         this.enemyMaturityLevel = enemy.enemyMaturityLevel;
@@ -65,9 +70,9 @@ public class CurrentEnemyInfo
         this.currentHealth = this.maxHealth;
         this.healthDead = enemy.healthDead;
         this.maxAP = enemy.MaxAP;
-        this.eathTurnRecoveredAP = enemy.eathTurnRecoveredAP;
+        this.eachTurnRecoveredAP = enemy.eachTurnRecoveredAP;
         this.currentAP = (maxAP / 2);
-        this.meleeStrenth = enemy.meleeStrenth;
+        this.meleeStrenth = enemy.meleeStrength;
         this.enemyBattleVisualPerfab = enemy.enemyBattleVisualPerfab;
 
         armorStats = enemy.GetArmorDictionary();

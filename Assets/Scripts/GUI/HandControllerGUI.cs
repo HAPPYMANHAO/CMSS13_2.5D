@@ -3,8 +3,8 @@ using UnityEngine.UI;
 
 public class HandControllerGUI : MonoBehaviour
 {
-    [SerializeField] public Sprite acitveSprite;
-    [SerializeField] public Sprite disacitveSprite;
+    [SerializeField] public Sprite activeSprite;
+    [SerializeField] public Sprite disactiveSprite;
 
     public Button handButton;
     public Image baseSprite;

@@ -43,14 +43,14 @@ public class BattleVisualGUI : MonoBehaviour
 
     private void UpdateVisuals()
     {
-        leftHandButton.baseSprite.sprite = isLeftHandMain ? leftHandButton.acitveSprite : leftHandButton.disacitveSprite;
-        rightHandButton.baseSprite.sprite = isLeftHandMain ? rightHandButton.disacitveSprite : rightHandButton.acitveSprite;
+        leftHandButton.baseSprite.sprite = isLeftHandMain ? leftHandButton.activeSprite : leftHandButton.disactiveSprite;
+        rightHandButton.baseSprite.sprite = isLeftHandMain ? rightHandButton.disactiveSprite : rightHandButton.activeSprite;
 
         leftHandButton.handButton.interactable = true;
         rightHandButton.handButton.interactable = true;
     }
 
-    public void SetHelathBarValue(int currentHealth, int maxHealth, int shockHealth)
+    public void SetHealthBarValue(int currentHealth, int maxHealth, int shockHealth)
     {
         healthBars[1].UpdateHealth(currentHealth, maxHealth, shockHealth, healthBarDefine);
     }

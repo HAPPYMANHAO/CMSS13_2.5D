@@ -46,6 +46,10 @@ public class PlayerEventTrigger : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            enemyEncounterTimer = 0f; 
+        }
     }
 
     private void CalculateStepsToNextEncounter()
