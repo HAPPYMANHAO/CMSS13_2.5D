@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: db8b1da551a3532408d809fa159e9683, type: 3}
-  m_Name: M41A bullet
+  m_Name: M41AStandardBullet
   m_EditorClassIdentifier: Assembly-CSharp::ProjectileInfo
   projectileSprite: {fileID: -1673625374, guid: 58f18dc247d0aff47b9d3e30dc17d117, type: 3}
   projectileGlowsColor: {r: 1, g: 0.6062992, b: 0, a: 0}

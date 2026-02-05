@@ -16,7 +16,23 @@ MonoBehaviour:
   enemyName: GiantLizard
   baseHealth: 260
   MaxAP: 70
-  eathTurnRecoveredAP: 15
-  meleeStrenth: 20
+  eachTurnRecoveredAP: 0
+  meleeStrength: 0
   healthDead: 0
-  enemyBattleVisualPerfab: {fileID: 0}
+  enemyBattleVisualPerfab: {fileID: 8061482746390470737, guid: bf81f737200d36e49a11a487a34dc671, type: 3}
+  armorStats:
+  - armorType: 0
+    armorValue: 0
+    armorStrength: 0
+  - armorType: 1
+    armorValue: 0
+    armorStrength: 0
+  - armorType: 2
+    armorValue: 0
+    armorStrength: 0
+  - armorType: 3
+    armorValue: 0
+    armorStrength: 0
+  - armorType: 4
+    armorValue: 0
+    armorStrength: 0

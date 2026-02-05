@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+Ôªøusing System.Collections.Generic;
 using UnityEngine;
 using static EnemyInfo;
 
@@ -16,7 +16,7 @@ public class EnemyManager : MonoBehaviour
 
     private void Awake()
     {
-        // ≥ı ºªØ◊÷µ‰Initialize dictionary
+        // ÂàùÂßãÂåñÂ≠óÂÖ∏Initialize dictionary
         foreach (var info in allEnemiesInfo)
         {
             string fullName = info.FullName; 
@@ -37,7 +37,7 @@ public class EnemyManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"’“≤ªµΩµ–»À: {lookupName}");
+            Debug.LogError($"Êâæ‰∏çÂà∞Êïå‰∫∫: {lookupName}");
         }
     }
 
@@ -58,7 +58,7 @@ public class CurrentEnemyInfo
     public int maxAP;
     public int eachTurnRecoveredAP;
     public int currentAP;
-    public int meleeStrenth;
+    public int meleeStrength;
     public GameObject enemyBattleVisualPerfab;
 
     public Dictionary<DamageType, ArmorStats> armorStats;
@@ -72,7 +72,7 @@ public class CurrentEnemyInfo
         this.maxAP = enemy.MaxAP;
         this.eachTurnRecoveredAP = enemy.eachTurnRecoveredAP;
         this.currentAP = (maxAP / 2);
-        this.meleeStrenth = enemy.meleeStrength;
+        this.meleeStrength = enemy.meleeStrength;
         this.enemyBattleVisualPerfab = enemy.enemyBattleVisualPerfab;
 
         armorStats = enemy.GetArmorDictionary();

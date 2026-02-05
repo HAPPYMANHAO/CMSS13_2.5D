@@ -1,11 +1,11 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class _Define : MonoBehaviour
 { 
 }
 
-//-----------------------Ã¶¾Ùenum-----------------------//
-//----------/³ÉÊì¶È µĞÈËµÄµÈ¼¶Maturity, Enemy's Level
+//-----------------------æšä¸¾enum-----------------------//
+//----------/æˆç†Ÿåº¦ æ•Œäººçš„ç­‰çº§Maturity, Enemy's Level
 public enum EnemyMaturityLevel
 {
     Young,    //LV1
@@ -15,17 +15,17 @@ public enum EnemyMaturityLevel
     Prime     //LV5
 };
 
-//----------/×°¼×ÀàĞÍArmorType
+//----------/è£…ç”²ç±»å‹ArmorType
 public enum DamageType
 {
-    Melee,      // ½üÕ½
-    Projectile, // Éäµ¯
-    Explosive,  // ±¬Õ¨
-    Bio,        // Éú»¯
-    Fire        // »ğÑæ
+    Melee,      // è¿‘æˆ˜
+    Projectile, // å°„å¼¹
+    Explosive,  // çˆ†ç‚¸
+    Bio,        // ç”ŸåŒ–
+    Fire        // ç«ç„°
 }
 
-//----------/¼¼ÄÜÀàĞÍSkillType
+//----------/æŠ€èƒ½ç±»å‹SkillType
 public enum SkillType
 {
     CQC,
@@ -45,21 +45,29 @@ public enum SkillType
     SpecWeapon
 }
 
-//-----------------------½á¹¹Ìåstruct-----------------------//
-//----------/°üº¬×°¼×¼ÆËãÁ½¸öÖµ£¨intºÍfloat£©µÄ½á¹¹ÌåA struct that contains two values (an int and a float) for armor calculation
+//-----------------------ç»“æ„ä½“struct-----------------------//
+//----------/åŒ…å«è£…ç”²è®¡ç®—ä¸¤ä¸ªå€¼ï¼ˆintå’Œfloatï¼‰çš„ç»“æ„ä½“A struct that contains two values (an int and a float) for armor calculation
 [System.Serializable]
 public struct ArmorStats
 {
     public DamageType armorType;
-    public int armorValue;        // »¤¼×Öµarmor value
+    public int armorValue;        // æŠ¤ç”²å€¼armor value
     [Range(0f, 1f)]
-    public float armorStrength;   // »¤¼×Ç¿¶È£¨0%~100%£©armor strength£¨0%~100%£©
+    public float armorStrength;   // æŠ¤ç”²å¼ºåº¦ï¼ˆ0%~100%ï¼‰armor strengthï¼ˆ0%~100%ï¼‰
 }
 
-//----------/°üº¬¼ÆËãÑªÌõµÄ½á¹¹Ìå A struct that includes the calculation of health bars
+//----------/åŒ…å«è®¡ç®—è¡€æ¡çš„ç»“æ„ä½“ A struct that includes the calculation of health bars
 [System.Serializable]
 public class HealthBarEntry
 {
-    public float healthThreshold;   // ÀıÈç 1.0(100%),0.63(63%),-0.5(-50%)
+    public float healthThreshold;   // ä¾‹å¦‚ 1.0(100%),0.63(63%),-0.5(-50%)
     public Sprite sprite;
+}
+
+//----------/åŒ…å«æŠ€èƒ½æ•°å€¼çš„ç»“æ„ä½“ A struct containing skill values
+[System.Serializable]
+public struct InitialSkill
+{
+    public SkillType skillType;
+    public int level;
 }

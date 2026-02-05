@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -9,7 +9,7 @@ public class HealthBarControllerGUI : MonoBehaviour
     private UnityEngine.UI.Image healthBarImage;
     private TextMeshProUGUI healthValue;
 
-    private IBattleEntity owner;
+    public IBattleEntity owner;
 
     private bool IsCritAnimationActive = false;
 
@@ -20,9 +20,10 @@ public class HealthBarControllerGUI : MonoBehaviour
         animatorCRIT = overlayCRIT.GetComponent<Animator>();
     }
 
-    public void HealthBarBind(IBattleEntity entity)
+    public void HealthBarBind(PartyBattleEntity entity)
     {
         this.owner = entity;
+        this.gameObject.SetActive(true);
     }
 
     public void UpdateHealth(int currentHealth, int maxHealth, int shockHealth, List<HealthBarEntry> healthBarDefine)

@@ -3,7 +3,7 @@ using UnityEngine;
 public class ProjectileLauncher : MonoBehaviour
 {
     
-    [SerializeField] private GameObject projectilePrefab; // 投射物预制体
+    [SerializeField] private GameObject projectilePrefab; // 鎶曞皠鐗╅鍒朵綋
 
     public void ProjectileLaunch(ProjectileInfo info, Vector3 target)
     {       

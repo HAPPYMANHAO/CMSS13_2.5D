@@ -1,5 +1,6 @@
-using System.Collections.Generic;
+锘縰sing System.Collections.Generic;
 using TMPro;
+using Unity.Properties;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,7 +8,7 @@ using UnityEngine.UI;
 public class BattleVisualGUI : MonoBehaviour
 {
     [SerializeField] private HealthBarControllerGUI[] healthBars;
-    //healthBarDefine必须按照threshold从大到小进行排序 healthBarDefine must be sorted by threshold DESC
+    //healthBarDefine蹇呴』鎸夌収threshold浠庡ぇ鍒板皬杩涜鎺掑簭 healthBarDefine must be sorted by threshold DESC
     [SerializeField] private List<HealthBarEntry> healthBarDefine;
 
     [SerializeField] private HandControllerGUI rightHandButton;
@@ -53,5 +54,17 @@ public class BattleVisualGUI : MonoBehaviour
     public void SetHealthBarValue(int currentHealth, int maxHealth, int shockHealth)
     {
         healthBars[1].UpdateHealth(currentHealth, maxHealth, shockHealth, healthBarDefine);
+    }
+
+    public void BindHealthBar(PartyBattleEntity entity)
+    {
+        for (int i = 0; i < healthBars.Length; i++)
+        {
+            if (healthBars[i].owner == null)
+            {
+                healthBars[i].HealthBarBind(entity);
+                return;
+            }
+        } 
     }
 }

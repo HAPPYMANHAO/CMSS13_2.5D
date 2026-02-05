@@ -1,8 +1,13 @@
-using UnityEngine;
-public interface IBattleEntity 
+﻿using UnityEngine;
+public interface IBattleEntity
 {
-        int currentAP { get; set; }
+    string memberName { get; }
+    int currentHealth { get; set; }
+    int maxHealth { get; }
+    int currentAP { get; set; }
+    int maxAP { get; }
+    bool isPlayerFaction { get; }
 
-        void ExecuteAction(IBattleAction battleAction, IBattleEntity target);
-        void TakeDamage(int amount, DamageType type);
+    void ExecuteAction(ActionBase battleAction, BattleEntityBase target);
+    void EntityTakeDamage(int amount, DamageType type);
 }

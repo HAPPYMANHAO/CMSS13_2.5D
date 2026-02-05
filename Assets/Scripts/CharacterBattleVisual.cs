@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEngine;
 
 public class CharacterBattleVisual : MonoBehaviour
@@ -10,11 +10,13 @@ public class CharacterBattleVisual : MonoBehaviour
     [SerializeField] private SpriteRenderer[] mainRenderers;
     [SerializeField] private Light rightLight;
 
-    Color flashStartColor = new Color(1, 0, 0, 1f);   // ³õÊ¼ºìÉ«£¨´øÍ¸Ã÷£©
-    Color flashEndColor = new Color(1, 0, 0, 0f);     // ×îÖÕ±äÎªÍêÈ«Í¸Ã÷
+    Color flashStartColor = new Color(1, 0, 0, 1f);   // åˆå§‹çº¢è‰²ï¼ˆå¸¦é€æ˜ï¼‰
+    Color flashEndColor = new Color(1, 0, 0, 0f);     // æœ€ç»ˆå˜ä¸ºå®Œå…¨é€æ˜
 
     private const float FLASH_DURATION = 0.6f;
     private const float GUN_FIRE_LIGHT_DURATION = 0.2f;
+
+    public BattleEntityBase battleEntity;
 
     private void Awake()
     {
@@ -28,16 +30,6 @@ public class CharacterBattleVisual : MonoBehaviour
                 overlayRenderer[i].color = new Color(1, 0, 0, 1.0f);
             }
         }
-    }
-
-    void Start()
-    {
-
-    }
-
-
-    void Update()
-    {
     }
 
     public void RightLightOn()

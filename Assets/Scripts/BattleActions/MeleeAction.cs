@@ -1,16 +1,16 @@
-using UnityEngine;
+锘縰sing UnityEngine;
 
 public class MeleeAction : IBattleAction
 {
     public string actionName { get; } = "Melee";
-    public int costAP { get; } = 10;
+    public int costAP { get; } = 15;
 
-    public bool CanExecute(IBattleEntity user, IBattleEntity[] target)
+    public bool CanExecute(BattleEntityBase userEntity, BattleEntityBase[] target)
     {
-        return target.Length > 0;//AP判断还没写
+        return target.Length > 0 && userEntity.currentAP >= costAP;
     }
-    public void Execute(IBattleEntity user, IBattleEntity[] target)
+    public void Execute(BattleEntityBase userEntity, BattleEntityBase[] target)
     {
-        //造成伤害
+        //閫犳垚浼ゅ
     }
 }

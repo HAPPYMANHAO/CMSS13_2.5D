@@ -1,10 +1,10 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public interface IBattleAction
 {
     string actionName { get; }
     int costAP { get; }
 
-    bool CanExecute(IBattleEntity user, IBattleEntity[] target);
-    void Execute(IBattleEntity user, IBattleEntity[] target);
+    bool CanExecute(BattleEntityBase user, BattleEntityBase[] target);
+    void Execute(BattleEntityBase user, BattleEntityBase[] target);
 }

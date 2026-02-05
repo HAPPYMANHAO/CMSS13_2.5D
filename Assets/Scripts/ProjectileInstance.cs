@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class ProjectileInstance : MonoBehaviour
 {
@@ -19,7 +19,9 @@ public class ProjectileInstance : MonoBehaviour
         projectileConfig = info;
         targetPos = target;
         projectileSprite.sprite = info.projectileSprite;
-        projectileSpriteGlows.color = info.projectileGlowsColor; 
+        projectileSpriteGlows.color = info.projectileGlowsColor;
+
+        isFlying = true;
     }
 
     private void Update()
@@ -31,7 +33,7 @@ public class ProjectileInstance : MonoBehaviour
         if (Vector3.Distance(transform.position, targetPos) < 0.1f)
         {
             isFlying = false;
-            //Ôì³ÉÉËº¦£¡
+            //é€ æˆä¼¤å®³ï¼
             Destroy(gameObject);
         }
     }

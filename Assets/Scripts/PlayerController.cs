@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     private PlayerControls inputActions;
 
-    private Vector3 lastMoveDir = Vector3.back; // ½ÇÉ«Ä¬ÈÏ³¯ÄÏcharacter is set to face south by default.
+    private Vector3 lastMoveDir = Vector3.back; // è§’è‰²é»˜è®¤æœå—character is set to face south by default.
 
     private const string MOVE_X_PARAM = "MoveX";
     private const string MOVE_Z_PARAM = "MoveZ";

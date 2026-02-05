@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using TMPro.EditorUtilities;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 using static PartyMemberInfo;
 
@@ -8,13 +7,12 @@ public class PartyManager : MonoBehaviour
     [SerializeField] private PartyMemberInfo[] allPartyMember;
     [SerializeField] private List<CurrentPartyMemberInfo> currentPartyMember;
 
-    [SerializeField] private PartyMemberInfo defaultMember;//Ö÷½ÇRermadon£¬ÓĞÊ±ºòÒ²¿ÉÒÔ³ÆÎªplayer The protagonist Rermadon,Sometimes can also be called "player"
+    [SerializeField] private PartyMemberInfo defaultMember;//ä¸»è§’Rermadonï¼Œæœ‰æ—¶å€™ä¹Ÿå¯ä»¥ç§°ä¸ºplayer The protagonist Rermadon,Sometimes can also be called "player"
 
     public void Awake()
     {
         AddPartyMemberByName(defaultMember.memberName);
     }
-
     public void AddPartyMemberByName(string memberName)
     {
         for (int i = 0; i < allPartyMember.Length; i++)
@@ -70,7 +68,7 @@ public class CurrentPartyMemberInfo
         this.memberBattleVisualPerfab = partyMember.MemberBattleVisualPerfab;
         this.memberOverworldVisualPerfab = partyMember.MemberOverworldVisualPerfab;
 
-        // ¿ËÂ¡Êı¾İÎª×Öµä cloned data in the form of a dictionary
+        // å…‹éš†æ•°æ®ä¸ºå­—å…¸ cloned data in the form of a dictionary
         skills = partyMember.GetSkillDictionary();
         armorStats = partyMember.GetArmorDictionary();
     }

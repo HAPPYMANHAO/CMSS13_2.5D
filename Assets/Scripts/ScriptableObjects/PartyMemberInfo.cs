@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,38 +21,8 @@ public class PartyMemberInfo : ScriptableObject
     public List<InitialSkill> startingSkills = new List<InitialSkill>();
     public List<ArmorStats> armorStats = new List<ArmorStats>();
 
-
-
-    private void OnValidate()
-    {
-        SkillType[] allSkills = (SkillType[])System.Enum.GetValues(typeof(SkillType));
-
-        if (startingSkills.Count != allSkills.Length)
-        {
-            Dictionary<SkillType, int> existingLevels = new Dictionary<SkillType, int>();
-            foreach (var _skill in startingSkills)
-            {
-                existingLevels[_skill.skillType] = _skill.level;
-            }
-
-            startingSkills.Clear();
-
-            foreach (var _skill in allSkills)
-            {
-                startingSkills.Add(new InitialSkill
-                {
-                    skillType = _skill,
-                    level = existingLevels.ContainsKey(_skill) ? existingLevels[_skill] : 0
-                });
-            }
-        }
-
-        if (!skillsInitialized)
-        {
-            InitializeSkills();
-            skillsInitialized = true;
-        }
-    }
+    private bool skillsInitialized = false;
+    private bool armorInitialized= false;
 
     public Dictionary<SkillType, int> GetSkillDictionary()
     {
@@ -74,10 +44,73 @@ public class PartyMemberInfo : ScriptableObject
         return dict;
     }
 
-    [SerializeField, HideInInspector]
-    private bool skillsInitialized = false;
+    //----------------------OnValidate----------------------//
 
-    public void InitializeSkills()
+    private void OnValidate()
+    {
+        SkillType[] allSkills = (SkillType[])System.Enum.GetValues(typeof(SkillType));
+
+        if (startingSkills.Count != allSkills.Length)
+        {
+            Dictionary<SkillType, int> existingLevels = new Dictionary<SkillType, int>();
+            foreach (var _skill in startingSkills)
+            {
+                existingLevels[_skill.skillType] = _skill.level;
+            }
+
+            startingSkills.Clear();
+        
+            foreach (var _skill in allSkills)
+            {
+                startingSkills.Add(new InitialSkill
+                {
+                    skillType = _skill,
+                    level = existingLevels.ContainsKey(_skill) ? existingLevels[_skill] : 0
+                });
+            }
+        }
+
+        if (!skillsInitialized)
+        {
+            InitializeSkills();
+            skillsInitialized = true;
+        }
+        if (!armorInitialized)
+        {
+            InitializeAromr();
+            armorInitialized = true;
+        }
+
+        DamageType[] allDamgaeType = (DamageType[])System.Enum.GetValues(typeof(DamageType));
+
+        if (armorStats.Count != allDamgaeType.Length)
+        {
+            Dictionary<DamageType, int> existingAromrValue = new Dictionary<DamageType, int>();
+            foreach (var _aromr in armorStats)
+            {
+                existingAromrValue[_aromr.armorType] = _aromr.armorValue;
+            }
+            Dictionary<DamageType, float> existingArmorStrength = new Dictionary<DamageType, float>();
+            foreach (var _aromr in armorStats)
+            {
+                existingArmorStrength[_aromr.armorType] = _aromr.armorStrength;
+            }
+
+            armorStats.Clear();
+
+            foreach (var _aromr in armorStats)
+            {
+                armorStats.Add(new ArmorStats
+                {
+                    armorType = _aromr.armorType,
+                    armorStrength = existingArmorStrength.ContainsKey(_aromr.armorType) ? existingArmorStrength[_aromr.armorType] : 0f,
+                    armorValue = existingAromrValue.ContainsKey(_aromr.armorType) ? existingAromrValue[_aromr.armorType] : 0,
+                });
+            }
+        }       
+    }
+
+    private void InitializeSkills()
     {
         startingSkills.Clear();
 
@@ -92,13 +125,24 @@ public class PartyMemberInfo : ScriptableObject
             });
         }
     }
+
+    private void InitializeAromr()
+    {
+        armorStats.Clear();
+
+        DamageType[] allDamgaeType = (DamageType[])System.Enum.GetValues(typeof(DamageType));
+
+        foreach(var damageType in allDamgaeType)
+        {
+            armorStats.Add(new ArmorStats
+            {
+                armorType = damageType,
+                armorStrength = 0,
+                armorValue = 0,
+            });
+        }
+    }
 }
 
-[System.Serializable]
-public struct InitialSkill
-{
-    public SkillType skillType;
-    public int level;
-}
 
 

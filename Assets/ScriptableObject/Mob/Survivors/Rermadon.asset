@@ -16,11 +16,11 @@ MonoBehaviour:
   startLevel: 1
   baseHealth: 100
   MaxAP: 100
-  eathTurnRecoveredAP: 30
+  eachTurnRecoveredAP: 0
   healthCRIT: 0
   healthCRITShock: -50
   healthDead: -100
-  MemberBattleVisualPerfab: {fileID: 0}
+  MemberBattleVisualPerfab: {fileID: 3555361479991047596, guid: a4ff3432b9df98440a207354b8ddb60b, type: 3}
   MemberOverworldVisualPerfab: {fileID: 0}
   startingSkills:
   - skillType: 0
@@ -53,5 +53,19 @@ MonoBehaviour:
     level: 0
   - skillType: 14
     level: 0
-  armorStats: []
-  skillsInitialized: 1
+  armorStats:
+  - armorType: 0
+    armorValue: 0
+    armorStrength: 0
+  - armorType: 1
+    armorValue: 0
+    armorStrength: 0
+  - armorType: 2
+    armorValue: 0
+    armorStrength: 0
+  - armorType: 3
+    armorValue: 0
+    armorStrength: 0
+  - armorType: 4
+    armorValue: 0
+    armorStrength: 0
