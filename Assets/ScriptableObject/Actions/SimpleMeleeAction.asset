@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3b7d0ce6efa18f4fa30a93288f80b54, type: 3}
+  m_Name: SimpleMeleeAction
+  m_EditorClassIdentifier: Assembly-CSharp::MeleeAction
+  _actionName: SimpleMelee
+  _costAP: 15
+  acitonLog: '[USER] attack [TARGET], deal [VALUE] damage'
+  damageType: 0
+  baseDamage: 25

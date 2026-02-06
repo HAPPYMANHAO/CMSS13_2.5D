@@ -3,6 +3,18 @@
 public class _Define : MonoBehaviour
 { 
 }
+//-----------------------常量const-----------------------//
+public static class LogTextSettings
+{
+    public const int MAX_LOG_COUNT = 100;
+}
+
+public static class LogText
+{
+    public const string LOG_VALUE = "[VALUE]";
+    public const string LOG_TARGET = "[TARGET]";
+    public const string LOG_USER = "[USER]";
+}
 
 //-----------------------枚举enum-----------------------//
 //----------/成熟度 敌人的等级Maturity, Enemy's Level
@@ -44,6 +56,13 @@ public enum SkillType
     Research,
     SpecWeapon
 }
+//----------/阵营Faction
+public enum Faction
+{
+    Survivor,//玩家阵营player faction
+    Enemy,
+    neutral,
+}
 
 //-----------------------结构体struct-----------------------//
 //----------/包含装甲计算两个值（int和float）的结构体A struct that contains two values (an int and a float) for armor calculation
@@ -52,8 +71,9 @@ public struct ArmorStats
 {
     public DamageType armorType;
     public int armorValue;        // 护甲值armor value
-    [Range(0f, 1f)]
-    public float armorStrength;   // 护甲强度（0%~100%）armor strength（0%~100%）
+    [Range(0f, 1f)]               //对于护甲来说，护甲抵消的伤害值为护甲值和护甲完整性*伤害值中的较小值
+                                  //amount of damage absorbed by the armor is the smaller value between the armor value and the armor integrity * damage.
+    public float armorIntegrity;   // 护甲强度（0%~100%）armor strength（0%~100%）
 }
 
 //----------/包含计算血条的结构体 A struct that includes the calculation of health bars

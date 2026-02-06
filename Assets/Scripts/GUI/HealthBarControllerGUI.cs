@@ -1,36 +1,58 @@
 ﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class HealthBarControllerGUI : MonoBehaviour
 {
-    [SerializeField]private UnityEngine.UI.Image overlayCRIT;
+    [SerializeField] private UnityEngine.UI.Image overlayCRIT;
     private Animator animatorCRIT;
     private UnityEngine.UI.Image healthBarImage;
-    private TextMeshProUGUI healthValue;
+    private TextMeshProUGUI APValue;
 
-    public IBattleEntity owner;
+    public List<HealthBarEntry> healthBarDefine;
+
+    public PartyBattleEntity owner;
 
     private bool IsCritAnimationActive = false;
 
     private void Awake()
     {
         healthBarImage = this.GetComponent<UnityEngine.UI.Image>();
-        healthValue = this.transform.Find("PlayerHealthValue").GetComponent<TextMeshProUGUI>();
+        APValue = this.transform.Find("PlayerAPValue").GetComponent<TextMeshProUGUI>();
         animatorCRIT = overlayCRIT.GetComponent<Animator>();
     }
 
     public void HealthBarBind(PartyBattleEntity entity)
     {
+        if (owner != null)
+        {
+            owner.OnHealthChanged -= HandleHealthUpdate;
+            owner.OnApChanged -= HandleUpdateAP;
+        }
+
         this.owner = entity;
+
+        owner.OnHealthChanged += HandleHealthUpdate;
+        owner.OnApChanged += HandleUpdateAP;
         this.gameObject.SetActive(true);
+        UpdateHealth();
+        UpdateAP();
     }
 
-    public void UpdateHealth(int currentHealth, int maxHealth, int shockHealth, List<HealthBarEntry> healthBarDefine)
+    private void HandleHealthUpdate()
     {
-        bool healthCRIT = currentHealth < 0;
-        bool healthShock = currentHealth < shockHealth;
-        healthValue.text = currentHealth.ToString() + "/" + maxHealth.ToString();
+        UpdateHealth();
+    }
+    private void HandleUpdateAP()
+    {
+        UpdateAP();
+    }
+
+    public void UpdateHealth()
+    {
+        bool healthCRIT = owner.currentHealth < 0;
+        bool healthShock = owner.currentHealth < owner.healthCRITShock;
 
         if (healthCRIT != IsCritAnimationActive)
         {
@@ -52,12 +74,22 @@ public class HealthBarControllerGUI : MonoBehaviour
             overlayCRIT.gameObject.SetActive(false);
             for (int i = 0; i < healthBarDefine.Count; i++)
             {
-                if ((float)currentHealth / maxHealth >= healthBarDefine[i].healthThreshold)
+                if ((float)owner.currentHealth / owner.maxHealth >= healthBarDefine[i].healthThreshold)
                 {
                     healthBarImage.sprite = healthBarDefine[i].sprite;
                     break;
                 }
             }
         }
+    }
+
+    private void UpdateAP()
+    {
+        APValue.text = owner.currentAP.ToString() + "/" + owner.maxAP.ToString();
+    }
+
+    private void OnDestroy()
+    {
+        if (owner != null) owner.OnHealthChanged -= HandleHealthUpdate;
     }
 }

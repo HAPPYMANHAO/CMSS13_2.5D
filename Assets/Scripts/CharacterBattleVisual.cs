@@ -68,7 +68,6 @@ public class CharacterBattleVisual : MonoBehaviour
         for (int i = 0; i < overlayRenderer.Length; i++)
         {
             overlayRenderer[i].gameObject.SetActive(false);
-            Debug.Log(overlayRenderer.Length);
         }     
     }
 

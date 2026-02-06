@@ -461,6 +461,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthBarControllerGUI
   overlayCRIT: {fileID: 6645939021340622926}
+  healthBarDefine: []
+  owner:
+    memberName: 
+    currentHealth: 0
+    eachTurnRecoveredAP: 0
+    battleVisual: {fileID: 0}
+    healthCRIT: 0
+    healthCRITShock: 0
+    currentLevel: 0
 --- !u!1 &6900724837375232317
 GameObject:
   m_ObjectHideFlags: 0
@@ -473,7 +482,7 @@ GameObject:
   - component: {fileID: 4644373090009130789}
   - component: {fileID: 5258315230655387305}
   m_Layer: 5
-  m_Name: PlayerHealthValue
+  m_Name: PlayerAPValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

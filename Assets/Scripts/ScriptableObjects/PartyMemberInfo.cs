@@ -93,7 +93,7 @@ public class PartyMemberInfo : ScriptableObject
             Dictionary<DamageType, float> existingArmorStrength = new Dictionary<DamageType, float>();
             foreach (var _aromr in armorStats)
             {
-                existingArmorStrength[_aromr.armorType] = _aromr.armorStrength;
+                existingArmorStrength[_aromr.armorType] = _aromr.armorIntegrity;
             }
 
             armorStats.Clear();
@@ -103,7 +103,7 @@ public class PartyMemberInfo : ScriptableObject
                 armorStats.Add(new ArmorStats
                 {
                     armorType = _aromr.armorType,
-                    armorStrength = existingArmorStrength.ContainsKey(_aromr.armorType) ? existingArmorStrength[_aromr.armorType] : 0f,
+                    armorIntegrity = existingArmorStrength.ContainsKey(_aromr.armorType) ? existingArmorStrength[_aromr.armorType] : 0f,
                     armorValue = existingAromrValue.ContainsKey(_aromr.armorType) ? existingAromrValue[_aromr.armorType] : 0,
                 });
             }
@@ -137,7 +137,7 @@ public class PartyMemberInfo : ScriptableObject
             armorStats.Add(new ArmorStats
             {
                 armorType = damageType,
-                armorStrength = 0,
+                armorIntegrity = 0,
                 armorValue = 0,
             });
         }

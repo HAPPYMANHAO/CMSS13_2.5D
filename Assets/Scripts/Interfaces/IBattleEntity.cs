@@ -3,11 +3,12 @@ public interface IBattleEntity
 {
     string memberName { get; }
     int currentHealth { get; set; }
-    int maxHealth { get; }
+    int maxHealth { get; set; }
+    int healthDead { get; set; }
     int currentAP { get; set; }
-    int maxAP { get; }
-    bool isPlayerFaction { get; }
+    int maxAP { get; set; }
+    Faction entityFaction { get; set; }
 
-    void ExecuteAction(ActionBase battleAction, BattleEntityBase target);
+    void ExecuteAction(ActionBase battleAction, BattleEntityBase[] target);
     void EntityTakeDamage(int amount, DamageType type);
 }

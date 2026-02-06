@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
+using static Unity.Cinemachine.IInputAxisOwner.AxisDescriptor;
 
 public class TargetSelectorGUI : MonoBehaviour
 {
@@ -15,19 +16,9 @@ public class TargetSelectorGUI : MonoBehaviour
 
         RaycastHit[] hits = Physics.RaycastAll(mouseRay, 100f, battleEntityLayer);
 
-        if (hits.Length > 0)
+        if (Mouse.current.leftButton.wasPressedThisFrame)
         {
-            RaycastHit closestHit = GetClosestHit(hits);
-
-            CharacterBattleVisual visual = closestHit.collider.GetComponentInParent<CharacterBattleVisual>();
-
-            if (visual != null && Mouse.current.leftButton.wasPressedThisFrame)
-            {
-                if (currentTarget != visual.battleEntity)
-                {
-                    SelectTarget(visual.battleEntity);
-                }
-            }
+            ConfirmTarget(hits);
         }
     }
 
@@ -52,15 +43,32 @@ public class TargetSelectorGUI : MonoBehaviour
         //ToDo
     }
 
-    private void ConfirmTarget()
+    private void ConfirmTarget(RaycastHit[] hits)
     {
-        //ToDo
+        if (hits.Length > 0)
+        {
+            RaycastHit closestHit = GetClosestHit(hits);
+
+            CharacterBattleVisual visual = closestHit.collider.GetComponentInParent<CharacterBattleVisual>();
+
+            if (visual != null)
+            {
+                if (currentTarget != visual.battleEntity)
+                {
+                    SelectTarget(visual.battleEntity);
+                }
+            }
+        }
     }
 
 
     private void SelectTarget(BattleEntityBase entity)
     {
         currentTarget = entity;
-        Debug.Log("Selected Target: " + entity.memberName);
+    }
+
+    public BattleEntityBase GetCurrentTarget()
+    {
+        return currentTarget;
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
@@ -6,49 +7,85 @@ public abstract class BattleEntityBase : IBattleEntity
 {
     public string memberName;
     public int currentHealth;
-    public int maxHealth;
+    public int maxHealth { get; set; }
+    public int healthDead { get; set; }
     public int currentAP { get; set; }
-    public int maxAP;
+    public int maxAP { get; set; }
     public int eachTurnRecoveredAP;
-    public bool isPlayerFaction { get; set; }
+
+    public CharacterBattleVisual battleVisual;
+
+    public event Action OnHealthChanged;
+    public event Action OnApChanged;
+    public event Action OnEntityDeath;
+    public Faction entityFaction { get; set; }
 
     string IBattleEntity.memberName => memberName;
     int IBattleEntity.currentHealth { get => currentHealth; set => currentHealth = value; }
-    int IBattleEntity.maxHealth => maxHealth;
-    int IBattleEntity.maxAP => maxAP;
+
 
     public Dictionary<DamageType, ArmorStats> armorStats;
 
-    public abstract void ExecuteAction(ActionBase battleAction, BattleEntityBase target);
+    public void ExecuteAction(ActionBase battleAction, BattleEntityBase[] target)
+    {
+        if (!battleAction.CanExecute(this, target))
+        { 
+            return;
+        }
+
+        EntityConsumeAP(battleAction.costAP);
+
+        battleAction.Execute(this, target);
+    }
 
     public void EntityTakeDamage(int damageAmount, DamageType type)
     {
         int finalDamage = damageAmount;
-
         if (armorStats.ContainsKey(type))
         {
             ArmorStats armor = armorStats[type];
             int armorReduction = Mathf.FloorToInt(
-                (Mathf.Min(armor.armorValue, armor.armorStrength * damageAmount))
+                (Mathf.Min(armor.armorValue, armor.armorIntegrity * damageAmount))
             );
             finalDamage = Mathf.Max(0, damageAmount - armorReduction);
         }
-
-        EntitySetHealth(currentHealth - finalDamage); ;
+        if(battleVisual != null)
+        {
+            battleVisual.PlayHurt();
+        }
+        Debug.Log(this.memberName + "受到伤害：" + finalDamage + "剩下血量为:" + this.currentHealth);
+        EntitySetHealth(currentHealth - finalDamage); 
     }
 
-    public void EntitySetHealth(int newHealth)
+    private void EntitySetHealth(int newHealth)
     {
-        currentHealth = Mathf.Clamp(newHealth, -800, maxHealth);
+        currentHealth = Mathf.Clamp(newHealth, healthDead, maxHealth);
+        OnHealthChanged?.Invoke();
+
+        if (EntityIsDead())
+        {
+            OnEntityDeath.Invoke();
+        }
     }
 
-    public bool EntityIsDead(PartyBattleEntity entity)
+    public bool EntityIsDead()
     {
-        return entity.currentHealth <= entity.healthDead;
+        return currentHealth <= healthDead;
     }
 
-    public void EntityRecoverAP(BattleEntityBase entity)
+    public void EntityRecoverAP()
     {
-        entity.currentAP = Mathf.Min(entity.maxAP, entity.currentAP + entity.eachTurnRecoveredAP);
+        currentAP = Mathf.Min(maxAP, currentAP +eachTurnRecoveredAP);
+    }
+
+    public void EntityConsumeAP(int consumedAP)
+    {
+        EntitySetAP(currentAP - consumedAP);    
+    }
+
+    private void EntitySetAP(int newAP)
+    {
+        currentAP = Mathf.Clamp(newAP, 0, maxAP);
+        OnApChanged?.Invoke();
     }
 }

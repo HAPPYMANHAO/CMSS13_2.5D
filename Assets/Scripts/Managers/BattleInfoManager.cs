@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
@@ -7,16 +8,21 @@ public class BattleInfoManager : MonoBehaviour
     [Header("SpawnPoints")]
     [SerializeField] private Transform[] partySpawnPoints;
     [SerializeField] private Transform[] enemySpawnPoints;
-   
-    private List<IBattleEntity> allBattleEntities = new List<IBattleEntity>();
-    [Header("BattleEntity")]
-    [SerializeField] private List<PartyBattleEntity> partyBattleEntities = new List<PartyBattleEntity>();
-    [SerializeField] private List<EnemyBattleEntity> enemyBattleEntities = new List<EnemyBattleEntity>();
+
+    public List<BattleEntityBase> allBattleEntities = new List<BattleEntityBase>();
+    public IEnumerable<PartyBattleEntity> PartyEntities =>
+        allBattleEntities.OfType<PartyBattleEntity>();
+    public IEnumerable<EnemyBattleEntity> EnemyEntities =>
+        allBattleEntities.OfType<EnemyBattleEntity>();
 
     private PartyManager partyManager;
     private EnemyManager enemyManager;
     
     private BattleVisualGUI battleVisualGUI;
+
+    private int currentPlayerEntity;
+
+    [SerializeField] ActionBase testAction;
 
     private void Awake()
     {
@@ -30,6 +36,8 @@ public class BattleInfoManager : MonoBehaviour
     {
         SpawnPartyEntity();
         SpawnEnemyEntity();
+
+        currentPlayerEntity = 0;  
     }
 
     //----------------------------SpawnEntity----------------------------//
@@ -42,7 +50,8 @@ public class BattleInfoManager : MonoBehaviour
         for (int i = 0; i < currentParty.Count; i++)
         {
             PartyBattleEntity partyBattleEntity = new PartyBattleEntity(currentParty[i]);
-            partyBattleEntity.isPlayerFaction = true;
+
+            partyBattleEntity.entityFaction = Faction.Survivor;
 
             CharacterBattleVisual tempBattleVisual = 
                 Instantiate(currentParty[i].memberBattleVisualPerfab, partySpawnPoints[i].position, Quaternion.identity)
@@ -53,7 +62,6 @@ public class BattleInfoManager : MonoBehaviour
             battleVisualGUI.BindHealthBar(partyBattleEntity);
 
             allBattleEntities.Add(partyBattleEntity);
-            partyBattleEntities.Add(partyBattleEntity);
         }
     }
     //----------------Spawn Enemy Entity/2
@@ -65,7 +73,8 @@ public class BattleInfoManager : MonoBehaviour
         for (int i = 0; i < currentEnemy.Count; i++)
         {
             EnemyBattleEntity enemyBattleEntity = new EnemyBattleEntity(currentEnemy[i]);
-            enemyBattleEntity.isPlayerFaction = false;
+
+            enemyBattleEntity.entityFaction = Faction.Enemy;
 
             CharacterBattleVisual tempBattleVisual =
                 Instantiate(currentEnemy[i].enemyBattleVisualPerfab, enemySpawnPoints[i].position, Quaternion.identity)
@@ -74,8 +83,22 @@ public class BattleInfoManager : MonoBehaviour
             enemyBattleEntity.battleVisual = tempBattleVisual;
 
             allBattleEntities.Add(enemyBattleEntity);
-            enemyBattleEntities.Add(enemyBattleEntity);
         }
+    }
+
+    //----------------------------GetEntitiesByFaction----------------------------//
+    public List<T> GetEntitiesByFaction<T>(Faction faction) where T : BattleEntityBase
+    {
+        return allBattleEntities.OfType<T>()
+            .Where(entity => entity.entityFaction == faction)
+            .ToList();
+    }
+    //----------------------------Target----------------------------//
+    public void PlayerComfirmTarget(BattleEntityBase entity)
+    {
+        BattleEntityBase[] targetEntities = { entity };
+
+        allBattleEntities[currentPlayerEntity].ExecuteAction(testAction, targetEntities);
     }
 }
 
@@ -86,11 +109,8 @@ public class PartyBattleEntity : BattleEntityBase
 {
     public int healthCRIT;
     public int healthCRITShock;
-    public int healthDead;
 
     public int currentLevel;
-
-    public CharacterBattleVisual battleVisual;
 
     public Dictionary<SkillType, int> skills;
 
@@ -112,43 +132,35 @@ public class PartyBattleEntity : BattleEntityBase
         armorStats = memberInfo.armorStats;
     }
 
-    public override void ExecuteAction(ActionBase battleAction, BattleEntityBase target)
+
+    public bool PartyMemberIsCrit()
     {
+        return currentHealth <= healthCRIT;
     }
 
-    public bool PartyMemberIsCrit(PartyBattleEntity entity)
+    public bool PartyMemberIsCritShock()
     {
-        return entity.currentHealth <= entity.healthCRIT;
-    }
-
-    public bool PartyMemberIsCritShock(PartyBattleEntity entity)
-    {
-        return entity.currentHealth <= entity.healthCRITShock;
+        return currentHealth <= healthCRITShock;
     }
 }
 [System.Serializable]
 public class EnemyBattleEntity : BattleEntityBase
 {
     public EnemyMaturityLevel currentEnemyLevel;
-    public int healthDead = 0;
     public int meleeStrength;
-
-    public CharacterBattleVisual battleVisual;
 
     public EnemyBattleEntity(CurrentEnemyInfo enemyInfo)
     {
         memberName = enemyInfo.memberName;
-        currentEnemyLevel = enemyInfo.enemyMaturityLevel; 
+        currentEnemyLevel = enemyInfo.enemyMaturityLevel;
+        healthDead = 0;//敌人会在生命值归零时被击败 enemy will be defeated once their HP reach zero.
         maxHealth = enemyInfo.maxHealth;
+        currentHealth = enemyInfo.currentHealth;
         maxAP = enemyInfo.maxAP;
         eachTurnRecoveredAP = enemyInfo.eachTurnRecoveredAP;
         currentAP = enemyInfo.currentAP;
         meleeStrength = enemyInfo.meleeStrength;
 
         armorStats = enemyInfo.armorStats;
-    }
-
-    public override void ExecuteAction(ActionBase battleAction, BattleEntityBase target)
-    {
     }
 }

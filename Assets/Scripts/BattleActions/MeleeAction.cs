@@ -1,16 +1,21 @@
 ﻿using UnityEngine;
-
-public class MeleeAction : IBattleAction
+using static UnityEngine.Rendering.DebugUI;
+[CreateAssetMenu(menuName = "Battle/MeleeAction")]
+public class MeleeAction : ActionBase
 {
-    public string actionName { get; } = "Melee";
-    public int costAP { get; } = 15;
+    [Header("Action Settings")]
+    public DamageType damageType;
+    public int baseDamage;
 
-    public bool CanExecute(BattleEntityBase userEntity, BattleEntityBase[] target)
+    public override bool CanExecute(BattleEntityBase userEntity, BattleEntityBase[] target)
     {
         return target.Length > 0 && userEntity.currentAP >= costAP;
     }
-    public void Execute(BattleEntityBase userEntity, BattleEntityBase[] target)
+    public override void Execute(BattleEntityBase userEntity, BattleEntityBase[] target)
     {
-        //造成伤害
+        for (int i = 0; i < target.Length; i++)
+        {
+            target[i].EntityTakeDamage(baseDamage, damageType);
+        }
     }
 }
