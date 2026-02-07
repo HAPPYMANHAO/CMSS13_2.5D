@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MeleeAction
   _actionName: SimpleMelee
   _costAP: 15
+  actionDelay: 0.8
   acitonLog: '[USER] attack [TARGET], deal [VALUE] damage'
   damageType: 0
-  baseDamage: 25
+  baseDamage: 100
+  armorPenetration: 0

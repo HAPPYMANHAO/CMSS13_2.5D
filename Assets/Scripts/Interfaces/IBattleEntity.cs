@@ -10,5 +10,5 @@ public interface IBattleEntity
     Faction entityFaction { get; set; }
 
     void ExecuteAction(ActionBase battleAction, BattleEntityBase[] target);
-    void EntityTakeDamage(int amount, DamageType type);
+    void EntityTakeDamage(int damageAmount, DamageType type, float armourPenetration);
 }

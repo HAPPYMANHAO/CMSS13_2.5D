@@ -7,6 +7,8 @@ public class MeleeAction : ActionBase
     public DamageType damageType;
     public int baseDamage;
 
+    public float armorPenetration = 0f;
+
     public override bool CanExecute(BattleEntityBase userEntity, BattleEntityBase[] target)
     {
         return target.Length > 0 && userEntity.currentAP >= costAP;
@@ -15,7 +17,7 @@ public class MeleeAction : ActionBase
     {
         for (int i = 0; i < target.Length; i++)
         {
-            target[i].EntityTakeDamage(baseDamage, damageType);
+            target[i].EntityTakeDamage(baseDamage, damageType, armorPenetration);
         }
     }
 }

@@ -63,6 +63,15 @@ public enum Faction
     Enemy,
     neutral,
 }
+//----------/战斗实体行动状态Battle Entity Action States
+public enum BattleEntityActionStates
+{
+    Attack,            //实体的AI会积极进攻
+    Defend,            //实体的AI会积极防守和治疗
+    Run,               //实体的AI会积极尝试撤退
+    Idle,              //实体的已经行动完成或未开始，在下一次回合开始前不能行动
+    Unconscious,       //这个状态下的实体不能行动
+}
 
 //-----------------------结构体struct-----------------------//
 //----------/包含装甲计算两个值（int和float）的结构体A struct that contains two values (an int and a float) for armor calculation

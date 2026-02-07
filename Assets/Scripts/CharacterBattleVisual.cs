@@ -1,9 +1,10 @@
 ﻿using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CharacterBattleVisual : MonoBehaviour
 {
-    Animator PlayerBattleAnimator;
+    Animator characterAnimator;
     [SerializeField] private SpriteRenderer mainBodyRenderer;
     [SerializeField] private SpriteRenderer mainHoldItemRenderer;
     [SerializeField] private SpriteRenderer[] overlayRenderer;
@@ -15,12 +16,15 @@ public class CharacterBattleVisual : MonoBehaviour
 
     private const float FLASH_DURATION = 0.6f;
     private const float GUN_FIRE_LIGHT_DURATION = 0.2f;
+    private const float DEAD_ANIMATION_DURATION = 3.0f;
 
     public BattleEntityBase battleEntity;
 
+    private const string IS_DEAD_PARAM = "IsDead";
+
     private void Awake()
     {
-        PlayerBattleAnimator = GetComponent<Animator>();
+        characterAnimator = GetComponent<Animator>();
 
         if (overlayRenderer.Length > 0)
         {
@@ -30,6 +34,11 @@ public class CharacterBattleVisual : MonoBehaviour
                 overlayRenderer[i].color = new Color(1, 0, 0, 1.0f);
             }
         }
+    }
+
+    private void Start()
+    {
+        battleEntity.OnEntityDeath += HandleEntityDead;
     }
 
     public void RightLightOn()
@@ -76,5 +85,11 @@ public class CharacterBattleVisual : MonoBehaviour
         rightLight.gameObject.SetActive(true);
         yield return new WaitForSeconds(GUN_FIRE_LIGHT_DURATION);
         rightLight.gameObject.SetActive(false);
+    }
+
+    private void HandleEntityDead()
+    {
+        characterAnimator.SetBool(IS_DEAD_PARAM, true);
+        Destroy(gameObject, DEAD_ANIMATION_DURATION);  
     }
 }

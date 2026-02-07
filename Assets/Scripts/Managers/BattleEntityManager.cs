@@ -3,31 +3,33 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
-public class BattleInfoManager : MonoBehaviour
+public class BattleEntityManager : MonoBehaviour
 {
     [Header("SpawnPoints")]
     [SerializeField] private Transform[] partySpawnPoints;
     [SerializeField] private Transform[] enemySpawnPoints;
 
     public List<BattleEntityBase> allBattleEntities = new List<BattleEntityBase>();
-    public IEnumerable<PartyBattleEntity> PartyEntities =>
+    public IEnumerable<PartyBattleEntity> partyEntities =>
         allBattleEntities.OfType<PartyBattleEntity>();
-    public IEnumerable<EnemyBattleEntity> EnemyEntities =>
+    public IEnumerable<EnemyBattleEntity> enemyEntities =>
         allBattleEntities.OfType<EnemyBattleEntity>();
 
     private PartyManager partyManager;
     private EnemyManager enemyManager;
+    private BattleTurnManager turnManager;
     
     private BattleVisualGUI battleVisualGUI;
 
-    private int currentPlayerEntity;
+    public int currentPlayerEntity;
 
-    [SerializeField] ActionBase testAction;
+    [SerializeField] ActionBase testAction;//Test
 
     private void Awake()
     {
         partyManager = FindFirstObjectByType<PartyManager>();
         enemyManager = FindFirstObjectByType<EnemyManager>();
+        turnManager = FindFirstObjectByType<BattleTurnManager>();
 
         battleVisualGUI = FindFirstObjectByType<BattleVisualGUI>();
     }
@@ -36,8 +38,10 @@ public class BattleInfoManager : MonoBehaviour
     {
         SpawnPartyEntity();
         SpawnEnemyEntity();
-
-        currentPlayerEntity = 0;  
+        for (int i = 0; i < allBattleEntities.Count; i++)
+        {
+            allBattleEntities[i].OnEntityDeath += HandleEntityDead;
+        }     
     }
 
     //----------------------------SpawnEntity----------------------------//
@@ -97,8 +101,30 @@ public class BattleInfoManager : MonoBehaviour
     public void PlayerComfirmTarget(BattleEntityBase entity)
     {
         BattleEntityBase[] targetEntities = { entity };
+        partyEntities.ElementAt(currentPlayerEntity).ExecuteAction(testAction, targetEntities);//test
 
-        allBattleEntities[currentPlayerEntity].ExecuteAction(testAction, targetEntities);
+        battleVisualGUI.isPlayerCanExecuteAction = false;
+        battleVisualGUI.playerActionDelayTimer = testAction.actionDelay;//test
+    }
+    //----------------------------Event----------------------------//
+    private void HandleEntityDead()
+    {
+        for (int i = allBattleEntities.Count - 1; i >= 0; i--)
+        {
+            if (allBattleEntities[i].EntityIsDead())
+            {
+                allBattleEntities.RemoveAt(i);    
+            }
+        }
+
+        if (!partyEntities.Any())
+        {
+            turnManager.battleState = BattleTurnManager.BattleState.Defeat;
+        }
+        if (!enemyEntities.Any())
+        {
+            turnManager.battleState = BattleTurnManager.BattleState.Victory;
+        }
     }
 }
 
@@ -109,10 +135,11 @@ public class PartyBattleEntity : BattleEntityBase
 {
     public int healthCRIT;
     public int healthCRITShock;
-
     public int currentLevel;
 
     public Dictionary<SkillType, int> skills;
+
+    public bool isAutoExecuteAction = false;
 
     public PartyBattleEntity(CurrentPartyMemberInfo memberInfo)
     {

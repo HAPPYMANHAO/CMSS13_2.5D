@@ -2,10 +2,13 @@
 
 public abstract class ActionBase : ScriptableObject, IBattleAction
 {
-    [SerializeField] private string _actionName;
-    [SerializeField] private int _costAP;
+    [SerializeField] protected string _actionName;
+    [SerializeField] public int _costAP;
+    //如果玩家执行这个行动，则actionDelay秒时间内不能执行任何行动，敌人也是如此
+    //If the player execute this action, they will not be able to execute any actions within the actionDelay seconds, and the same applies to the enemies.
+    [SerializeField] public float actionDelay;
 
-    [SerializeField]private string acitonLog;
+    [SerializeField] public string acitonLog;
     public string actionName
     {
         get => _actionName;

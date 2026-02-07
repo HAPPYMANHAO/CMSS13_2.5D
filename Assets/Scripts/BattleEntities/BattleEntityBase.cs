@@ -19,6 +19,7 @@ public abstract class BattleEntityBase : IBattleEntity
     public event Action OnApChanged;
     public event Action OnEntityDeath;
     public Faction entityFaction { get; set; }
+    public BattleEntityActionStates entityBattleState { get; set; } = BattleEntityActionStates.Idle;
 
     string IBattleEntity.memberName => memberName;
     int IBattleEntity.currentHealth { get => currentHealth; set => currentHealth = value; }
@@ -29,7 +30,7 @@ public abstract class BattleEntityBase : IBattleEntity
     public void ExecuteAction(ActionBase battleAction, BattleEntityBase[] target)
     {
         if (!battleAction.CanExecute(this, target))
-        { 
+        {
             return;
         }
 
@@ -38,23 +39,32 @@ public abstract class BattleEntityBase : IBattleEntity
         battleAction.Execute(this, target);
     }
 
-    public void EntityTakeDamage(int damageAmount, DamageType type)
+    public void EntityTakeDamage(int damageAmount, DamageType type, float armourPenetration)
+    {
+        int finalDamage = CalculateArmorReduction(damageAmount, type, armourPenetration);
+        if (battleVisual != null)
+        {
+            battleVisual.PlayHurt();
+        }
+        Debug.Log(this.memberName + "受到伤害：" + finalDamage + "剩下血量为:" + this.currentHealth);
+        EntitySetHealth(currentHealth - finalDamage);
+    }
+
+    private int CalculateArmorReduction(int damageAmount, DamageType type, float armourPenetration)
     {
         int finalDamage = damageAmount;
         if (armorStats.ContainsKey(type))
         {
             ArmorStats armor = armorStats[type];
+
+            float currentArmorIntegrity = Math.Clamp(armor.armorIntegrity - armourPenetration, 0f, 1f);
             int armorReduction = Mathf.FloorToInt(
-                (Mathf.Min(armor.armorValue, armor.armorIntegrity * damageAmount))
+                (Mathf.Min(armor.armorValue, currentArmorIntegrity * damageAmount))
             );
-            finalDamage = Mathf.Max(0, damageAmount - armorReduction);
+            return finalDamage = Mathf.Max(0, damageAmount - armorReduction);
         }
-        if(battleVisual != null)
-        {
-            battleVisual.PlayHurt();
-        }
-        Debug.Log(this.memberName + "受到伤害：" + finalDamage + "剩下血量为:" + this.currentHealth);
-        EntitySetHealth(currentHealth - finalDamage); 
+
+        return damageAmount;
     }
 
     private void EntitySetHealth(int newHealth)
@@ -75,12 +85,12 @@ public abstract class BattleEntityBase : IBattleEntity
 
     public void EntityRecoverAP()
     {
-        currentAP = Mathf.Min(maxAP, currentAP +eachTurnRecoveredAP);
+        currentAP = Mathf.Min(maxAP, currentAP + eachTurnRecoveredAP);
     }
 
     public void EntityConsumeAP(int consumedAP)
     {
-        EntitySetAP(currentAP - consumedAP);    
+        EntitySetAP(currentAP - consumedAP);
     }
 
     private void EntitySetAP(int newAP)

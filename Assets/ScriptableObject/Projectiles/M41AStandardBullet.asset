@@ -16,7 +16,5 @@ MonoBehaviour:
   projectileGlowsColor: {r: 1, g: 0.6062992, b: 0, a: 0}
   projectileDamageType: 1
   projectileDamage: 44
-  projectileArmorPenetration: 5
+  projectileArmorPenetration: 0.05
   projectileSpeed: 2
-  projectileTargat: {x: 0, y: 0, z: 0}
-  projectileActive: 0

@@ -7,6 +7,8 @@ public class TargetSelectorGUI : MonoBehaviour
     [SerializeField] private Camera battleCamera;
     [SerializeField] private LayerMask battleEntityLayer;
 
+    private RaycastHit[] currentHits;
+
     public BattleEntityBase currentTarget { get; private set; }
 
     void Update()
@@ -14,12 +16,8 @@ public class TargetSelectorGUI : MonoBehaviour
         Vector2 mousePos = Mouse.current.position.ReadValue();
         Ray mouseRay = battleCamera.ScreenPointToRay(mousePos);
 
-        RaycastHit[] hits = Physics.RaycastAll(mouseRay, 100f, battleEntityLayer);
-
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            ConfirmTarget(hits);
-        }
+        currentHits = Physics.RaycastAll(mouseRay, 100f, battleEntityLayer);  
+        CheckTarget();
     }
 
     private RaycastHit GetClosestHit(RaycastHit[] hits)
@@ -43,11 +41,11 @@ public class TargetSelectorGUI : MonoBehaviour
         //ToDo
     }
 
-    private void ConfirmTarget(RaycastHit[] hits)
+    public void CheckTarget()
     {
-        if (hits.Length > 0)
+        if (currentHits.Length > 0)
         {
-            RaycastHit closestHit = GetClosestHit(hits);
+            RaycastHit closestHit = GetClosestHit(currentHits);
 
             CharacterBattleVisual visual = closestHit.collider.GetComponentInParent<CharacterBattleVisual>();
 

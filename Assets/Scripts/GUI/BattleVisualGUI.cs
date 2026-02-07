@@ -5,11 +5,12 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using static Unity.Cinemachine.IInputAxisOwner.AxisDescriptor;
 using static UnityEngine.EventSystems.EventTrigger;
 
 public class BattleVisualGUI : MonoBehaviour
 {
-    [SerializeField] private BattleInfoManager battleInfoManager;
+    [SerializeField] private BattleEntityManager battleEntityManager;
     [SerializeField] private HealthBarControllerGUI[] healthBars;
     [SerializeField] private TargetSelectorGUI targetSelectorGUI;
     //healthBarDefine必须按照threshold从大到小进行排序 healthBarDefine must be sorted by threshold DESC
@@ -18,6 +19,9 @@ public class BattleVisualGUI : MonoBehaviour
     [SerializeField] private HandControllerGUI rightHandButton;
     [SerializeField] private HandControllerGUI leftHandButton;
     [SerializeField] private Button Backpack;
+
+    public bool isPlayerCanExecuteAction = true;
+    public float playerActionDelayTimer = 0f; 
 
     public bool isLeftHandMain { get; private set; } = true;
     private void Awake()
@@ -37,14 +41,22 @@ public class BattleVisualGUI : MonoBehaviour
 
     private void Update()
     {
-        if (targetSelectorGUI.GetCurrentTarget() != null)
+        if (Mouse.current.leftButton.wasPressedThisFrame)
         {
-            battleInfoManager.PlayerComfirmTarget(targetSelectorGUI.GetCurrentTarget());
-            Debug.Log(targetSelectorGUI.GetCurrentTarget().memberName);
-        }
-        else
+            if (targetSelectorGUI.GetCurrentTarget() != null && isPlayerCanExecuteAction)
+            {
+                battleEntityManager.PlayerComfirmTarget(targetSelectorGUI.GetCurrentTarget());
+            }
+        }     
+
+        if (!isPlayerCanExecuteAction)
         {
-            Debug.Log("没有目标");
+            playerActionDelayTimer -= Time.deltaTime;
+            if (playerActionDelayTimer < 0)
+            {
+                isPlayerCanExecuteAction = true;
+                playerActionDelayTimer = 0;
+            }
         }
     }
 
