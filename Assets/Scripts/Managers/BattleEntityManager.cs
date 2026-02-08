@@ -17,7 +17,7 @@ public class BattleEntityManager : MonoBehaviour
 
     private PartyManager partyManager;
     private EnemyManager enemyManager;
-    private BattleTurnManager turnManager;
+    public BattleTurnManager turnManager;
     
     private BattleVisualGUI battleVisualGUI;
 
@@ -38,10 +38,6 @@ public class BattleEntityManager : MonoBehaviour
     {
         SpawnPartyEntity();
         SpawnEnemyEntity();
-        for (int i = 0; i < allBattleEntities.Count; i++)
-        {
-            allBattleEntities[i].OnEntityDeath += HandleEntityDead;
-        }     
     }
 
     //----------------------------SpawnEntity----------------------------//
@@ -56,6 +52,7 @@ public class BattleEntityManager : MonoBehaviour
             PartyBattleEntity partyBattleEntity = new PartyBattleEntity(currentParty[i]);
 
             partyBattleEntity.entityFaction = Faction.Survivor;
+            partyBattleEntity.OnEntityDeath += HandleEntityDead;
 
             CharacterBattleVisual tempBattleVisual = 
                 Instantiate(currentParty[i].memberBattleVisualPerfab, partySpawnPoints[i].position, Quaternion.identity)
@@ -79,6 +76,7 @@ public class BattleEntityManager : MonoBehaviour
             EnemyBattleEntity enemyBattleEntity = new EnemyBattleEntity(currentEnemy[i]);
 
             enemyBattleEntity.entityFaction = Faction.Enemy;
+            enemyBattleEntity.OnEntityDeath += HandleEntityDead;
 
             CharacterBattleVisual tempBattleVisual =
                 Instantiate(currentEnemy[i].enemyBattleVisualPerfab, enemySpawnPoints[i].position, Quaternion.identity)
@@ -107,24 +105,14 @@ public class BattleEntityManager : MonoBehaviour
         battleVisualGUI.playerActionDelayTimer = testAction.actionDelay;//test
     }
     //----------------------------Event----------------------------//
-    private void HandleEntityDead()
+    private void HandleEntityDead(BattleEntityBase deadEntity)
     {
-        for (int i = allBattleEntities.Count - 1; i >= 0; i--)
+        if (allBattleEntities.Contains(deadEntity))
         {
-            if (allBattleEntities[i].EntityIsDead())
-            {
-                allBattleEntities.RemoveAt(i);    
-            }
+                allBattleEntities.Remove(deadEntity);    
         }
 
-        if (!partyEntities.Any())
-        {
-            turnManager.battleState = BattleTurnManager.BattleState.Defeat;
-        }
-        if (!enemyEntities.Any())
-        {
-            turnManager.battleState = BattleTurnManager.BattleState.Victory;
-        }
+        turnManager.CheckBattleVictoryOrDefeat();
     }
 }
 
@@ -157,6 +145,8 @@ public class PartyBattleEntity : BattleEntityBase
 
         skills = memberInfo.skills;
         armorStats = memberInfo.armorStats;
+
+        entityAI = memberInfo.entityAI;
     }
 
 
@@ -189,5 +179,7 @@ public class EnemyBattleEntity : BattleEntityBase
         meleeStrength = enemyInfo.meleeStrength;
 
         armorStats = enemyInfo.armorStats;
+
+        entityAI = enemyInfo.entityAI;
     }
 }

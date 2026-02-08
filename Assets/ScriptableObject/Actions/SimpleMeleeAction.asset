@@ -15,7 +15,7 @@ MonoBehaviour:
   _actionName: SimpleMelee
   _costAP: 15
   actionDelay: 0.8
-  acitonLog: '[USER] attack [TARGET], deal [VALUE] damage'
+  actionLog: 
   damageType: 0
-  baseDamage: 100
+  baseDamage: 25
   armorPenetration: 0

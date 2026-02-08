@@ -16,7 +16,7 @@ MonoBehaviour:
   startLevel: 1
   baseHealth: 100
   MaxAP: 100
-  eachTurnRecoveredAP: 0
+  eachTurnRecoveredAP: 15
   healthCRIT: 0
   healthCRITShock: -50
   healthDead: -100
@@ -56,16 +56,17 @@ MonoBehaviour:
   armorStats:
   - armorType: 0
     armorValue: 0
-    armorStrength: 0
+    armorIntegrity: 0
   - armorType: 1
     armorValue: 0
-    armorStrength: 0
+    armorIntegrity: 0
   - armorType: 2
     armorValue: 0
-    armorStrength: 0
+    armorIntegrity: 0
   - armorType: 3
     armorValue: 0
-    armorStrength: 0
+    armorIntegrity: 0
   - armorType: 4
     armorValue: 0
-    armorStrength: 0
+    armorIntegrity: 0
+  entityAI: {fileID: 0}

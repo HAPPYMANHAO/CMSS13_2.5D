@@ -16,6 +16,12 @@ public static class LogText
     public const string LOG_USER = "[USER]";
 }
 
+public static class SceneName
+{
+    public const string OVER_WORLD = "OverworldScene";
+    public const string BATTLE = "BattleScene";
+}
+
 //-----------------------枚举enum-----------------------//
 //----------/成熟度 敌人的等级Maturity, Enemy's Level
 public enum EnemyMaturityLevel
@@ -99,4 +105,20 @@ public struct InitialSkill
 {
     public SkillType skillType;
     public int level;
+}
+//----------/包含AI自动行动的action的结构体，这是用于AI计算action权重的 A struct containing AI action ,This is used for calculating the action weights in AI.
+[System.Serializable]
+public struct AIActionWeight
+{
+    public ActionBase action;
+    [Range(0, 100)] public int weight; // 如果是概率触发
+}
+//----------/包含AI自动行动的action的行动和目标数据,这个是发送给Turn manager的 A struct containing AI action and target, This is for sending to Turn Manager.
+public struct DecisionAI
+{
+    public ActionBase action;
+    public BattleEntityBase[] targets;
+
+    // 辅助属性，方便判断是否有效
+    public bool IsValid => action != null && targets != null && targets.Length > 0;
 }

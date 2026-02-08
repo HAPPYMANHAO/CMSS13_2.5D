@@ -16,6 +16,8 @@ public class EnemyInfo : ScriptableObject
 
     public List<ArmorStats> armorStats = new List<ArmorStats>();
 
+    public EntityAI entityAI;
+
     public string FullName => $"{enemyMaturityLevel} {enemyName}";
 
     public Dictionary<DamageType, ArmorStats> GetArmorDictionary()

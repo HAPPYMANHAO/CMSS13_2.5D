@@ -14,10 +14,11 @@ public abstract class BattleEntityBase : IBattleEntity
     public int eachTurnRecoveredAP;
 
     public CharacterBattleVisual battleVisual;
+    public EntityAI entityAI;
 
     public event Action OnHealthChanged;
     public event Action OnApChanged;
-    public event Action OnEntityDeath;
+    public event Action<BattleEntityBase> OnEntityDeath;
     public Faction entityFaction { get; set; }
     public BattleEntityActionStates entityBattleState { get; set; } = BattleEntityActionStates.Idle;
 
@@ -74,7 +75,7 @@ public abstract class BattleEntityBase : IBattleEntity
 
         if (EntityIsDead())
         {
-            OnEntityDeath.Invoke();
+            OnEntityDeath.Invoke(this);
         }
     }
 
@@ -83,9 +84,10 @@ public abstract class BattleEntityBase : IBattleEntity
         return currentHealth <= healthDead;
     }
 
-    public void EntityRecoverAP()
+    public void EntityRecoverAP(int recoverAP)
     {
-        currentAP = Mathf.Min(maxAP, currentAP + eachTurnRecoveredAP);
+        Debug.Log("恢复AP:" + recoverAP);
+        EntitySetAP(currentAP + recoverAP);
     }
 
     public void EntityConsumeAP(int consumedAP)

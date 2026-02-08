@@ -57,6 +57,10 @@ public class TargetSelectorGUI : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            currentTarget = null;
+        }
     }
 
 

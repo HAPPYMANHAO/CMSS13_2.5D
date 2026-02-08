@@ -53,6 +53,8 @@ public class CurrentPartyMemberInfo
     public Dictionary<SkillType, int> skills;
     public Dictionary<DamageType, ArmorStats> armorStats;
 
+    public EntityAI entityAI;
+
     public CurrentPartyMemberInfo(PartyMemberInfo partyMember)
     {
         this.memberName = partyMember.memberName;
@@ -71,5 +73,7 @@ public class CurrentPartyMemberInfo
         // 克隆数据为字典 cloned data in the form of a dictionary
         skills = partyMember.GetSkillDictionary();
         armorStats = partyMember.GetArmorDictionary();
+
+        this.entityAI = partyMember.entityAI;
     }
 }

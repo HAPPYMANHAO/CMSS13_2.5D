@@ -21,6 +21,8 @@ public class PartyMemberInfo : ScriptableObject
     public List<InitialSkill> startingSkills = new List<InitialSkill>();
     public List<ArmorStats> armorStats = new List<ArmorStats>();
 
+    public EntityAI entityAI;
+
     private bool skillsInitialized = false;
     private bool armorInitialized= false;
 

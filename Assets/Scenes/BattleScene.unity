@@ -2146,7 +2146,8 @@ MonoBehaviour:
     sprite: {fileID: 1771846595, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
   rightHandButton: {fileID: 471915619}
   leftHandButton: {fileID: 1294563942}
-  Backpack: {fileID: 2114462118}
+  backpack: {fileID: 2114462118}
+  playerEndTurnButton: {fileID: 1863399007}
   isPlayerCanExecuteAction: 0
   playerActionDelayTimer: 0
 --- !u!1 &1226675144
@@ -2880,6 +2881,7 @@ MonoBehaviour:
   - {fileID: 864324068}
   - {fileID: 761975212}
   - {fileID: 1516570580}
+  turnManager: {fileID: 0}
   currentPlayerEntity: 0
   testAction: {fileID: 11400000, guid: 6431f33da74967a41957a4f79fea3e22, type: 2}
 --- !u!4 &1668409897

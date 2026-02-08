@@ -11,7 +11,17 @@ public class MeleeAction : ActionBase
 
     public override bool CanExecute(BattleEntityBase userEntity, BattleEntityBase[] target)
     {
-        return target.Length > 0 && userEntity.currentAP >= costAP;
+        bool targetAlive = true;
+        for (int i = 0; i < target.Length; i++)
+        {
+            if (target[i].EntityIsDead())
+            {
+                targetAlive = false;
+                break;
+            }
+        }
+
+        return target.Length > 0 && targetAlive && userEntity.currentAP >= costAP;
     }
     public override void Execute(BattleEntityBase userEntity, BattleEntityBase[] target)
     {

@@ -62,6 +62,8 @@ public class CurrentEnemyInfo
     public GameObject enemyBattleVisualPerfab;
 
     public Dictionary<DamageType, ArmorStats> armorStats;
+
+    public EntityAI entityAI;
     public CurrentEnemyInfo(EnemyInfo enemy)
     {
         this.enemyMaturityLevel = enemy.enemyMaturityLevel;
@@ -74,6 +76,7 @@ public class CurrentEnemyInfo
         this.currentAP = (maxAP / 2);
         this.meleeStrength = enemy.meleeStrength;
         this.enemyBattleVisualPerfab = enemy.enemyBattleVisualPerfab;
+        this.entityAI = enemy.entityAI;
 
         armorStats = enemy.GetArmorDictionary();
     }

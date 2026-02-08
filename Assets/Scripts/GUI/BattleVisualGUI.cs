@@ -18,7 +18,10 @@ public class BattleVisualGUI : MonoBehaviour
 
     [SerializeField] private HandControllerGUI rightHandButton;
     [SerializeField] private HandControllerGUI leftHandButton;
-    [SerializeField] private Button Backpack;
+    [SerializeField] private Button backpack;
+    [SerializeField] public Button playerEndTurnButton;
+
+    public static System.Action OnPlayerRequestEndTurn;
 
     public bool isPlayerCanExecuteAction = true;
     public float playerActionDelayTimer = 0f; 
@@ -31,6 +34,8 @@ public class BattleVisualGUI : MonoBehaviour
 
     private void Start()
     {
+        playerEndTurnButton.onClick.AddListener(HandleEndTurnClick);
+
         SetHealthBar(healthBarDefine);
 
         SelectLeftHand();
@@ -60,6 +65,7 @@ public class BattleVisualGUI : MonoBehaviour
         }
     }
 
+    //-----------------------HandsGUI------------------------//
     public void SelectLeftHand()
     {
         isLeftHandMain = true;
@@ -81,6 +87,7 @@ public class BattleVisualGUI : MonoBehaviour
         rightHandButton.handButton.interactable = true;
     }
 
+    //---------------------HealthBarGUI------------------------//
     private void SetHealthBar(List<HealthBarEntry> healthBarDefine)
     {
         for (int i = 0; i < healthBars.Length; i++)
@@ -98,6 +105,14 @@ public class BattleVisualGUI : MonoBehaviour
                 healthBars[i].HealthBarBind(entity);
                 break;
             }
+        }
+    }
+    //---------------------EndTurnGUI---------------------//
+    private void HandleEndTurnClick()
+    {
+        if(battleEntityManager.turnManager.battleState == BattleTurnManager.BattleState.PlayerTurnAction)
+        {
+            OnPlayerRequestEndTurn.Invoke();
         }
     }
 }

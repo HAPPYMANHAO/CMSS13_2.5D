@@ -41,6 +41,14 @@ public class CharacterBattleVisual : MonoBehaviour
         battleEntity.OnEntityDeath += HandleEntityDead;
     }
 
+    private void OnDestroy()
+    {
+        if (battleEntity != null)
+        {
+            battleEntity.OnEntityDeath -= HandleEntityDead;
+        }
+    }
+
     public void RightLightOn()
     {
         StartCoroutine(RightLightRoutine());
@@ -87,7 +95,7 @@ public class CharacterBattleVisual : MonoBehaviour
         rightLight.gameObject.SetActive(false);
     }
 
-    private void HandleEntityDead()
+    private void HandleEntityDead(BattleEntityBase deadEntity)
     {
         characterAnimator.SetBool(IS_DEAD_PARAM, true);
         Destroy(gameObject, DEAD_ANIMATION_DURATION);  

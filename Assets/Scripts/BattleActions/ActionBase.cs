@@ -8,7 +8,7 @@ public abstract class ActionBase : ScriptableObject, IBattleAction
     //If the player execute this action, they will not be able to execute any actions within the actionDelay seconds, and the same applies to the enemies.
     [SerializeField] public float actionDelay;
 
-    [SerializeField] public string acitonLog;
+    [SerializeField] public string actionLog;
     public string actionName
     {
         get => _actionName;
