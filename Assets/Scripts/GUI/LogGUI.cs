@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BattleLogGUI : MonoBehaviour
+public class LogGUI : MonoBehaviour
 {
     [SerializeField] private GameObject logItemPrefab; 
     [SerializeField] private Transform contentTransform; 
@@ -14,11 +14,16 @@ public class BattleLogGUI : MonoBehaviour
     private const int MAX_LOG_COUNT = LogTextSettings.MAX_LOG_COUNT; 
     private Queue<GameObject> logQueue = new Queue<GameObject>();
 
-    public void updateLog(string message)
+    private void Start()
+    {
+        ActionBase.OnActionLogged += HandleActionLogged;
+    }
+
+    public void UpdateLog(string message)
     {
         LogMessage( message, logColorDefault);
     }
-    public void updateLog(string message, Color color)
+    public void UpdateLog(string message, Color color)
     {
         LogMessage(message, color);
     }
@@ -38,6 +43,14 @@ public class BattleLogGUI : MonoBehaviour
         }
 
         Canvas.ForceUpdateCanvases();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(
+            contentTransform as RectTransform
+        );
         scrollRect.verticalNormalizedPosition = 0f;
+    }
+
+    private void HandleActionLogged(string log)
+    {
+        UpdateLog(log);
     }
 }

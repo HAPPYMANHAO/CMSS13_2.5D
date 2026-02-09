@@ -32,9 +32,10 @@ public class HealthBarControllerGUI : MonoBehaviour
         }
 
         this.owner = entity;
-
+        //绑定health bar GUI和AP value GUI
         owner.OnHealthChanged += HandleHealthUpdate;
         owner.OnApChanged += HandleUpdateAP;
+
         this.gameObject.SetActive(true);
         UpdateHealth();
         UpdateAP();

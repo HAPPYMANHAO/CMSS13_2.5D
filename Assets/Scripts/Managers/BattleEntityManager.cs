@@ -112,6 +112,7 @@ public class BattleEntityManager : MonoBehaviour
                 allBattleEntities.Remove(deadEntity);    
         }
 
+        //turnManager.logGUI.UpdateLog();
         turnManager.CheckBattleVictoryOrDefeat();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Localization;
 
 public abstract class ActionBase : ScriptableObject, IBattleAction
 {
@@ -8,7 +9,8 @@ public abstract class ActionBase : ScriptableObject, IBattleAction
     //If the player execute this action, they will not be able to execute any actions within the actionDelay seconds, and the same applies to the enemies.
     [SerializeField] public float actionDelay;
 
-    [SerializeField] public string actionLog;
+    [SerializeField] public LocalizedString actionLogTemplate;
+    public static System.Action<string> OnActionLogged;
     public string actionName
     {
         get => _actionName;
@@ -23,12 +25,4 @@ public abstract class ActionBase : ScriptableObject, IBattleAction
 
     public abstract bool CanExecute(BattleEntityBase user, BattleEntityBase[] target);
     public abstract void Execute(BattleEntityBase user, BattleEntityBase[] target);
-
-    public string ProcessBattleLog(string template, BattleEntityBase user, BattleEntityBase target, int value)
-    {
-        return template
-            .Replace("[USER]", $"<color=green>{user.memberName}</color>")
-            .Replace("[TARGET]", $"<color=red>{target.memberName}</color>")
-            .Replace("[VALUE]", $"<b>{value}</b>");
-    }
 }

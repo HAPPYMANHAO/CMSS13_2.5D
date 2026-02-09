@@ -15,7 +15,18 @@ MonoBehaviour:
   _actionName: SimpleMelee
   _costAP: 15
   actionDelay: 0.8
-  actionLog: 
+  actionLogTemplate:
+    m_TableReference:
+      m_TableCollectionName: GUID:a9ee409725d7f1647b49ba6a0d11fb9e
+    m_TableEntryReference:
+      m_KeyId: 3438770380800
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   damageType: 0
   baseDamage: 25
   armorPenetration: 0
+  references:
+    version: 2
+    RefIds: []

@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Battle Log EN ZH_zh
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: zh
+  m_SharedData: {fileID: 11400000, guid: a9ee409725d7f1647b49ba6a0d11fb9e, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 6760670716703277368
+  m_TableData:
+  - m_Id: 3236055474176
+    m_Localized: "\u8BED\u8A00"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3438770380800
+    m_Localized: "{user}\u653B\u51FB{target} \uFF0C\u9020\u6210\u4E86{damage}\u4F24\u5BB3\uFF01"
+    m_Metadata:
+      m_Items:
+      - rid: 6760670716703277368
+  - m_Id: 4742351675392
+    m_Localized: "{eneity}\u6B7B\u4EA1\u3002"
+    m_Metadata:
+      m_Items:
+      - rid: 6760670716703277368
+  - m_Id: 5363414851584
+    m_Localized: "\u6218\u6597\u5F00\u59CB\uFF01"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5500400820224
+    m_Localized: "\u73A9\u5BB6\u7ED3\u675F\u56DE\u5408\u3002"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6653612122112
+    m_Localized: "\u8F6E\u5230\u4F60\u884C\u52A8\u4E86\u3002"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 6760670716703277368
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 3438770380800
+        - id: 4742351675392

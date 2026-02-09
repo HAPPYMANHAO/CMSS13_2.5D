@@ -40,15 +40,15 @@ public abstract class BattleEntityBase : IBattleEntity
         battleAction.Execute(this, target);
     }
 
-    public void EntityTakeDamage(int damageAmount, DamageType type, float armourPenetration)
+    public int EntityTakeDamage(int damageAmount, DamageType type, float armourPenetration)
     {
         int finalDamage = CalculateArmorReduction(damageAmount, type, armourPenetration);
         if (battleVisual != null)
         {
             battleVisual.PlayHurt();
         }
-        Debug.Log(this.memberName + "受到伤害：" + finalDamage + "剩下血量为:" + this.currentHealth);
         EntitySetHealth(currentHealth - finalDamage);
+        return finalDamage;
     }
 
     private int CalculateArmorReduction(int damageAmount, DamageType type, float armourPenetration)
@@ -86,7 +86,6 @@ public abstract class BattleEntityBase : IBattleEntity
 
     public void EntityRecoverAP(int recoverAP)
     {
-        Debug.Log("恢复AP:" + recoverAP);
         EntitySetAP(currentAP + recoverAP);
     }
 

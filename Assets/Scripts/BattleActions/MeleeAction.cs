@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using static UnityEngine.Rendering.DebugUI;
 [CreateAssetMenu(menuName = "Battle/MeleeAction")]
 public class MeleeAction : ActionBase
@@ -27,7 +28,24 @@ public class MeleeAction : ActionBase
     {
         for (int i = 0; i < target.Length; i++)
         {
-            target[i].EntityTakeDamage(baseDamage, damageType, armorPenetration);
+            int damage = target[i].EntityTakeDamage(baseDamage, damageType, armorPenetration);
+
+            BattleEntityBase currentTarget = target[i];
+
+            var handleLog = actionLogTemplate.GetLocalizedStringAsync(new
+            {
+                user = userEntity.memberName,
+                target = target[i].memberName,
+                damage = damage.ToString()
+            });
+            handleLog.Completed += (op) =>
+            {
+                if (op.Status == AsyncOperationStatus.Succeeded)
+                { 
+                    string finalLog = op.Result;
+                    OnActionLogged?.Invoke(finalLog);
+                }
+            };
         }
     }
 }
