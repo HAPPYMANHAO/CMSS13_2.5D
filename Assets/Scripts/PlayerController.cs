@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -24,6 +24,10 @@ public class PlayerController : MonoBehaviour
     private void OnEnable()
     {
         inputActions.Enable();
+    }
+    private void OnDisable()
+    {
+        inputActions.Disable();
     }
 
     void Start()

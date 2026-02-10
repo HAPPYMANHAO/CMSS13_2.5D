@@ -59,6 +59,7 @@ public class CurrentEnemyInfo
     public int eachTurnRecoveredAP;
     public int currentAP;
     public int meleeStrength;
+    public int rangedStrength;
     public GameObject enemyBattleVisualPerfab;
 
     public Dictionary<DamageType, ArmorStats> armorStats;
@@ -75,6 +76,7 @@ public class CurrentEnemyInfo
         this.eachTurnRecoveredAP = enemy.eachTurnRecoveredAP;
         this.currentAP = (maxAP / 2);
         this.meleeStrength = enemy.meleeStrength;
+        this.rangedStrength = enemy.rangedStrenth;
         this.enemyBattleVisualPerfab = enemy.enemyBattleVisualPerfab;
         this.entityAI = enemy.entityAI;
 

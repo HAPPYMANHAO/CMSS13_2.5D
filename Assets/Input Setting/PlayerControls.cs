@@ -100,6 +100,24 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ChangeActiveHand"",
+                    ""type"": ""Button"",
+                    ""id"": ""49a1cbf1-97dc-46b9-aa4f-846a2fe746ab"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ActiveHoldItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""ab783b04-c1f2-4098-bc1e-e121ece127b3"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -157,6 +175,28 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e30114e0-44cd-44ad-b4ca-af805d971daf"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeActiveHand"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ad0366dc-6216-4876-af6a-d28bdc87d97d"",
+                    ""path"": ""<Keyboard>/z"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ActiveHoldItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -166,6 +206,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
+        m_Player_ChangeActiveHand = m_Player.FindAction("ChangeActiveHand", throwIfNotFound: true);
+        m_Player_ActiveHoldItem = m_Player.FindAction("ActiveHoldItem", throwIfNotFound: true);
     }
 
     ~@PlayerControls()
@@ -247,6 +289,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Move;
+    private readonly InputAction m_Player_ChangeActiveHand;
+    private readonly InputAction m_Player_ActiveHoldItem;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -262,6 +306,14 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Move".
         /// </summary>
         public InputAction @Move => m_Wrapper.m_Player_Move;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/ChangeActiveHand".
+        /// </summary>
+        public InputAction @ChangeActiveHand => m_Wrapper.m_Player_ChangeActiveHand;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/ActiveHoldItem".
+        /// </summary>
+        public InputAction @ActiveHoldItem => m_Wrapper.m_Player_ActiveHoldItem;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -291,6 +343,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Move.started += instance.OnMove;
             @Move.performed += instance.OnMove;
             @Move.canceled += instance.OnMove;
+            @ChangeActiveHand.started += instance.OnChangeActiveHand;
+            @ChangeActiveHand.performed += instance.OnChangeActiveHand;
+            @ChangeActiveHand.canceled += instance.OnChangeActiveHand;
+            @ActiveHoldItem.started += instance.OnActiveHoldItem;
+            @ActiveHoldItem.performed += instance.OnActiveHoldItem;
+            @ActiveHoldItem.canceled += instance.OnActiveHoldItem;
         }
 
         /// <summary>
@@ -305,6 +363,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Move.started -= instance.OnMove;
             @Move.performed -= instance.OnMove;
             @Move.canceled -= instance.OnMove;
+            @ChangeActiveHand.started -= instance.OnChangeActiveHand;
+            @ChangeActiveHand.performed -= instance.OnChangeActiveHand;
+            @ChangeActiveHand.canceled -= instance.OnChangeActiveHand;
+            @ActiveHoldItem.started -= instance.OnActiveHoldItem;
+            @ActiveHoldItem.performed -= instance.OnActiveHoldItem;
+            @ActiveHoldItem.canceled -= instance.OnActiveHoldItem;
         }
 
         /// <summary>
@@ -352,5 +416,19 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMove(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ChangeActiveHand" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnChangeActiveHand(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ActiveHoldItem" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnActiveHoldItem(InputAction.CallbackContext context);
     }
 }

@@ -1,10 +1,9 @@
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-public interface IHoldable
+public interface IHoldable : IActionProvider
 {
-    bool allowUseOfBothHands { get; }
-
-    Sprite holdInLeftHandSprite { get; }
-    Sprite holdInRightHandSprite { get; }
-    Sprite holdInBothHandsSprite { get; }
+    
+    [Header("Provided Actions")]
+    [SerializeField] public List<ActionBase> providedActions { get; set; }
 }

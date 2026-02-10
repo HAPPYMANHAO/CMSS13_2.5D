@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "New Item")]
 public abstract class ItemBase : ScriptableObject
 {
-    public string itemName;
-
-    public Sprite icon;
+    [SerializeField] public string itemName;
+    [SerializeField] public Sprite icon;
 }

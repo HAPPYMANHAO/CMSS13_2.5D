@@ -341,7 +341,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3555361479991047596}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 534b30f89b81a724b8b3b4104c620a20, type: 3}
+  m_Script: {fileID: 11500000, guid: 4eda3eb351c18684ebf48fae0af2442f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerBattleVisual
   mainBodyRenderer: {fileID: 8435210667367092322}

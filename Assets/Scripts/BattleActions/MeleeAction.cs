@@ -6,9 +6,6 @@ public class MeleeAction : ActionBase
 {
     [Header("Action Settings")]
     public DamageType damageType;
-    public int baseDamage;
-
-    public float armorPenetration = 0f;
 
     public override bool CanExecute(BattleEntityBase userEntity, BattleEntityBase[] target)
     {
@@ -28,24 +25,29 @@ public class MeleeAction : ActionBase
     {
         for (int i = 0; i < target.Length; i++)
         {
-            int damage = target[i].EntityTakeDamage(baseDamage, damageType, armorPenetration);
+            int damage = target[i].EntityTakeDamage(userEntity ,damageType, this);
 
             BattleEntityBase currentTarget = target[i];
 
-            var handleLog = actionLogTemplate.GetLocalizedStringAsync(new
-            {
-                user = userEntity.memberName,
-                target = target[i].memberName,
-                damage = damage.ToString()
-            });
-            handleLog.Completed += (op) =>
-            {
-                if (op.Status == AsyncOperationStatus.Succeeded)
-                { 
-                    string finalLog = op.Result;
-                    OnActionLogged?.Invoke(finalLog);
-                }
-            };
+            UpdateActionLog(userEntity, currentTarget, damage);
         }
+    }
+
+    public void UpdateActionLog(BattleEntityBase userEntity, BattleEntityBase target, int amount)
+    {
+        var handleLog = actionLogTemplate.GetLocalizedStringAsync(new
+        {
+            user = userEntity.memberName,
+            target = target.memberName,
+            damage = amount.ToString()
+        });
+        handleLog.Completed += (op) =>
+        {
+            if (op.Status == AsyncOperationStatus.Succeeded)
+            {
+                string finalLog = op.Result;
+                OnActionLogged?.Invoke(finalLog);
+            }
+        };
     }
 }

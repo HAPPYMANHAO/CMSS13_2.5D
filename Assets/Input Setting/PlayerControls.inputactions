@@ -14,6 +14,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ChangeActiveHand",
+                    "type": "Button",
+                    "id": "49a1cbf1-97dc-46b9-aa4f-846a2fe746ab",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ActiveHoldItem",
+                    "type": "Button",
+                    "id": "ab783b04-c1f2-4098-bc1e-e121ece127b3",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -71,6 +89,28 @@
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "e30114e0-44cd-44ad-b4ca-af805d971daf",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ChangeActiveHand",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ad0366dc-6216-4876-af6a-d28bdc87d97d",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ActiveHoldItem",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

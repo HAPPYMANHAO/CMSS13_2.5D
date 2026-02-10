@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 9a659d0e34d033a40973a7d5dd44feeb
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - icon: {fileID: 361597389, guid: 9e7e73ac5805ca946ae4b954f0bc4e2c, type: 3}
+  - _holdSprite: {instanceID: 0}
+  - holdInLeftHandSprite: {instanceID: 0}
+  - holdInRightHandSprite: {instanceID: 0}
+  - holdInBothHandsSprite: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

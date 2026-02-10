@@ -21,9 +21,9 @@ public class BattleEntityManager : MonoBehaviour
     
     private BattleVisualGUI battleVisualGUI;
 
-    public int currentPlayerEntity;
+    public PartyBattleEntity currentPlayerEntity;
 
-    [SerializeField] ActionBase testAction;//Test
+    [SerializeField] public WeaponBase testWeapon;
 
     private void Awake()
     {
@@ -59,11 +59,18 @@ public class BattleEntityManager : MonoBehaviour
                 .GetComponent<CharacterBattleVisual>();
             tempBattleVisual.battleEntity = partyBattleEntity;
             partyBattleEntity.battleVisual = tempBattleVisual;
+            partyBattleEntity.battleVisualGUI = battleVisualGUI;
+
+            //Test
+            partyBattleEntity.leftHandEquipment.item = testWeapon;
 
             battleVisualGUI.BindHealthBar(partyBattleEntity);
 
             allBattleEntities.Add(partyBattleEntity);
         }
+
+        currentPlayerEntity = partyEntities.First();
+        battleVisualGUI.SelectLeftHand();
     }
     //----------------Spawn Enemy Entity/2
     private void SpawnEnemyEntity()
@@ -98,11 +105,33 @@ public class BattleEntityManager : MonoBehaviour
     //----------------------------Target----------------------------//
     public void PlayerComfirmTarget(BattleEntityBase entity)
     {
+        if (currentPlayerEntity == null || currentPlayerEntity.EntityIsDead())
+        {
+            return;
+        }
+
+        HoldableBase item = currentPlayerEntity.GetCurrentActiveHand();
+        if (item == null)
+        {
+            return;
+        }
+
+        ActionBase currentAction = item.GetCurrentActions();
+        if (currentAction == null)
+        {
+            return;
+        }
+
+        if (string.IsNullOrEmpty(currentAction.actionName))
+        {
+            return;
+        }
+
         BattleEntityBase[] targetEntities = { entity };
-        partyEntities.ElementAt(currentPlayerEntity).ExecuteAction(testAction, targetEntities);//test
+        currentPlayerEntity.ExecuteAction(currentAction, targetEntities);
 
         battleVisualGUI.isPlayerCanExecuteAction = false;
-        battleVisualGUI.playerActionDelayTimer = testAction.actionDelay;//test
+        battleVisualGUI.playerActionDelayTimer = currentAction.actionDelay;
     }
     //----------------------------Event----------------------------//
     private void HandleEntityDead(BattleEntityBase deadEntity)
@@ -130,6 +159,24 @@ public class PartyBattleEntity : BattleEntityBase
 
     public bool isAutoExecuteAction = false;
 
+    public HandSlot leftHandEquipment = new HandSlot();
+    public HandSlot rightHandEquipment = new HandSlot();
+    public EquipmentSlot armorEquipment =  new EquipmentSlot();
+
+    public BattleVisualGUI battleVisualGUI;
+
+    public HoldableBase GetCurrentActiveHand()
+    {
+        if (battleVisualGUI.isLeftHandMain)
+        {
+            return leftHandEquipment?.item;
+        }
+        else
+        {
+            return rightHandEquipment?.item;
+        }
+    }
+
     public PartyBattleEntity(CurrentPartyMemberInfo memberInfo)
     {
         memberName = memberInfo.memberName;
@@ -150,7 +197,6 @@ public class PartyBattleEntity : BattleEntityBase
         entityAI = memberInfo.entityAI;
     }
 
-
     public bool PartyMemberIsCrit()
     {
         return currentHealth <= healthCRIT;
@@ -166,6 +212,7 @@ public class EnemyBattleEntity : BattleEntityBase
 {
     public EnemyMaturityLevel currentEnemyLevel;
     public int meleeStrength;
+    public int rangedStrength;
 
     public EnemyBattleEntity(CurrentEnemyInfo enemyInfo)
     {
@@ -178,6 +225,7 @@ public class EnemyBattleEntity : BattleEntityBase
         eachTurnRecoveredAP = enemyInfo.eachTurnRecoveredAP;
         currentAP = enemyInfo.currentAP;
         meleeStrength = enemyInfo.meleeStrength;
+        rangedStrength = enemyInfo.rangedStrength;
 
         armorStats = enemyInfo.armorStats;
 

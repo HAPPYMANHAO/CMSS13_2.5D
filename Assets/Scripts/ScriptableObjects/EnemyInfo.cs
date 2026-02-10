@@ -11,6 +11,7 @@ public class EnemyInfo : ScriptableObject
     public int MaxAP;
     public int eachTurnRecoveredAP;
     public int meleeStrength;
+    public int rangedStrenth;
     public int healthDead = 0;
     public GameObject enemyBattleVisualPerfab;
 

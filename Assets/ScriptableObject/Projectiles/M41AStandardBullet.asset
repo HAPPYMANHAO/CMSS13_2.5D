@@ -17,4 +17,4 @@ MonoBehaviour:
   projectileDamageType: 1
   projectileDamage: 44
   projectileArmorPenetration: 0.05
-  projectileSpeed: 2
+  projectileSpeed: 25

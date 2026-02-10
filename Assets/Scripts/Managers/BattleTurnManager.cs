@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Localization;
@@ -9,8 +10,6 @@ public class BattleTurnManager : MonoBehaviour
     [SerializeField] BattleEntityManager battleEntityManager;
     [SerializeField] BattleVisualGUI battleVisualGUI;
 
-    [SerializeField] public LogGUI logGUI;
-
     [SerializeField] public BattleState battleState;
 
     [SerializeField] private BattleStringDataSO battleTurnStringData;
@@ -20,7 +19,9 @@ public class BattleTurnManager : MonoBehaviour
     private bool isEndingTurn = false;
 
     private const int FIRST_PLAYER_ENTITY = 0;
-    private const float PLYAER_END_TURN_DURATION = 0.8f;
+    private const float PLAYER_END_TURN_DURATION = 0.8f;
+
+    public static Action<string, Color> OnBattleTurnLoggedColor;
 
     public enum BattleState
     {
@@ -41,7 +42,7 @@ public class BattleTurnManager : MonoBehaviour
     private void Start()
     {
         SetUpBattleStart();
-        BattleVisualGUI.OnPlayerRequestEndTurn += HandlePlayerEndTurn;
+        BattleVisualGUI.OnPlayerEndTurn += HandlePlayerEndTurn;
     }
 
     private void Update()
@@ -70,8 +71,6 @@ public class BattleTurnManager : MonoBehaviour
             battleEntityManager.allBattleEntities[i].entityBattleState = BattleEntityActionStates.Attack;
         }
 
-        battleEntityManager.currentPlayerEntity = FIRST_PLAYER_ENTITY;
-
         ChangeState(BattleState.PlayerTurnStart);
         currentTurn = 1;
         SetPlayerTurnStart();
@@ -80,7 +79,8 @@ public class BattleTurnManager : MonoBehaviour
     //-------------------Battle End-------------------//
     private void SetBattleEnd()
     {
-        SceneManager.LoadScene(SceneName.OVER_WORLD);
+        Debug.Log("战斗结束！");
+        //SceneManager.LoadScene(SceneName.OVER_WORLD);
     }
     //----------------------Battle loop----------------------//
     //-------Player Turn Start--------/ 1 
@@ -128,7 +128,10 @@ public class BattleTurnManager : MonoBehaviour
     {
         yield return null;
         //目前不需要玩家角色的AI
+        //AutoBattle(Faction.Survivor)
+        //这里不会自动战斗，因为玩家实体目前没有AI
         ChangeState(BattleState.PlayerTurnEnd);
+
         SetPlayerTurnEnd();
     }
 
@@ -157,13 +160,13 @@ public class BattleTurnManager : MonoBehaviour
     //-----------Enemy Turn Action----------/6
     private IEnumerator SetEnemyAction()
     {
-        yield return new WaitForSeconds(PLYAER_END_TURN_DURATION);
+        yield return new WaitForSeconds(PLAYER_END_TURN_DURATION);
         yield return StartCoroutine(AutoBattle(Faction.Enemy));
 
         ChangeState(BattleState.EnemyTurnEnd);
         SetEnemyTurnEnd();
     }
-    //------------Enemy Turn End----------/7
+    //------------Enemy Turn End------------/7
     private void SetEnemyTurnEnd()
     {
         CheckBattleVictoryOrDefeat();
@@ -232,7 +235,7 @@ public class BattleTurnManager : MonoBehaviour
         switch (currentEntity.entityFaction)
         {
             case Faction.Survivor:
-                CheckPartyAutoAction(currentEntity);//这里不会通过，因为玩家实体目前没有AI
+                CheckPartyAutoAction(currentEntity);
                 //Execute ToDo
                 break;
             case Faction.Enemy:
@@ -286,7 +289,7 @@ public class BattleTurnManager : MonoBehaviour
         localizedString.GetLocalizedStringAsync().Completed += (op) =>
         {
             string msg = op.Result;
-            logGUI.UpdateLog($">>> {msg} <<<", battleTurnLogColor); 
+            OnBattleTurnLoggedColor.Invoke($">>> {msg} <<<", battleTurnLogColor); 
         };
     }
 

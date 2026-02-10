@@ -49,7 +49,7 @@ public class CharacterBattleVisual : MonoBehaviour
         }
     }
 
-    public void RightLightOn()
+    public void RightLightOn()//gun fire
     {
         StartCoroutine(RightLightRoutine());
     }

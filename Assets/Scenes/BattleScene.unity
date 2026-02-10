@@ -602,7 +602,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -503791159, guid: ee9f6a5afda6ce04da734eddcd547d4b, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1024,6 +1024,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HandControllerGUI
   activeSprite: {fileID: -720477659, guid: 671afbf626027c24f8285693b6e533cb, type: 3}
   disactiveSprite: {fileID: -1508844222, guid: 671afbf626027c24f8285693b6e533cb, type: 3}
+  holdItemImage: {fileID: 1624531349}
+  holdItemSprite: {fileID: 0}
   handButton: {fileID: 471915616}
   baseSprite: {fileID: 471915617}
 --- !u!1 &550954750
@@ -1782,9 +1784,9 @@ MonoBehaviour:
     m_Left: 0
     m_Right: 0
     m_Top: 0
-    m_Bottom: 0
+    m_Bottom: 10
   m_ChildAlignment: 0
-  m_Spacing: 0
+  m_Spacing: 5
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -2216,6 +2218,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HandControllerGUI
   activeSprite: {fileID: -668858890, guid: 671afbf626027c24f8285693b6e533cb, type: 3}
   disactiveSprite: {fileID: -2079006351, guid: 671afbf626027c24f8285693b6e533cb, type: 3}
+  holdItemImage: {fileID: 334245368}
+  holdItemSprite: {fileID: 0}
   handButton: {fileID: 471915616}
   baseSprite: {fileID: 471915617}
 --- !u!1 &1496097026
@@ -2503,7 +2507,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -503791159, guid: ee9f6a5afda6ce04da734eddcd547d4b, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2559,7 +2563,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -253, y: 206}
+  m_AnchoredPosition: {x: -253, y: 213}
   m_SizeDelta: {x: 500, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1639117672
@@ -2683,9 +2687,21 @@ MonoBehaviour:
   - {fileID: 864324068}
   - {fileID: 761975212}
   - {fileID: 1516570580}
-  turnManager: {fileID: 0}
-  currentPlayerEntity: 0
-  testAction: {fileID: 11400000, guid: 6431f33da74967a41957a4f79fea3e22, type: 2}
+  turnManager: {fileID: 1865637674}
+  currentPlayerEntity:
+    memberName: 
+    currentHealth: 0
+    eachTurnRecoveredAP: 0
+    battleVisual: {fileID: 0}
+    entityAI: {fileID: 0}
+    healthCRIT: 0
+    healthCRITShock: 0
+    currentLevel: 0
+    isAutoExecuteAction: 0
+    armorEquipment:
+      equipment: {fileID: 0}
+    battleVisualGUI: {fileID: 0}
+  testWeapon: {fileID: 11400000, guid: 1e838c8a1c8816b4c89634d42e203ad4, type: 2}
 --- !u!4 &1668409897
 Transform:
   m_ObjectHideFlags: 0
@@ -3873,7 +3889,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BattleTurnManager
   battleEntityManager: {fileID: 1668409896}
   battleVisualGUI: {fileID: 1195785850}
-  logGUI: {fileID: 1639117675}
   battleState: 0
   battleTurnStringData: {fileID: 11400000, guid: 50b57658b20efb146ab3261a9b898107, type: 2}
   battleTurnLogColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}

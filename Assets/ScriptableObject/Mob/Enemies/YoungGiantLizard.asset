@@ -17,7 +17,8 @@ MonoBehaviour:
   baseHealth: 260
   MaxAP: 50
   eachTurnRecoveredAP: 15
-  meleeStrength: 0
+  meleeStrength: 18
+  rangedStrenth: 0
   healthDead: 0
   enemyBattleVisualPerfab: {fileID: 8061482746390470737, guid: bf81f737200d36e49a11a487a34dc671, type: 3}
   armorStats:

@@ -40,32 +40,22 @@ public abstract class BattleEntityBase : IBattleEntity
         battleAction.Execute(this, target);
     }
 
-    public int EntityTakeDamage(int damageAmount, DamageType type, float armourPenetration)
+    public int EntityTakeDamage(BattleEntityBase user, DamageType damageType, ActionBase sourceAction = null)
     {
-        int finalDamage = CalculateArmorReduction(damageAmount, type, armourPenetration);
+        DamageResult result = DamageCalculator.CalculateDamage(
+            user,
+            this,
+            damageType,
+            sourceAction
+        );
+
         if (battleVisual != null)
         {
             battleVisual.PlayHurt();
         }
-        EntitySetHealth(currentHealth - finalDamage);
-        return finalDamage;
-    }
 
-    private int CalculateArmorReduction(int damageAmount, DamageType type, float armourPenetration)
-    {
-        int finalDamage = damageAmount;
-        if (armorStats.ContainsKey(type))
-        {
-            ArmorStats armor = armorStats[type];
-
-            float currentArmorIntegrity = Math.Clamp(armor.armorIntegrity - armourPenetration, 0f, 1f);
-            int armorReduction = Mathf.FloorToInt(
-                (Mathf.Min(armor.armorValue, currentArmorIntegrity * damageAmount))
-            );
-            return finalDamage = Mathf.Max(0, damageAmount - armorReduction);
-        }
-
-        return damageAmount;
+        EntitySetHealth(currentHealth - result.finalDamage);
+        return result.finalDamage;
     }
 
     private void EntitySetHealth(int newHealth)

@@ -17,6 +17,11 @@ public class LogGUI : MonoBehaviour
     private void Start()
     {
         ActionBase.OnActionLogged += HandleActionLogged;
+        BattleTurnManager.OnBattleTurnLoggedColor += HandleTurnLogged;
+    }
+    private void OnDisable()
+    {
+        ActionBase.OnActionLogged -= HandleActionLogged; 
     }
 
     public void UpdateLog(string message)
@@ -30,6 +35,8 @@ public class LogGUI : MonoBehaviour
 
     private void LogMessage(string message, Color color)
     {
+        if (this == null || scrollRect == null) return;
+
         GameObject newLog = Instantiate(logItemPrefab, contentTransform);
         var textComp = newLog.GetComponent<TextMeshProUGUI>();
         textComp.text = message;
@@ -46,11 +53,19 @@ public class LogGUI : MonoBehaviour
         LayoutRebuilder.ForceRebuildLayoutImmediate(
             contentTransform as RectTransform
         );
-        scrollRect.verticalNormalizedPosition = 0f;
+        if (scrollRect != null)
+        {
+            scrollRect.verticalNormalizedPosition = 0f;
+        }
     }
 
+    //------------------Event-------------------//
     private void HandleActionLogged(string log)
     {
         UpdateLog(log);
+    }
+    private void HandleTurnLogged(string log, Color color)
+    {
+        UpdateLog(log, color);
     }
 }

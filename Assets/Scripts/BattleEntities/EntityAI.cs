@@ -18,7 +18,6 @@ public class EntityAI : ScriptableObject, IEntityAI
         {
             return new DecisionAI { action = null, targets = null };
         }
-        Debug.Log($"AI决策: {self.memberName} 打算对 {targets[0].memberName} 使用 {currentAction.actionName}");
         return new DecisionAI { action = currentAction, targets = targets };
     }
 
@@ -28,6 +27,7 @@ public class EntityAI : ScriptableObject, IEntityAI
         if (decisionAI.targets.Length > 0 && decisionAI.targets != null && actionPool.Count > 0 && decisionAI.action != null)
         {
             self.ExecuteAction(decisionAI.action, new BattleEntityBase[] { decisionAI.targets[0] });
+            //目前实际上只选择一个目标进行行动，AI暂时不支持多目标(实际上玩家GUI目前也不行)
         }
 
         return decisionAI.action;

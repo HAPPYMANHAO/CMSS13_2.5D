@@ -52,7 +52,7 @@ public class HealthBarControllerGUI : MonoBehaviour
 
     public void UpdateHealth()
     {
-        bool healthCRIT = owner.currentHealth < 0;
+        bool healthCRIT = owner.currentHealth < 0;//没有血条在0以下的精灵，血条CRIT条件始终设置为 < 0
         bool healthShock = owner.currentHealth < owner.healthCRITShock;
 
         if (healthCRIT != IsCritAnimationActive)
@@ -91,6 +91,10 @@ public class HealthBarControllerGUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (owner != null) owner.OnHealthChanged -= HandleHealthUpdate;
+        if (owner != null)
+        {
+            owner.OnHealthChanged -= HandleHealthUpdate;
+            owner.OnApChanged -= HandleUpdateAP;
+        }
     }
 }

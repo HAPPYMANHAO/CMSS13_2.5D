@@ -16,7 +16,7 @@ MonoBehaviour:
   startLevel: 1
   baseHealth: 100
   MaxAP: 100
-  eachTurnRecoveredAP: 15
+  eachTurnRecoveredAP: 30
   healthCRIT: 0
   healthCRITShock: -50
   healthDead: -100
@@ -24,7 +24,7 @@ MonoBehaviour:
   MemberOverworldVisualPerfab: {fileID: 0}
   startingSkills:
   - skillType: 0
-    level: 1
+    level: 0
   - skillType: 1
     level: 0
   - skillType: 2

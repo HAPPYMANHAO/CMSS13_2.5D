@@ -34,17 +34,22 @@ MonoBehaviour:
       m_Items:
       - rid: 6760670716703277369
   - m_Id: 5363414851584
-    m_Localized: Battle Start!
+    m_Localized: Battle Start
     m_Metadata:
       m_Items: []
   - m_Id: 5500400820224
-    m_Localized: End Turn.
+    m_Localized: End Turn
     m_Metadata:
       m_Items: []
   - m_Id: 6653612122112
-    m_Localized: It's your turn.
+    m_Localized: It's your turn
     m_Metadata:
       m_Items: []
+  - m_Id: 274340355497984
+    m_Localized: '{user} shoot {target} ,deal {damage} damage!'
+    m_Metadata:
+      m_Items:
+      - rid: 6760670716703277369
   references:
     version: 2
     RefIds:
@@ -55,3 +60,4 @@ MonoBehaviour:
         m_SharedEntries:
         - id: 3438770380800
         - id: 4742351675392
+        - id: 274340355497984

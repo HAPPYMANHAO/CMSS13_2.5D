@@ -39,6 +39,10 @@ MonoBehaviour:
     m_Key: Log_Turn_Player_Start_Turn
     m_Metadata:
       m_Items: []
+  - m_Id: 274340355497984
+    m_Key: Log_Action_Simple_Ranged
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

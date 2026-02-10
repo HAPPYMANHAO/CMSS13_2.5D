@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class _Define : MonoBehaviour
 { 
@@ -9,11 +10,10 @@ public static class LogTextSettings
     public const int MAX_LOG_COUNT = 100;
 }
 
-public static class LogText
+public static class CustomInputString
 {
-    public const string LOG_VALUE = "[VALUE]";
-    public const string LOG_TARGET = "[TARGET]";
-    public const string LOG_USER = "[USER]";
+    public const string ACTIVE_HOLD_ITEM = "ActiveHoldItem";
+    public const string CHANGE_ACTIVE_HAND = "ChangeActiveHand";
 }
 
 public static class SceneName
@@ -121,4 +121,15 @@ public struct DecisionAI
 
     // 辅助属性，方便判断是否有效
     public bool IsValid => action != null && targets != null && targets.Length > 0;
+}
+//-----------/装备槽 Equipment Slot
+[System.Serializable]
+public class EquipmentSlot
+{
+    public ItemBase equipment;
+}
+//---------/Hand solt
+public class HandSlot
+{
+    public HoldableBase item;
 }
