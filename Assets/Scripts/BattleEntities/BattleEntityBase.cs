@@ -27,6 +27,7 @@ public abstract class BattleEntityBase : IBattleEntity
 
 
     public Dictionary<DamageType, ArmorStats> armorStats;
+    public Dictionary<DamageType, float> damageResistanceStats;
 
     public void ExecuteAction(ActionBase battleAction, BattleEntityBase[] target)
     {

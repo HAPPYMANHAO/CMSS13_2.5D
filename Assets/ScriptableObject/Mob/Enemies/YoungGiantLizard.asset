@@ -19,6 +19,7 @@ MonoBehaviour:
   eachTurnRecoveredAP: 15
   meleeStrength: 18
   rangedStrenth: 0
+  armorPenetration: 0
   healthDead: 0
   enemyBattleVisualPerfab: {fileID: 8061482746390470737, guid: bf81f737200d36e49a11a487a34dc671, type: 3}
   armorStats:
@@ -37,4 +38,15 @@ MonoBehaviour:
   - armorType: 4
     armorValue: 0
     armorIntegrity: 0
+  damageResistanceStats:
+  - resistType: 0
+    damageResist: 0
+  - resistType: 1
+    damageResist: 0
+  - resistType: 2
+    damageResist: 0
+  - resistType: 3
+    damageResist: 0
+  - resistType: 4
+    damageResist: 0
   entityAI: {fileID: 11400000, guid: 4004377941b2a364fab57732fd3c69d5, type: 2}

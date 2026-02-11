@@ -86,9 +86,15 @@ public struct ArmorStats
 {
     public DamageType armorType;
     public int armorValue;        // 护甲值armor value
-    [Range(0f, 1f)]               //对于护甲来说，护甲抵消的伤害值为护甲值和护甲完整性*伤害值中的较小值
-                                  //amount of damage absorbed by the armor is the smaller value between the armor value and the armor integrity * damage.
-    public float armorIntegrity;   // 护甲强度（0%~100%）armor strength（0%~100%）
+                                  //对于护甲来说，护甲抵消的伤害值为护甲值和护甲完整性*伤害值中的较小值
+    [Range(0f, 1f)] public float armorIntegrity;   // 护甲强度（0%~100%）armor strength（0%~100%）
+}
+//----------/包含伤害抗性的值的结构体
+[System.Serializable]
+public struct DamageResistanceStats
+{
+    public DamageType resistType;
+    [Range(0f, 1f)] public float damageResist; //对于伤害抗性来说，伤害抗性直接减少 伤害抗性*伤害值 的伤害，在护甲后结算
 }
 
 //----------/包含计算血条的结构体 A struct that includes the calculation of health bars

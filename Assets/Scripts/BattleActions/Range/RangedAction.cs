@@ -4,6 +4,8 @@ public class RangedAction : ActionBase
 {
     [Header("Ranged Settings")]
     public ProjectileInfo projectileInfo;
+    
+    private ProjectileLauncher launcher;
 
     public override bool CanExecute(BattleEntityBase userEntity, BattleEntityBase[] target)
     {
@@ -21,18 +23,18 @@ public class RangedAction : ActionBase
 
     public override void Execute(BattleEntityBase userEntity, BattleEntityBase[] target)
     {
-        userEntity.EntityConsumeAP(costAP);
-
-        foreach (var currentTarget in target)
+        if(launcher == null)
         {
-            ProjectileLauncher launcher = userEntity.battleVisual.GetComponentInChildren<ProjectileLauncher>();
+            launcher = userEntity.battleVisual.GetComponentInChildren<ProjectileLauncher>();
+        }
 
+        if (target.Length > 0)
+        {
             if (launcher != null)
             {
-                //直接遍历目标，不是很好的做法，有待改进ToDo
-                launcher.ProjectileLaunch(userEntity, currentTarget, this);
+                // 单发
+                launcher.ProjectileLaunch(userEntity, target[0], this);
                 ActiveActionViusal(userEntity);
-                break;
             }
         }
     }

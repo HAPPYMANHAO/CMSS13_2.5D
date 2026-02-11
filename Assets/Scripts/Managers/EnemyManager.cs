@@ -60,9 +60,11 @@ public class CurrentEnemyInfo
     public int currentAP;
     public int meleeStrength;
     public int rangedStrength;
+    public float armorPenetration;
     public GameObject enemyBattleVisualPerfab;
 
     public Dictionary<DamageType, ArmorStats> armorStats;
+    public Dictionary<DamageType, float> damageResistanceStats;
 
     public EntityAI entityAI;
     public CurrentEnemyInfo(EnemyInfo enemy)
@@ -77,9 +79,11 @@ public class CurrentEnemyInfo
         this.currentAP = (maxAP / 2);
         this.meleeStrength = enemy.meleeStrength;
         this.rangedStrength = enemy.rangedStrenth;
+        this.armorPenetration = enemy.armorPenetration;
         this.enemyBattleVisualPerfab = enemy.enemyBattleVisualPerfab;
         this.entityAI = enemy.entityAI;
 
         armorStats = enemy.GetArmorDictionary();
+        damageResistanceStats = enemy.GetDamageResistanceDictionary();
     }
 }

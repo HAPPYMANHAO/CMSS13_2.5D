@@ -12,6 +12,9 @@ public class WeaponBase : HoldableBase, IEquippable
     [Header("Base Damage")]
     public int meleeDamage = 25;
 
+    [Range(0f, 1f)] public float armorPenetration = 0f;
+
+
     [Header("Modifiers")]
     public List<DamageModifier> damageModifiers = new List<DamageModifier>();
 
@@ -22,14 +25,31 @@ public class WeaponBase : HoldableBase, IEquippable
 
     public int GetBaseDamage()
     {
-        if(primaryActionType == ActionType.Melee)
+        if (primaryActionType == ActionType.Melee)
         {
             return meleeDamage;
         }
-        else if(primaryActionType == ActionType.Ranged)
+        else if (primaryActionType == ActionType.Ranged)
         {
             RangedAction action = GetCurrentActions() as RangedAction;
             return action.projectileInfo.projectileDamage;
+        }
+        else
+        {
+            return 0;//无伤害，但是应该不会出现
+        }
+    }
+
+    public float GetArmorPenetration()
+    {
+        if (primaryActionType == ActionType.Melee)
+        {
+            return armorPenetration;
+        }
+        else if (primaryActionType == ActionType.Ranged)
+        {
+            RangedAction action = GetCurrentActions() as RangedAction;
+            return action.projectileInfo.projectileArmorPenetration;
         }
         else
         {

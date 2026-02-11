@@ -20,11 +20,9 @@ public class PartyMemberInfo : ScriptableObject
 
     public List<InitialSkill> startingSkills = new List<InitialSkill>();
     public List<ArmorStats> armorStats = new List<ArmorStats>();
+    public List<DamageResistanceStats> damageResistanceStats = new List<DamageResistanceStats>();
 
     public EntityAI entityAI;
-
-    private bool skillsInitialized = false;
-    private bool armorInitialized= false;
 
     public Dictionary<SkillType, int> GetSkillDictionary()
     {
@@ -45,11 +43,40 @@ public class PartyMemberInfo : ScriptableObject
         }
         return dict;
     }
+    public Dictionary<DamageType, float> GetDamageResistanceDictionary()
+    {
+        Dictionary<DamageType, float> dict = new Dictionary<DamageType, float>();
+        foreach (DamageResistanceStats damageResistanceStat in damageResistanceStats)
+        {
+            dict[damageResistanceStat.resistType] = damageResistanceStat.damageResist;
+        }
+        return dict;
+    }
 
     //----------------------OnValidate----------------------//
 
+    private bool skillsInitialized = false;
+    private bool armorInitialized = false;
+    private bool damageResistanceInitialized = false;
+
     private void OnValidate()
     {
+        if (!skillsInitialized)
+        {
+            InitializeSkills();
+            skillsInitialized = true;
+        }
+        if (!armorInitialized)
+        {
+            InitializeAromr();
+            armorInitialized = true;
+        }
+        if (!damageResistanceInitialized)
+        {
+            InitializeDamageResistan();
+            damageResistanceInitialized = true;
+        }
+
         SkillType[] allSkills = (SkillType[])System.Enum.GetValues(typeof(SkillType));
 
         if (startingSkills.Count != allSkills.Length)
@@ -70,18 +97,7 @@ public class PartyMemberInfo : ScriptableObject
                     level = existingLevels.ContainsKey(_skill) ? existingLevels[_skill] : 0
                 });
             }
-        }
-
-        if (!skillsInitialized)
-        {
-            InitializeSkills();
-            skillsInitialized = true;
-        }
-        if (!armorInitialized)
-        {
-            InitializeAromr();
-            armorInitialized = true;
-        }
+        }      
 
         DamageType[] allDamgaeType = (DamageType[])System.Enum.GetValues(typeof(DamageType));
 
@@ -109,7 +125,27 @@ public class PartyMemberInfo : ScriptableObject
                     armorValue = existingAromrValue.ContainsKey(_aromr.armorType) ? existingAromrValue[_aromr.armorType] : 0,
                 });
             }
-        }       
+        }
+
+        if (damageResistanceStats.Count != allDamgaeType.Length)
+        {
+            Dictionary<DamageType, float> existingResistancealue = new Dictionary<DamageType, float>();
+            foreach (DamageResistanceStats _damageResist in damageResistanceStats)
+            {
+                existingResistancealue[_damageResist.resistType] = _damageResist.damageResist;
+            } 
+
+            damageResistanceStats.Clear();
+
+            foreach (DamageResistanceStats _damageResist in damageResistanceStats)
+            {
+                damageResistanceStats.Add(new DamageResistanceStats
+                {
+                    resistType = _damageResist.resistType,
+                    damageResist = existingResistancealue.ContainsKey(_damageResist.resistType) ? existingResistancealue[_damageResist.resistType] : 0,
+                });
+            }
+        }
     }
 
     private void InitializeSkills()
@@ -141,6 +177,22 @@ public class PartyMemberInfo : ScriptableObject
                 armorType = damageType,
                 armorIntegrity = 0,
                 armorValue = 0,
+            });
+        }
+    }
+
+    private void InitializeDamageResistan()
+    {
+        damageResistanceStats.Clear();
+
+        DamageType[] allDamgaeType = (DamageType[])System.Enum.GetValues(typeof(DamageType));
+
+        foreach (var damageType in allDamgaeType)
+        {
+            damageResistanceStats.Add(new DamageResistanceStats
+            {
+                resistType = damageType,
+                damageResist = 0f,
             });
         }
     }

@@ -13,16 +13,20 @@ using static UnityEngine.EventSystems.EventTrigger;
 public class BattleVisualGUI : MonoBehaviour
 {
     [SerializeField] private BattleEntityManager battleEntityManager;
-    [SerializeField] private HealthBarControllerGUI[] healthBars;
+    [SerializeField] private InventoryManager inventoryManager;
+    [SerializeField] private HealthBarControllerGUI[] healthBarsGUI;
     [SerializeField] private TargetSelectorGUI targetSelectorGUI;
+    [SerializeField] private ItemContainerGUI containerGUI;
+
+    [SerializeField] private HandControllerGUI rightHandButtonGUI;
+    [SerializeField] private HandControllerGUI leftHandButtonGUI;
+
+    [SerializeField] private Button backpackGUI;
+    [SerializeField] public Button playerEndTurnButtonGUI;
     //healthBarDefine必须按照threshold从大到小进行排序 healthBarDefine must be sorted by threshold DESC
     [SerializeField] private List<HealthBarEntry> healthBarDefine;
 
-    [SerializeField] private HandControllerGUI rightHandButton;
-    [SerializeField] private HandControllerGUI leftHandButton;
-
-    [SerializeField] private Button backpack;
-    [SerializeField] public Button playerEndTurnButton;
+    
 
     public static Action OnPlayerEndTurn;
 
@@ -30,9 +34,7 @@ public class BattleVisualGUI : MonoBehaviour
     InputAction changeActiveHand;
 
     public bool isPlayerCanExecuteAction = true;
-    public float playerActionDelayTimer = 0f;
-
-    public bool isLeftHandMain { get; private set; } = true;
+    public float playerActionDelayTimer = 0f;   
 
     private PlayerControls inputActions;
 
@@ -52,15 +54,18 @@ public class BattleVisualGUI : MonoBehaviour
 
     private void Start()
     {
+        containerGUI.battleEntityManager = battleEntityManager;
+
         activeHoldItem = InputSystem.actions.FindAction(CustomInputString.ACTIVE_HOLD_ITEM);
         changeActiveHand = InputSystem.actions.FindAction(CustomInputString.CHANGE_ACTIVE_HAND);
 
-        playerEndTurnButton.onClick.AddListener(HandleEndTurnClick);
+        playerEndTurnButtonGUI.onClick.AddListener(HandleEndTurnClick);
 
         SetHealthBar(healthBarDefine);
 
-        leftHandButton.handButton.onClick.AddListener(SelectLeftHand);
-        rightHandButton.handButton.onClick.AddListener(SelectRightHand);
+        leftHandButtonGUI.handButton.onClick.AddListener(SelectLeftHand);
+        rightHandButtonGUI.handButton.onClick.AddListener(SelectRightHand);
+        backpackGUI.onClick.AddListener(HandleOpenBackpack);
     }
 
     private void Update()
@@ -92,36 +97,43 @@ public class BattleVisualGUI : MonoBehaviour
     //-----------------------HandsGUI------------------------//
     public void SelectLeftHand()
     {
-        isLeftHandMain = true;
+        battleEntityManager.currentPlayerEntity.currentActiveHand = PartyBattleEntity.EntityHandsSlot.Left;
         UpdateHandVisuals();
     }
 
     public void SelectRightHand()
     {
-        isLeftHandMain = false;
+        battleEntityManager.currentPlayerEntity.currentActiveHand = PartyBattleEntity.EntityHandsSlot.Right;
         UpdateHandVisuals();
     }
 
     public void ChangeActiveHand()
     {
-        isLeftHandMain = !isLeftHandMain; 
+        if(battleEntityManager.currentPlayerEntity.currentActiveHand == PartyBattleEntity.EntityHandsSlot.Left)
+        {
+            battleEntityManager.currentPlayerEntity.currentActiveHand = PartyBattleEntity.EntityHandsSlot.Right;
+        }
+        else if (battleEntityManager.currentPlayerEntity.currentActiveHand == PartyBattleEntity.EntityHandsSlot.Right)
+        {
+            battleEntityManager.currentPlayerEntity.currentActiveHand = PartyBattleEntity.EntityHandsSlot.Left;
+        }
         UpdateHandVisuals();
     }
 
-    private void UpdateHandVisuals()
+    public void UpdateHandVisuals()
     {
         if (battleEntityManager?.currentPlayerEntity == null) return;
 
         var player = battleEntityManager.currentPlayerEntity;
 
-        leftHandButton.baseSprite.sprite = isLeftHandMain ? leftHandButton.activeSprite : leftHandButton.disactiveSprite;
-        rightHandButton.baseSprite.sprite = isLeftHandMain ? rightHandButton.disactiveSprite : rightHandButton.activeSprite;
+        leftHandButtonGUI.baseSprite.sprite = player.currentActiveHand == PartyBattleEntity.EntityHandsSlot.Left ? leftHandButtonGUI.activeSprite : leftHandButtonGUI.disactiveSprite;
+        rightHandButtonGUI.baseSprite.sprite = player.currentActiveHand == PartyBattleEntity.EntityHandsSlot.Left ? rightHandButtonGUI.disactiveSprite : rightHandButtonGUI.activeSprite;
 
-        UpdateSingleHandVisual(leftHandButton, player.leftHandEquipment?.item);
-        UpdateSingleHandVisual(rightHandButton, player.rightHandEquipment?.item);
+        UpdateSingleHandVisual(leftHandButtonGUI, player.leftHandEquipment?.item);
+        UpdateSingleHandVisual(rightHandButtonGUI, player.rightHandEquipment?.item);
 
-        leftHandButton.handButton.interactable = true;
-        rightHandButton.handButton.interactable = true;
+        leftHandButtonGUI.handButton.interactable = true;
+        rightHandButtonGUI.handButton.interactable = true;
     }
 
     private void UpdateSingleHandVisual(HandControllerGUI handGUI, HoldableBase item)
@@ -141,19 +153,19 @@ public class BattleVisualGUI : MonoBehaviour
     //---------------------HealthBarGUI------------------------//
     private void SetHealthBar(List<HealthBarEntry> healthBarDefine)
     {
-        for (int i = 0; i < healthBars.Length; i++)
+        for (int i = 0; i < healthBarsGUI.Length; i++)
         {
-            healthBars[i].healthBarDefine = healthBarDefine;
+            healthBarsGUI[i].healthBarDefine = healthBarDefine;
         }
     }
 
     public void BindHealthBar(PartyBattleEntity entity)
     {
-        for (int i = 0; i < healthBars.Length; i++)
+        for (int i = 0; i < healthBarsGUI.Length; i++)
         {
-            if (healthBars[i].owner == null || string.IsNullOrEmpty(healthBars[i].owner.memberName))
+            if (healthBarsGUI[i].owner == null || string.IsNullOrEmpty(healthBarsGUI[i].owner.memberName))
             {
-                healthBars[i].HealthBarBind(entity);
+                healthBarsGUI[i].HealthBarBind(entity);
                 break;
             }
         }
@@ -165,5 +177,11 @@ public class BattleVisualGUI : MonoBehaviour
         {
             OnPlayerEndTurn.Invoke();
         }
+    }
+    //---------------------BackpackGUI---------------------//
+    private void HandleOpenBackpack()
+    {
+        containerGUI.gameObject.SetActive(true);
+        containerGUI.UpdateItemContainerGUI(inventoryManager.GetCurrentInventoryItems());
     }
 }

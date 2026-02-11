@@ -12,10 +12,12 @@ public class EnemyInfo : ScriptableObject
     public int eachTurnRecoveredAP;
     public int meleeStrength;
     public int rangedStrenth;
+    [Range(0f, 1f)] public float armorPenetration;
     public int healthDead = 0;
     public GameObject enemyBattleVisualPerfab;
 
     public List<ArmorStats> armorStats = new List<ArmorStats>();
+    public List<DamageResistanceStats> damageResistanceStats = new List<DamageResistanceStats>();
 
     public EntityAI entityAI;
 
@@ -30,16 +32,31 @@ public class EnemyInfo : ScriptableObject
         }
         return dict;
     }
+    public Dictionary<DamageType, float> GetDamageResistanceDictionary()
+    {
+        Dictionary<DamageType, float> dict = new Dictionary<DamageType, float>();
+        foreach (DamageResistanceStats damageResistanceStat in damageResistanceStats)
+        {
+            dict[damageResistanceStat.resistType] = damageResistanceStat.damageResist;
+        }
+        return dict;
+    }
 
     //----------------------OnValidate----------------------//
 
-    private bool armorInitialized;
+    private bool armorInitialized = false;
+    private bool damageResistanceInitialized = false;
     private void OnValidate()
     {
         if (!armorInitialized)
         {
             InitializeAromr();
             armorInitialized = true;
+        }
+        if (!damageResistanceInitialized)
+        {
+            InitializeDamageResistan();
+            damageResistanceInitialized = true;
         }
 
         DamageType[] allDamgaeType = (DamageType[])System.Enum.GetValues(typeof(DamageType));
@@ -69,6 +86,26 @@ public class EnemyInfo : ScriptableObject
                 });
             }
         }
+
+        if (damageResistanceStats.Count != allDamgaeType.Length)
+        {
+            Dictionary<DamageType, float> existingResistancealue = new Dictionary<DamageType, float>();
+            foreach (DamageResistanceStats _damageResist in damageResistanceStats)
+            {
+                existingResistancealue[_damageResist.resistType] = _damageResist.damageResist;
+            }
+
+            damageResistanceStats.Clear();
+
+            foreach (DamageResistanceStats _damageResist in damageResistanceStats)
+            {
+                damageResistanceStats.Add(new DamageResistanceStats
+                {
+                    resistType = _damageResist.resistType,
+                    damageResist = existingResistancealue.ContainsKey(_damageResist.resistType) ? existingResistancealue[_damageResist.resistType] : 0,
+                });
+            }
+        }
     }
 
     private void InitializeAromr()
@@ -84,6 +121,22 @@ public class EnemyInfo : ScriptableObject
                 armorType = damageType,
                 armorIntegrity = 0,
                 armorValue = 0,
+            });
+        }
+    }
+
+    private void InitializeDamageResistan()
+    {
+        damageResistanceStats.Clear();
+
+        DamageType[] allDamgaeType = (DamageType[])System.Enum.GetValues(typeof(DamageType));
+
+        foreach (var damageType in allDamgaeType)
+        {
+            damageResistanceStats.Add(new DamageResistanceStats
+            {
+                resistType = damageType,
+                damageResist = 0f,
             });
         }
     }

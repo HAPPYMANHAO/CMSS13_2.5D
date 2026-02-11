@@ -21,7 +21,8 @@ public class LogGUI : MonoBehaviour
     }
     private void OnDisable()
     {
-        ActionBase.OnActionLogged -= HandleActionLogged; 
+        ActionBase.OnActionLogged -= HandleActionLogged;
+        BattleTurnManager.OnBattleTurnLoggedColor -= HandleTurnLogged;
     }
 
     public void UpdateLog(string message)

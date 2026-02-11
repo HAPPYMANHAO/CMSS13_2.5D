@@ -59,7 +59,6 @@ public class BattleEntityManager : MonoBehaviour
                 .GetComponent<CharacterBattleVisual>();
             tempBattleVisual.battleEntity = partyBattleEntity;
             partyBattleEntity.battleVisual = tempBattleVisual;
-            partyBattleEntity.battleVisualGUI = battleVisualGUI;
 
             //Test
             partyBattleEntity.leftHandEquipment.item = testWeapon;
@@ -110,7 +109,7 @@ public class BattleEntityManager : MonoBehaviour
             return;
         }
 
-        HoldableBase item = currentPlayerEntity.GetCurrentActiveHand();
+        HoldableBase item = currentPlayerEntity.GetCurrentActiveHandItem();
         if (item == null)
         {
             return;
@@ -163,18 +162,26 @@ public class PartyBattleEntity : BattleEntityBase
     public HandSlot rightHandEquipment = new HandSlot();
     public EquipmentSlot armorEquipment =  new EquipmentSlot();
 
-    public BattleVisualGUI battleVisualGUI;
+    public enum EntityHandsSlot { Left, Right }
 
-    public HoldableBase GetCurrentActiveHand()
+    public EntityHandsSlot currentActiveHand = EntityHandsSlot.Left;
+
+    public HoldableBase GetCurrentActiveHandItem()
     {
-        if (battleVisualGUI.isLeftHandMain)
+        return currentActiveHand == EntityHandsSlot.Left ? leftHandEquipment?.item : rightHandEquipment?.item;
+    }
+    public HoldableBase SentHoldItemToInventory()
+    {
+        if(currentActiveHand == EntityHandsSlot.Left)
         {
-            return leftHandEquipment?.item;
+            leftHandEquipment.item = null;
         }
-        else
+        else if (currentActiveHand == EntityHandsSlot.Right)
         {
-            return rightHandEquipment?.item;
+            rightHandEquipment.item = null;
         }
+
+        return GetCurrentActiveHandItem();
     }
 
     public PartyBattleEntity(CurrentPartyMemberInfo memberInfo)
@@ -193,6 +200,7 @@ public class PartyBattleEntity : BattleEntityBase
 
         skills = memberInfo.skills;
         armorStats = memberInfo.armorStats;
+        damageResistanceStats = memberInfo.damageResistanceStats;
 
         entityAI = memberInfo.entityAI;
     }
@@ -213,6 +221,7 @@ public class EnemyBattleEntity : BattleEntityBase
     public EnemyMaturityLevel currentEnemyLevel;
     public int meleeStrength;
     public int rangedStrength;
+    public float armorPenetration;
 
     public EnemyBattleEntity(CurrentEnemyInfo enemyInfo)
     {
@@ -226,9 +235,11 @@ public class EnemyBattleEntity : BattleEntityBase
         currentAP = enemyInfo.currentAP;
         meleeStrength = enemyInfo.meleeStrength;
         rangedStrength = enemyInfo.rangedStrength;
+        armorPenetration = enemyInfo.armorPenetration;
 
         armorStats = enemyInfo.armorStats;
-
+        damageResistanceStats = enemyInfo.damageResistanceStats;
+       
         entityAI = enemyInfo.entityAI;
     }
 }
