@@ -3,7 +3,5 @@ using UnityEngine;
 
 public interface IHoldable : IActionProvider
 {
-    
-    [Header("Provided Actions")]
-    [SerializeField] public List<ActionBase> providedActions { get; set; }
+    List<ActionBase> providedActions { get; set; }
 }

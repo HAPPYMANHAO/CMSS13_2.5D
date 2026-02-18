@@ -6,10 +6,14 @@ public class CharacterBattleVisual : MonoBehaviour
 {
     Animator characterAnimator;
     [SerializeField] private SpriteRenderer mainBodyRenderer;
-    [SerializeField] private SpriteRenderer mainHoldItemRenderer;
+    
     [SerializeField] private SpriteRenderer[] overlayRenderer;
     [SerializeField] private SpriteRenderer[] mainRenderers;
     [SerializeField] private Light rightLight;
+
+    [Header("For Player Praty")]
+    [SerializeField] private SpriteRenderer mainHoldItemRenderer;
+    [SerializeField] private ItemDisplayer itemDisplayer; 
 
     Color flashStartColor = new Color(1, 0, 0, 1f);   // 初始红色（带透明）
     Color flashEndColor = new Color(1, 0, 0, 0f);     // 最终变为完全透明
@@ -99,5 +103,17 @@ public class CharacterBattleVisual : MonoBehaviour
     {
         characterAnimator.SetBool(IS_DEAD_PARAM, true);
         Destroy(gameObject, DEAD_ANIMATION_DURATION);  
+    }
+
+    public void ActiveItemDisplyer(Sprite sprite)
+    {
+        if (itemDisplayer.gameObject.activeSelf)
+        {
+            itemDisplayer.gameObject.SetActive(false);
+        }
+
+        itemDisplayer.spriteRenderer.sprite = sprite;
+
+        itemDisplayer.gameObject.SetActive(true);
     }
 }

@@ -37,6 +37,7 @@ public class HealthBarControllerGUI : MonoBehaviour
         owner.OnApChanged += HandleUpdateAP;
 
         this.gameObject.SetActive(true);
+        overlayCRIT.gameObject.SetActive(false);
         UpdateHealth();
         UpdateAP();
     }

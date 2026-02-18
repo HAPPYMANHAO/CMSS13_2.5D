@@ -43,6 +43,10 @@ MonoBehaviour:
     m_Key: Log_Action_Simple_Ranged
     m_Metadata:
       m_Items: []
+  - m_Id: 2951627911716864
+    m_Key: Log_Action_Simple_Heal
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

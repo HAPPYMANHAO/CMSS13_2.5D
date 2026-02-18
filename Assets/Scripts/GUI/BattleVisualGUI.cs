@@ -23,10 +23,6 @@ public class BattleVisualGUI : MonoBehaviour
 
     [SerializeField] private Button backpackGUI;
     [SerializeField] public Button playerEndTurnButtonGUI;
-    //healthBarDefine必须按照threshold从大到小进行排序 healthBarDefine must be sorted by threshold DESC
-    [SerializeField] private List<HealthBarEntry> healthBarDefine;
-
-    
 
     public static Action OnPlayerEndTurn;
 
@@ -60,8 +56,6 @@ public class BattleVisualGUI : MonoBehaviour
         changeActiveHand = InputSystem.actions.FindAction(CustomInputString.CHANGE_ACTIVE_HAND);
 
         playerEndTurnButtonGUI.onClick.AddListener(HandleEndTurnClick);
-
-        SetHealthBar(healthBarDefine);
 
         leftHandButtonGUI.handButton.onClick.AddListener(SelectLeftHand);
         rightHandButtonGUI.handButton.onClick.AddListener(SelectRightHand);
@@ -136,28 +130,23 @@ public class BattleVisualGUI : MonoBehaviour
         rightHandButtonGUI.handButton.interactable = true;
     }
 
-    private void UpdateSingleHandVisual(HandControllerGUI handGUI, HoldableBase item)
+    private void UpdateSingleHandVisual(HandControllerGUI handGUI, ItemInstance item)
     {
-        if (item != null && !string.IsNullOrEmpty(item.GetCurrentActions().actionName))
+        if (item != null)
         {
             handGUI.EnableHoldItemSprite();
-            handGUI.holdItemImage.sprite = item.icon;
+            handGUI.holdItemImage.sprite = item.itemData.icon;
+            handGUI.UpdateQuantityDisplay(item);
         }
         else
         {
             handGUI.holdItemImage.sprite = null;
             handGUI.DisableHoldItemSprite();
+            handGUI.UpdateQuantityDisplay(item);
         }
     }
 
     //---------------------HealthBarGUI------------------------//
-    private void SetHealthBar(List<HealthBarEntry> healthBarDefine)
-    {
-        for (int i = 0; i < healthBarsGUI.Length; i++)
-        {
-            healthBarsGUI[i].healthBarDefine = healthBarDefine;
-        }
-    }
 
     public void BindHealthBar(PartyBattleEntity entity)
     {
@@ -182,6 +171,6 @@ public class BattleVisualGUI : MonoBehaviour
     private void HandleOpenBackpack()
     {
         containerGUI.gameObject.SetActive(true);
-        containerGUI.UpdateItemContainerGUI(inventoryManager.GetCurrentInventoryItems());
+        containerGUI.UpdateItemContainerGUI(inventoryManager.GetAllItems());
     }
 }

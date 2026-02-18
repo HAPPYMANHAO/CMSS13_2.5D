@@ -53,6 +53,156 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &2710224935549545216
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2285107667043957877}
+  - component: {fileID: 3407223665799418653}
+  - component: {fileID: 285590792418776527}
+  m_Layer: 5
+  m_Name: APBarEnemy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2285107667043957877
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2710224935549545216}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.02, y: 0.02, z: 0.02}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 5234869408688369251}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -956.99, y: -539.05}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &3407223665799418653
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2710224935549545216}
+  m_CullTransparentMesh: 1
+--- !u!114 &285590792418776527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2710224935549545216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 1190471814, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!1 &3067463392760035648
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7671426624691568639}
+  - component: {fileID: 7029708473951341588}
+  - component: {fileID: 7623946926617424023}
+  m_Layer: 5
+  m_Name: HealthBarEnemy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &7671426624691568639
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3067463392760035648}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.02, y: 0.02, z: 0.02}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 5234869408688369251}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -956.99, y: -539.05}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &7029708473951341588
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3067463392760035648}
+  m_CullTransparentMesh: 1
+--- !u!114 &7623946926617424023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3067463392760035648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: -1008129198, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &3728465775481230254
 GameObject:
   m_ObjectHideFlags: 0
@@ -357,6 +507,7 @@ Transform:
   - {fileID: 5565024646864020679}
   - {fileID: 7798206126160752346}
   - {fileID: 3562088336403122494}
+  - {fileID: 5234869408688369251}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &4263004960148314800
@@ -400,3 +551,177 @@ MonoBehaviour:
   mainRenderers:
   - {fileID: 6191481172136770597}
   rightLight: {fileID: 0}
+--- !u!1 &8403013298258045158
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5234869408688369251}
+  - component: {fileID: 5073437664457286239}
+  - component: {fileID: 1422331770578323927}
+  - component: {fileID: 2862715007593866259}
+  - component: {fileID: 7486666376543719353}
+  m_Layer: 5
+  m_Name: EnemyHealthBar
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &5234869408688369251
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8403013298258045158}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7671426624691568639}
+  - {fileID: 2285107667043957877}
+  m_Father: {fileID: 6426110392312347632}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 960, y: 540}
+  m_SizeDelta: {x: 1920, y: 1080}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!223 &5073437664457286239
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8403013298258045158}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
+--- !u!114 &1422331770578323927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8403013298258045158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
+  m_UiScaleMode: 0
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 800, y: 600}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 1
+--- !u!114 &2862715007593866259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8403013298258045158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GraphicRaycaster
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!114 &7486666376543719353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8403013298258045158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6477fa391f322f546b2e947fc0e32cfb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealthBarGUI
+  healthBarImage: {fileID: 7623946926617424023}
+  _APBarImage: {fileID: 285590792418776527}
+  healthBarDefine:
+  - healthThreshold: 1
+    sprite: {fileID: -1008129198, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.9
+    sprite: {fileID: -1156961415, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.8
+    sprite: {fileID: -885749984, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.7
+    sprite: {fileID: 1800546595, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.6
+    sprite: {fileID: 1601475482, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.5
+    sprite: {fileID: -1219629203, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.4
+    sprite: {fileID: 738053976, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.3
+    sprite: {fileID: 1290213512, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.2
+    sprite: {fileID: 695385918, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.1
+    sprite: {fileID: 391678167, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0
+    sprite: {fileID: 391678167, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  _APBarDefine:
+  - healthThreshold: 1
+    sprite: {fileID: 1190471814, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.9
+    sprite: {fileID: 112995654, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.8
+    sprite: {fileID: 1882686761, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.7
+    sprite: {fileID: -795845455, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.6
+    sprite: {fileID: -883676526, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.5
+    sprite: {fileID: 1386431950, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.4
+    sprite: {fileID: 1565441933, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.3
+    sprite: {fileID: -2066031932, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.2
+    sprite: {fileID: 463627467, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.1
+    sprite: {fileID: 260929742, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0
+    sprite: {fileID: 1020504032, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  owner:
+    memberName: 
+    currentHealth: 0
+    eachTurnRecoveredAP: 0
+    battleVisual: {fileID: 0}
+    entityAI: {fileID: 0}
+    currentEnemyLevel: 0
+    meleeStrength: 0
+    rangedStrength: 0
+    armorPenetration: 0

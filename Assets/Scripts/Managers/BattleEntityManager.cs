@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class BattleEntityManager : MonoBehaviour
 {
@@ -18,12 +19,10 @@ public class BattleEntityManager : MonoBehaviour
     private PartyManager partyManager;
     private EnemyManager enemyManager;
     public BattleTurnManager turnManager;
-    
+
     private BattleVisualGUI battleVisualGUI;
 
     public PartyBattleEntity currentPlayerEntity;
-
-    [SerializeField] public WeaponBase testWeapon;
 
     private void Awake()
     {
@@ -54,14 +53,11 @@ public class BattleEntityManager : MonoBehaviour
             partyBattleEntity.entityFaction = Faction.Survivor;
             partyBattleEntity.OnEntityDeath += HandleEntityDead;
 
-            CharacterBattleVisual tempBattleVisual = 
+            CharacterBattleVisual tempBattleVisual =
                 Instantiate(currentParty[i].memberBattleVisualPerfab, partySpawnPoints[i].position, Quaternion.identity)
                 .GetComponent<CharacterBattleVisual>();
             tempBattleVisual.battleEntity = partyBattleEntity;
             partyBattleEntity.battleVisual = tempBattleVisual;
-
-            //Test
-            partyBattleEntity.leftHandEquipment.item = testWeapon;
 
             battleVisualGUI.BindHealthBar(partyBattleEntity);
 
@@ -90,6 +86,8 @@ public class BattleEntityManager : MonoBehaviour
             tempBattleVisual.battleEntity = enemyBattleEntity;
             enemyBattleEntity.battleVisual = tempBattleVisual;
 
+            tempBattleVisual.GetComponentInChildren<EnemyHealthBarGUI>().EnemyHealthBarBind(enemyBattleEntity);
+
             allBattleEntities.Add(enemyBattleEntity);
         }
     }
@@ -109,13 +107,17 @@ public class BattleEntityManager : MonoBehaviour
             return;
         }
 
-        HoldableBase item = currentPlayerEntity.GetCurrentActiveHandItem();
-        if (item == null)
+        if (currentPlayerEntity.GetCurrentActiveHandItem().itemData == null)
         {
             return;
         }
 
-        ActionBase currentAction = item.GetCurrentActions();
+        ItemInstance handItem = currentPlayerEntity.GetCurrentActiveHandItem();
+        if (handItem == null || handItem.itemData == null) return;
+
+        ActionBase currentAction = handItem.GetCurrentAction();
+        if (currentAction == null || string.IsNullOrEmpty(currentAction.actionName)) return;
+
         if (currentAction == null)
         {
             return;
@@ -129,6 +131,17 @@ public class BattleEntityManager : MonoBehaviour
         BattleEntityBase[] targetEntities = { entity };
         currentPlayerEntity.ExecuteAction(currentAction, targetEntities);
 
+        if (handItem is StackableItemInstance)
+        {
+            StackableItemInstance stackableItemInstance = (StackableItemInstance)handItem;
+            if (stackableItemInstance.IsEmpty)
+            {
+                currentPlayerEntity.SentHoldItemToInventory();
+            }
+        }
+
+        battleVisualGUI.UpdateHandVisuals();
+
         battleVisualGUI.isPlayerCanExecuteAction = false;
         battleVisualGUI.playerActionDelayTimer = currentAction.actionDelay;
     }
@@ -137,7 +150,7 @@ public class BattleEntityManager : MonoBehaviour
     {
         if (allBattleEntities.Contains(deadEntity))
         {
-                allBattleEntities.Remove(deadEntity);    
+            allBattleEntities.Remove(deadEntity);
         }
 
         //turnManager.logGUI.UpdateLog();
@@ -160,19 +173,21 @@ public class PartyBattleEntity : BattleEntityBase
 
     public HandSlot leftHandEquipment = new HandSlot();
     public HandSlot rightHandEquipment = new HandSlot();
-    public EquipmentSlot armorEquipment =  new EquipmentSlot();
+    public EquipmentSlot armorEquipment = new EquipmentSlot();
 
     public enum EntityHandsSlot { Left, Right }
 
     public EntityHandsSlot currentActiveHand = EntityHandsSlot.Left;
 
-    public HoldableBase GetCurrentActiveHandItem()
+    public ItemInstance GetCurrentActiveHandItem()
     {
         return currentActiveHand == EntityHandsSlot.Left ? leftHandEquipment?.item : rightHandEquipment?.item;
     }
-    public HoldableBase SentHoldItemToInventory()
+    public ItemInstance SentHoldItemToInventory()
     {
-        if(currentActiveHand == EntityHandsSlot.Left)
+        ItemInstance itemToReturn = GetCurrentActiveHandItem();
+
+        if (currentActiveHand == EntityHandsSlot.Left)
         {
             leftHandEquipment.item = null;
         }
@@ -181,7 +196,21 @@ public class PartyBattleEntity : BattleEntityBase
             rightHandEquipment.item = null;
         }
 
-        return GetCurrentActiveHandItem();
+        return itemToReturn;
+    }
+
+    public void GetItemFromToInventory(ItemInstance item)
+    {
+        if (currentActiveHand == EntityHandsSlot.Left)
+        {
+            leftHandEquipment.item = item;
+            battleVisual.ActiveItemDisplyer(item.itemData.icon);
+        }
+        else if (currentActiveHand == EntityHandsSlot.Right)
+        {
+            rightHandEquipment.item = item;
+            battleVisual.ActiveItemDisplyer(item.itemData.icon);
+        }
     }
 
     public PartyBattleEntity(CurrentPartyMemberInfo memberInfo)
@@ -239,7 +268,7 @@ public class EnemyBattleEntity : BattleEntityBase
 
         armorStats = enemyInfo.armorStats;
         damageResistanceStats = enemyInfo.damageResistanceStats;
-       
+
         entityAI = enemyInfo.entityAI;
     }
 }

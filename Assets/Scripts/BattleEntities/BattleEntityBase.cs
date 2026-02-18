@@ -70,6 +70,11 @@ public abstract class BattleEntityBase : IBattleEntity
         }
     }
 
+    public void EntityRevoverHealth(int recoverHealth)
+    {
+        EntitySetHealth(currentHealth + recoverHealth);
+    }
+
     public bool EntityIsDead()
     {
         return currentHealth <= healthDead;

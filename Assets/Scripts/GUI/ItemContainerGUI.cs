@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public class ItemContainerGUI : MonoBehaviour
@@ -20,14 +21,24 @@ public class ItemContainerGUI : MonoBehaviour
     {
         exitButton.onClick.AddListener(HandleExitButtonPressed);
         backgroundButton.onClick.AddListener(HandBackgroundButtonPressed);
+
     }
 
-    public void UpdateItemContainerGUI(List<ItemBase> items)
+    private void OnEnable()
+    {
+        InventoryManager.OnInventoryChanged += HandleInventoryChanged;
+    }
+    private void OnDisable()
+    {
+        InventoryManager.OnInventoryChanged -= HandleInventoryChanged;
+    }
+
+    public void UpdateItemContainerGUI(List<ItemInstance> items)
     {
         AddItems(items);
     }
 
-    private void AddItems(List<ItemBase> items)
+    private void AddItems(List<ItemInstance>items)
     {
         if (this == null || scrollRect == null) return;
 
@@ -40,6 +51,7 @@ public class ItemContainerGUI : MonoBehaviour
         {
             GameObject go = Instantiate(ItemPrefab, contentTransform);
             ItemBaseGUI itemGUI = go.GetComponent<ItemBaseGUI>();
+
 
             if (itemGUI != null)
             {
@@ -56,22 +68,39 @@ public class ItemContainerGUI : MonoBehaviour
     }
     private void HandBackgroundButtonPressed()
     {
-        ItemBase itemInHand = battleEntityManager.currentPlayerEntity.GetCurrentActiveHandItem();
+        ItemInstance itemInHand = battleEntityManager.currentPlayerEntity.GetCurrentActiveHandItem();
         if (itemInHand != null)
         {
-            inventoryManager.AddItemToInventory(itemInHand);
+            inventoryManager.AddItem(itemInHand);
             battleEntityManager.currentPlayerEntity.SentHoldItemToInventory();
+            UpdateCurrentGUI();
         }
 
-        UpdateItemContainerGUI(inventoryManager.GetCurrentInventoryItems());
-        battleVisualGUI.UpdateHandVisuals();
     }
 
-    private void HandleItemClicked(ItemBase item)
+    private void HandleItemClicked(ItemInstance item)
     {
-        if (item is HoldableBase holdable)
+        ItemInstance itemInHand = battleEntityManager.currentPlayerEntity.GetCurrentActiveHandItem();
+        if (itemInHand != null) return;
+
+        if (item.itemData is HoldableBase)
         {
-            // 执行装备逻辑TODO
+            inventoryManager.RemoveItem(item);
+            battleEntityManager.currentPlayerEntity.GetItemFromToInventory(item);
+            UpdateCurrentGUI();
         }
+    }
+
+    private void HandleInventoryChanged()
+    {
+        if (gameObject.activeSelf)
+            UpdateCurrentGUI();
+    }
+
+    private void UpdateCurrentGUI()
+    {
+        UpdateItemContainerGUI(inventoryManager.GetAllItems());
+
+        battleVisualGUI.UpdateHandVisuals();
     }
 }

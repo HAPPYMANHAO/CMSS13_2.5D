@@ -1,8 +1,8 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ItemDisplayer : MonoBehaviour
 {
-    private SpriteRenderer spriteRenderer;
+    public SpriteRenderer spriteRenderer;
     private float randomMoveUp;
     private float randomStartHorizontal;
     private Vector3 startPosition;

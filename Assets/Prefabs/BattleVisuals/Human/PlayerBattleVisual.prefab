@@ -345,7 +345,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerBattleVisual
   mainBodyRenderer: {fileID: 8435210667367092322}
-  mainHoldItemRenderer: {fileID: 5920917081260292509}
   overlayRenderer:
   - {fileID: 5260091357640906002}
   - {fileID: 6028968298605714136}
@@ -353,6 +352,8 @@ MonoBehaviour:
   - {fileID: 8435210667367092322}
   - {fileID: 5920917081260292509}
   rightLight: {fileID: 8089131062174008520}
+  mainHoldItemRenderer: {fileID: 5920917081260292509}
+  itemDisplayer: {fileID: 3240167975196419055}
 --- !u!1 &4001796501325902517
 GameObject:
   m_ObjectHideFlags: 0
@@ -772,6 +773,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 148d0cb24c0137342b52904a5601f1f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemDIsplayer
+  spriteRenderer: {fileID: 4027865818642690110}
 --- !u!1 &8455796533847781034
 GameObject:
   m_ObjectHideFlags: 0

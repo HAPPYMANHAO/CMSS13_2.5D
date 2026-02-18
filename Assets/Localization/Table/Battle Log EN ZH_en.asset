@@ -50,6 +50,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 6760670716703277369
+  - m_Id: 2951627911716864
+    m_Localized: '{user} treated {target} ,restored {healAmount} of health.'
+    m_Metadata:
+      m_Items:
+      - rid: 6760670716703277369
   references:
     version: 2
     RefIds:
@@ -61,3 +66,4 @@ MonoBehaviour:
         - id: 3438770380800
         - id: 4742351675392
         - id: 274340355497984
+        - id: 2951627911716864

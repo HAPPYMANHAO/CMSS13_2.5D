@@ -62,7 +62,7 @@ public class WeaponBase : HoldableBase, IEquippable
     {
         foreach (var modifier in damageModifiers)
         {
-            if (modifier.damageType == damageType || modifier.damageType == DamageType.Melee) // 通用
+            if (modifier.damageType == damageType) 
             {
                 yield return modifier;
             }

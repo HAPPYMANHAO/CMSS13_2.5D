@@ -137,5 +137,12 @@ public class EquipmentSlot
 //---------/Hand solt
 public class HandSlot
 {
-    public HoldableBase item;
+    public ItemInstance item;
+
+    public bool IsEmpty => item == null;
+
+    public ActionBase GetCurrentAction()
+    {
+        return item?.GetCurrentAction();
+    }
 }

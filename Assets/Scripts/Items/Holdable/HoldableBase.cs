@@ -3,7 +3,9 @@ using UnityEngine;
 
 public abstract class HoldableBase : ItemBase, IHoldable
 {
-    public List<ActionBase> _providedActions;
+    [Header("Provided Actions")]
+    [SerializeField] public List<ActionBase> _providedActions;
+
     public List<ActionBase> providedActions
     {
         get => _providedActions;

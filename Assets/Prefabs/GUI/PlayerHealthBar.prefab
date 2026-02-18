@@ -461,15 +461,60 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthBarControllerGUI
   overlayCRIT: {fileID: 6645939021340622926}
-  healthBarDefine: []
+  healthBarDefine:
+  - healthThreshold: 1
+    sprite: {fileID: 5623037, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.9
+    sprite: {fileID: -1255458205, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.85
+    sprite: {fileID: 5623037, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.8
+    sprite: {fileID: -1255458205, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.75
+    sprite: {fileID: 699179445, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.7
+    sprite: {fileID: 130131971, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.65
+    sprite: {fileID: 764260507, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.6
+    sprite: {fileID: -98246431, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.55
+    sprite: {fileID: 524495772, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.5
+    sprite: {fileID: -1415391148, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.45
+    sprite: {fileID: 516562229, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.4
+    sprite: {fileID: 1150443723, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.35
+    sprite: {fileID: -834253051, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.3
+    sprite: {fileID: -834253051, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.25
+    sprite: {fileID: -1211012722, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.2
+    sprite: {fileID: 1601780171, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.15
+    sprite: {fileID: 1862985008, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.1
+    sprite: {fileID: -1916589544, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0.05
+    sprite: {fileID: 1697654967, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
+  - healthThreshold: 0
+    sprite: {fileID: 1771846595, guid: 1afa4a66b95d5514abe7e6c3d9c523b5, type: 3}
   owner:
     memberName: 
     currentHealth: 0
     eachTurnRecoveredAP: 0
     battleVisual: {fileID: 0}
+    entityAI: {fileID: 0}
     healthCRIT: 0
     healthCRITShock: 0
     currentLevel: 0
+    isAutoExecuteAction: 0
+    armorEquipment:
+      equipment: {fileID: 0}
+    currentActiveHand: 0
 --- !u!1 &6900724837375232317
 GameObject:
   m_ObjectHideFlags: 0

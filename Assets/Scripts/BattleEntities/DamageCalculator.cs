@@ -17,7 +17,7 @@ public static class DamageCalculator
         var modifiers = GetAllModifiers(user, damageType);
         int finalDamage = ApplyModifiers(baseDamage, modifiers, damageType);
 
-        float totalPenetration = CalculateTotalPenetration(baseArmorPenetration ,modifiers ,damageType);
+        float totalPenetration = CalculateTotalPenetration(baseArmorPenetration, modifiers, damageType);
         int damageAfterArmor = CalculateArmorReduction(
             finalDamage,
             target,
@@ -54,7 +54,7 @@ public static class DamageCalculator
         // 玩家使用装备
         if (attacker is PartyBattleEntity party)
         {
-            WeaponBase equipment = party.GetCurrentActiveHandItem() as WeaponBase;
+            WeaponBase equipment = party.GetCurrentActiveHandItem().itemData as WeaponBase;
             if (equipment != null)
             {
                 return equipment.GetBaseDamage();
@@ -75,7 +75,8 @@ public static class DamageCalculator
         // 玩家使用装备
         if (attacker is PartyBattleEntity party)
         {
-            WeaponBase equipment = party.GetCurrentActiveHandItem() as WeaponBase;
+            var handItem = party.GetCurrentActiveHandItem();
+            WeaponBase equipment = handItem?.itemData as WeaponBase;
             if (equipment != null)
             {
                 return equipment.GetArmorPenetration();
@@ -93,7 +94,7 @@ public static class DamageCalculator
 
         if (attacker is PartyBattleEntity party)
         {
-            WeaponBase equipment = party.GetCurrentActiveHandItem() as WeaponBase;
+            WeaponBase equipment = party.GetCurrentActiveHandItem().itemData as WeaponBase;
             if (equipment != null)
             {
                 modifiers.AddRange(equipment.GetDamageModifiers(damageType));
@@ -107,9 +108,8 @@ public static class DamageCalculator
     {
         float finalDamage = baseDamage;
 
-        List<DamageModifier> finalmodifiers = 
-            new List<DamageModifier>().Where(modifier => modifier.damageType == damageType) 
-            as List<DamageModifier>;
+        List<DamageModifier> finalmodifiers =
+            modifiers.Where(modifier => modifier.damageType == damageType).ToList();
         if (finalmodifiers != null && finalmodifiers.Count > 0)
         {
             int totalFlat = finalmodifiers.Sum(modifier => modifier.flatBonus);
@@ -124,8 +124,7 @@ public static class DamageCalculator
     private static float CalculateTotalPenetration(float basePenetration, List<DamageModifier> modifiers, DamageType damageType)
     {
         List<DamageModifier> finalmodifiers =
-            new List<DamageModifier>().Where(modifier => modifier.damageType == damageType)
-            as List<DamageModifier>;
+           modifiers.Where(modifier => modifier.damageType == damageType).ToList();
         if (finalmodifiers != null && finalmodifiers.Count > 0)
         {
             return finalmodifiers.Sum(m => m.armorPenetration) + basePenetration;
