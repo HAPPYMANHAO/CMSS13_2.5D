@@ -7,6 +7,8 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private EnemyInfo[] allEnemiesInfo;
     [SerializeField] private List<CurrentEnemyInfo> currentEnemiesInfo;
 
+    private GameObject instance;//self
+
     private static readonly string[] EnemyName =
     {
         "GiantLizard" // EnemyName[0] 
@@ -16,6 +18,17 @@ public class EnemyManager : MonoBehaviour
 
     private void Awake()
     {
+        if (instance != null)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            instance = this.gameObject;
+        }
+
+            DontDestroyOnLoad(gameObject);
+
         // 初始化字典Initialize dictionary
         foreach (var info in allEnemiesInfo)
         {
@@ -23,8 +36,16 @@ public class EnemyManager : MonoBehaviour
             if (!enemyDatabase.ContainsKey(fullName))
                 enemyDatabase.Add(fullName, info);
         }
+    }
 
-        AddEnemy(EnemyMaturityLevel.Young, EnemyName[0]);
+    public void SpawnEnemeisByCounter(EncountEnemy[] encountEnemy)
+    {
+        currentEnemiesInfo.Clear();
+
+        foreach (var encount in encountEnemy)
+        {
+            AddEnemy(encount.enemy.enemyMaturityLevel, encount.enemy.enemyName);
+        }
     }
 
     public void AddEnemy(EnemyMaturityLevel level, string baseName)
@@ -78,7 +99,7 @@ public class CurrentEnemyInfo
         this.eachTurnRecoveredAP = enemy.eachTurnRecoveredAP;
         this.currentAP = (maxAP / 2);
         this.meleeStrength = enemy.meleeStrength;
-        this.rangedStrength = enemy.rangedStrenth;
+        this.rangedStrength = enemy.rangedStrength;
         this.armorPenetration = enemy.armorPenetration;
         this.enemyBattleVisualPerfab = enemy.enemyBattleVisualPerfab;
         this.entityAI = enemy.entityAI;

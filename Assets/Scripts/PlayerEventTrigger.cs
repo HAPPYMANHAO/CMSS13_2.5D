@@ -1,4 +1,4 @@
-using Unity.Mathematics;
+﻿using Unity.Mathematics;
 using Unity.Properties;
 using UnityEditor.SearchService;
 using UnityEngine;
@@ -7,8 +7,9 @@ using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCou
 
 public class PlayerEventTrigger : MonoBehaviour
 {
+    [SerializeField] PartyManager partyManager;
 
-    [SerializeField]  private LayerMask battleTriggerLayer;
+    [SerializeField] private LayerMask battleTriggerLayer;
 
     private bool moveInDangerArea;
     private float enemyEncounterTimer = 0f;
@@ -26,11 +27,19 @@ public class PlayerEventTrigger : MonoBehaviour
         CalculateStepsToNextEncounter();
     }
 
+    private void Start()
+    {
+        if(partyManager.GetPlayerPositon() != Vector3.zero)
+        {
+            this.transform.position = partyManager.GetPlayerPositon();
+        }
+    }
+
     private void FixedUpdate()
     {
         Collider[] colliders = Physics.OverlapSphere(this.transform.position, 1f, battleTriggerLayer);
 
-        if (colliders.Length > 0 ) moveInDangerArea = true;
+        if (colliders.Length > 0) moveInDangerArea = true;
 
         if (moveInDangerArea)
         {
@@ -40,20 +49,22 @@ public class PlayerEventTrigger : MonoBehaviour
                 stepInDangerArea++;
                 enemyEncounterTimer -= TIME_PER_STEP;
 
-                if(stepInDangerArea >= stepsToEncounter)
+                if (stepInDangerArea >= stepsToEncounter)
                 {
+                    partyManager.SetPlayerPosition(this.transform.position);
+                    stepInDangerArea = 0;
                     SceneManager.LoadScene(BATTLE_SCENE);
                 }
             }
         }
         else
         {
-            enemyEncounterTimer = 0f; 
+            enemyEncounterTimer = 0f;
         }
     }
 
     private void CalculateStepsToNextEncounter()
     {
-        stepsToEncounter = UnityEngine.Random.Range(minStepsToEncounter , maxStepsToEncounter);
+        stepsToEncounter = UnityEngine.Random.Range(minStepsToEncounter, maxStepsToEncounter);
     }
 }

@@ -12,6 +12,8 @@ public class EntityAI : ScriptableObject, IEntityAI
         BattleEntityBase[] targets = SetRandomTarget(self, entityManager);
         ActionBase currentAction = ComfirmAction();
 
+        if (targets == null || targets.Length == 0)
+            return new DecisionAI { action = null, targets = null };
         targets = targets.Where(entity => !entity.EntityIsDead()).ToArray();
 
         if (targets == null || targets.Length == 0 || currentAction == null)
@@ -21,10 +23,10 @@ public class EntityAI : ScriptableObject, IEntityAI
         return new DecisionAI { action = currentAction, targets = targets };
     }
 
-
+    // ExecuteAI目前没有被使用------------------
     public ActionBase ExecuteAI(BattleEntityBase self, DecisionAI decisionAI)
     {       
-        if (decisionAI.targets.Length > 0 && decisionAI.targets != null && actionPool.Count > 0 && decisionAI.action != null)
+        if (decisionAI.targets != null && decisionAI.targets.Length > 0 && actionPool.Count > 0 && decisionAI.action != null)
         {
             self.ExecuteAction(decisionAI.action, new BattleEntityBase[] { decisionAI.targets[0] });
             //目前实际上只选择一个目标进行行动，AI暂时不支持多目标(实际上玩家GUI目前也不行)
@@ -32,6 +34,7 @@ public class EntityAI : ScriptableObject, IEntityAI
 
         return decisionAI.action;
     }
+    // ExecuteAI目前没有被使用------------------
 
     public ActionBase ComfirmAction()
     {

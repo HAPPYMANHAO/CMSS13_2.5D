@@ -54,7 +54,8 @@ public static class DamageCalculator
         // 玩家使用装备
         if (attacker is PartyBattleEntity party)
         {
-            WeaponBase equipment = party.GetCurrentActiveHandItem().itemData as WeaponBase;
+            var handItem = party.GetCurrentActiveHandItem();
+            WeaponBase equipment = handItem?.itemData as WeaponBase;
             if (equipment != null)
             {
                 return equipment.GetBaseDamage();
@@ -94,7 +95,8 @@ public static class DamageCalculator
 
         if (attacker is PartyBattleEntity party)
         {
-            WeaponBase equipment = party.GetCurrentActiveHandItem().itemData as WeaponBase;
+            var handItem = party.GetCurrentActiveHandItem();
+            WeaponBase equipment = handItem?.itemData as WeaponBase;
             if (equipment != null)
             {
                 modifiers.AddRange(equipment.GetDamageModifiers(damageType));

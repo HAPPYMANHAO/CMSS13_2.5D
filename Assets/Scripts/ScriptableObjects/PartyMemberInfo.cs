@@ -116,13 +116,13 @@ public class PartyMemberInfo : ScriptableObject
 
             armorStats.Clear();
 
-            foreach (var _aromr in armorStats)
+            foreach (var _aromr in allDamgaeType)
             {
                 armorStats.Add(new ArmorStats
                 {
-                    armorType = _aromr.armorType,
-                    armorIntegrity = existingArmorStrength.ContainsKey(_aromr.armorType) ? existingArmorStrength[_aromr.armorType] : 0f,
-                    armorValue = existingAromrValue.ContainsKey(_aromr.armorType) ? existingAromrValue[_aromr.armorType] : 0,
+                    armorType = _aromr,
+                    armorIntegrity = existingArmorStrength.ContainsKey(_aromr) ? existingArmorStrength[_aromr] : 0f,
+                    armorValue = existingAromrValue.ContainsKey(_aromr) ? existingAromrValue[_aromr] : 0,
                 });
             }
         }
@@ -137,12 +137,12 @@ public class PartyMemberInfo : ScriptableObject
 
             damageResistanceStats.Clear();
 
-            foreach (DamageResistanceStats _damageResist in damageResistanceStats)
+            foreach (var _damageResist in allDamgaeType)
             {
                 damageResistanceStats.Add(new DamageResistanceStats
                 {
-                    resistType = _damageResist.resistType,
-                    damageResist = existingResistancealue.ContainsKey(_damageResist.resistType) ? existingResistancealue[_damageResist.resistType] : 0,
+                    resistType = _damageResist,
+                    damageResist = existingResistancealue.ContainsKey(_damageResist) ? existingResistancealue[_damageResist] : 0,
                 });
             }
         }

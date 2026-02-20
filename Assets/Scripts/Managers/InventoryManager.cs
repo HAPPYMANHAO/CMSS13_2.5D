@@ -58,7 +58,7 @@ public class InventoryManager : MonoBehaviour
     /// 从 SO 模板创建实例并添加到库存（便捷方法）。
     /// Convenience: creates an instance from an SO template and adds it.
     /// </summary>
-    public bool AddItemFromData(ItemBase itemData, int quantity = 10)
+    public bool AddItemFromData(ItemBase itemData, int quantity = 1)
     {
         if (itemData == null) return false;
 

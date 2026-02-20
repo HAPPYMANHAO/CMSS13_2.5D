@@ -14,7 +14,7 @@ public class LogGUI : MonoBehaviour
     private const int MAX_LOG_COUNT = LogTextSettings.MAX_LOG_COUNT; 
     private Queue<GameObject> logQueue = new Queue<GameObject>();
 
-    private void Start()
+    private void OnEnable()
     {
         ActionBase.OnActionLogged += HandleActionLogged;
         BattleTurnManager.OnBattleTurnLoggedColor += HandleTurnLogged;

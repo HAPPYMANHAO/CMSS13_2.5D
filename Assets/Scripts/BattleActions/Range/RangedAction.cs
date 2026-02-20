@@ -4,8 +4,6 @@ public class RangedAction : ActionBase
 {
     [Header("Ranged Settings")]
     public ProjectileInfo projectileInfo;
-    
-    private ProjectileLauncher launcher;
 
     public override bool CanExecute(BattleEntityBase userEntity, BattleEntityBase[] target)
     {
@@ -23,10 +21,7 @@ public class RangedAction : ActionBase
 
     public override void Execute(BattleEntityBase userEntity, BattleEntityBase[] target)
     {
-        if(launcher == null)
-        {
-            launcher = userEntity.battleVisual.GetComponentInChildren<ProjectileLauncher>();
-        }
+        var launcher = userEntity.battleVisual.GetComponentInChildren<ProjectileLauncher>();
 
         if (target.Length > 0)
         {

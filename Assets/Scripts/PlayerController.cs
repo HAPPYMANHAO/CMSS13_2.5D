@@ -34,6 +34,7 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         animator.SetFloat(MOVE_Z_PARAM, lastMoveDir.z);
+
     }
 
     void Update()

@@ -66,7 +66,7 @@ public abstract class BattleEntityBase : IBattleEntity
 
         if (EntityIsDead())
         {
-            OnEntityDeath.Invoke(this);
+            OnEntityDeath?.Invoke(this);
         }
     }
 

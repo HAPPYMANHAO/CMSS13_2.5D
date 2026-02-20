@@ -79,8 +79,8 @@ public class BattleTurnManager : MonoBehaviour
     //-------------------Battle End-------------------//
     private void SetBattleEnd()
     {
-        Debug.Log("战斗结束！");
-        //SceneManager.LoadScene(SceneName.OVER_WORLD);
+        battleEntityManager.SavePartyStats();
+        SceneManager.LoadScene(SceneName.OVER_WORLD);
     }
     //----------------------Battle loop----------------------//
     //-------Player Turn Start--------/ 1 
@@ -217,10 +217,9 @@ public class BattleTurnManager : MonoBehaviour
     //----------------------Auto Battle(AI)------------------------//
     private IEnumerator AutoBattle(Faction faction)
     {
-        for (int i = 0; i < battleEntityManager.allBattleEntities.Count; i++)
+        var snapshot = battleEntityManager.allBattleEntities.ToList();
+        foreach (var entity in snapshot)
         {
-            BattleEntityBase entity = battleEntityManager.allBattleEntities[i];
-
             if (entity.entityFaction == faction && !entity.EntityIsDead())
             {
                 yield return StartCoroutine(AutoExecuteActionRoutine(entity, faction));
@@ -289,7 +288,7 @@ public class BattleTurnManager : MonoBehaviour
         localizedString.GetLocalizedStringAsync().Completed += (op) =>
         {
             string msg = op.Result;
-            OnBattleTurnLoggedColor.Invoke($">>> {msg} <<<", battleTurnLogColor); 
+            OnBattleTurnLoggedColor?.Invoke($">>> {msg} <<<", battleTurnLogColor);
         };
     }
 

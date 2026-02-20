@@ -107,26 +107,11 @@ public class BattleEntityManager : MonoBehaviour
             return;
         }
 
-        if (currentPlayerEntity.GetCurrentActiveHandItem().itemData == null)
-        {
-            return;
-        }
-
         ItemInstance handItem = currentPlayerEntity.GetCurrentActiveHandItem();
         if (handItem == null || handItem.itemData == null) return;
 
         ActionBase currentAction = handItem.GetCurrentAction();
         if (currentAction == null || string.IsNullOrEmpty(currentAction.actionName)) return;
-
-        if (currentAction == null)
-        {
-            return;
-        }
-
-        if (string.IsNullOrEmpty(currentAction.actionName))
-        {
-            return;
-        }
 
         BattleEntityBase[] targetEntities = { entity };
         currentPlayerEntity.ExecuteAction(currentAction, targetEntities);
@@ -150,11 +135,23 @@ public class BattleEntityManager : MonoBehaviour
     {
         if (allBattleEntities.Contains(deadEntity))
         {
+            if(deadEntity is PartyBattleEntity)
+            {
+                SavePartyStats();
+            }
             allBattleEntities.Remove(deadEntity);
         }
 
         //turnManager.logGUI.UpdateLog();
         turnManager.CheckBattleVictoryOrDefeat();
+    }
+    //----------------------------Save Stats----------------------------//
+    public void SavePartyStats()
+    {
+        foreach (PartyBattleEntity member in partyEntities)
+        {
+            partyManager.SaveMemberStatsAfterBattle(member);
+        }
     }
 }
 

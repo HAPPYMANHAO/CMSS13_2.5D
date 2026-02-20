@@ -9,8 +9,22 @@ public class PartyManager : MonoBehaviour
 
     [SerializeField] private PartyMemberInfo defaultMember;//主角Rermadon，有时候也可以称为player The protagonist Rermadon,Sometimes can also be called "player"
 
+    private Vector3 playerPosition;
+
+    private GameObject instance;//self
+
     public void Awake()
     {
+        if (instance != null)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            instance = this.gameObject;
+        }
+
+        DontDestroyOnLoad(gameObject);
         AddPartyMemberByName(defaultMember.memberName);
     }
     public void AddPartyMemberByName(string memberName)
@@ -30,6 +44,32 @@ public class PartyManager : MonoBehaviour
     {
         return currentPartyMember;
     }
+
+    public void SaveMemberStatsAfterBattle(PartyBattleEntity partyBattleEntity)
+    {
+        foreach(CurrentPartyMemberInfo member in currentPartyMember)
+        {
+            if(member.memberName == partyBattleEntity.memberName)
+            {
+                member.currentHealth = partyBattleEntity.currentHealth;
+                if (partyBattleEntity.EntityIsDead())
+                {
+                    member.isDead = true;
+                }
+                break;
+            }
+        }
+    }
+
+    public void SetPlayerPosition(Vector3 newPosition)
+    {
+        playerPosition = newPosition;
+    }
+
+    public Vector3 GetPlayerPositon()
+    {
+        return playerPosition;
+    }
 }
 
 [System.Serializable]
@@ -47,6 +87,9 @@ public class CurrentPartyMemberInfo
     public int healthCRIT;
     public int healthCRITShock;
     public int healthDead;
+
+    public bool isDead = false;
+
     public GameObject memberBattleVisualPerfab;
     public GameObject memberOverworldVisualPerfab;
 
