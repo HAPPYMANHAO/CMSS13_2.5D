@@ -6,9 +6,14 @@ public class EncounterManager : MonoBehaviour
          
     private EnemyManager enemyManager;
 
-    private void Start()
+    private void Awake()
     {
         enemyManager = GameObject.FindFirstObjectByType<EnemyManager>();
+        
+    }
+
+    private void Start()
+    {
         enemyManager.SpawnEnemeisByCounter(encountEnemies);
     }
 }

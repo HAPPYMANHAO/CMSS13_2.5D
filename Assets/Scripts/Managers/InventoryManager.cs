@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
 {
-    [SerializeField] private int maxSlots = 50;
 
     // 库存槽列表，每格是一个 ItemInstance（可堆叠或不可堆叠）
     private readonly List<ItemInstance> _slots = new List<ItemInstance>();
@@ -17,18 +16,22 @@ public class InventoryManager : MonoBehaviour
 
     // ── 只读属性 Read-only properties ──────────────────────────────────
     public int SlotCount => _slots.Count;
-    public bool IsFull => _slots.Count >= maxSlots;
     public IReadOnlyList<ItemInstance> Slots => _slots;
-    // ── test ──────────────────────────────────
-    [SerializeField] List<ItemBase> testItems;
+    // ── 自身实例 self instance ──────────────────────────────────
+    private static GameObject instance;//self
 
-    private void Start()
+    private void Awake()
     {
-        foreach (var item in testItems) 
+        if (instance != null)
         {
-            AddItemFromData(item);
-        }   
+            Destroy(this.gameObject);
+            return;
+        }
+        instance = this.gameObject;
+
+        DontDestroyOnLoad(gameObject);
     }
+
 
     // ── 添加物品 Add Item ───────────────────────────────────────────────
 
@@ -100,11 +103,6 @@ public class InventoryManager : MonoBehaviour
         // 2. 剩余量开新格
         while (remaining > 0)
         {
-            if (_slots.Count >= maxSlots)
-            {
-                return false;
-            }
-
             int canFit = Mathf.Min(remaining, incoming.maxQuantity);
             var newSlot = new StackableItemInstance(incoming.itemData, canFit);
             remaining -= canFit;
@@ -119,11 +117,6 @@ public class InventoryManager : MonoBehaviour
 
     private bool AddSingle(ItemInstance item)
     {
-        if (_slots.Count >= maxSlots)
-        {
-            return false;
-        }
-
         _slots.Add(item);
         OnItemAdded?.Invoke(item);
         OnInventoryChanged?.Invoke();

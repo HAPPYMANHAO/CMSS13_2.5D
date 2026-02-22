@@ -32,6 +32,7 @@ public class WeaponBase : HoldableBase, IEquippable
         else if (primaryActionType == ActionType.Ranged)
         {
             RangedAction action = GetCurrentActions() as RangedAction;
+            if (action == null) return 0;
             return action.projectileInfo.projectileDamage;
         }
         else
@@ -49,6 +50,7 @@ public class WeaponBase : HoldableBase, IEquippable
         else if (primaryActionType == ActionType.Ranged)
         {
             RangedAction action = GetCurrentActions() as RangedAction;
+            if (action == null) return 0;
             return action.projectileInfo.projectileArmorPenetration;
         }
         else

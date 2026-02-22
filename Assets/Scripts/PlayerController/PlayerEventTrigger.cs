@@ -1,13 +1,13 @@
 ﻿using Unity.Mathematics;
 using Unity.Properties;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
+
 
 public class PlayerEventTrigger : MonoBehaviour
 {
     [SerializeField] PartyManager partyManager;
+    GameSceneManager gameSceneManager;  
 
     [SerializeField] private LayerMask battleTriggerLayer;
 
@@ -20,18 +20,19 @@ public class PlayerEventTrigger : MonoBehaviour
     private int stepsToEncounter;
 
     private const float TIME_PER_STEP = 0.5f;
-    private const string BATTLE_SCENE = "BattleScene";
 
     private void Awake()
     {
         CalculateStepsToNextEncounter();
+
+        gameSceneManager = GameObject.FindFirstObjectByType<GameSceneManager>();    
     }
 
     private void Start()
     {
-        if(partyManager.GetPlayerPositon() != Vector3.zero)
+        if(partyManager.GetPlayerPosition() != Vector3.zero)
         {
-            this.transform.position = partyManager.GetPlayerPositon();
+            this.transform.position = partyManager.GetPlayerPosition();
         }
     }
 
@@ -40,6 +41,7 @@ public class PlayerEventTrigger : MonoBehaviour
         Collider[] colliders = Physics.OverlapSphere(this.transform.position, 1f, battleTriggerLayer);
 
         if (colliders.Length > 0) moveInDangerArea = true;
+        else moveInDangerArea = false;
 
         if (moveInDangerArea)
         {
@@ -53,7 +55,7 @@ public class PlayerEventTrigger : MonoBehaviour
                 {
                     partyManager.SetPlayerPosition(this.transform.position);
                     stepInDangerArea = 0;
-                    SceneManager.LoadScene(BATTLE_SCENE);
+                    gameSceneManager.ChangeToBattleScene();
                 }
             }
         }

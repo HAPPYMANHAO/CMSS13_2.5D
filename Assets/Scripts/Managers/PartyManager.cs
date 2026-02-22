@@ -1,9 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static PartyMemberInfo;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class PartyManager : MonoBehaviour
 {
+    [SerializeField] private OverworldVisualGUI overworldVisual;
+
     [SerializeField] private PartyMemberInfo[] allPartyMember;
     [SerializeField] private List<CurrentPartyMemberInfo> currentPartyMember;
 
@@ -11,21 +16,21 @@ public class PartyManager : MonoBehaviour
 
     private Vector3 playerPosition;
 
-    private GameObject instance;//self
+    private static GameObject instance;//self
 
+    public CurrentPartyMemberInfo currentPlayerEntity;
     public void Awake()
     {
         if (instance != null)
         {
             Destroy(this.gameObject);
+            return; 
         }
-        else
-        {
-            instance = this.gameObject;
-        }
+        instance = this.gameObject;
 
         DontDestroyOnLoad(gameObject);
         AddPartyMemberByName(defaultMember.memberName);
+        currentPlayerEntity = currentPartyMember.FirstOrDefault();
     }
     public void AddPartyMemberByName(string memberName)
     {
@@ -47,18 +52,12 @@ public class PartyManager : MonoBehaviour
 
     public void SaveMemberStatsAfterBattle(PartyBattleEntity partyBattleEntity)
     {
-        foreach(CurrentPartyMemberInfo member in currentPartyMember)
-        {
-            if(member.memberName == partyBattleEntity.memberName)
-            {
-                member.currentHealth = partyBattleEntity.currentHealth;
-                if (partyBattleEntity.EntityIsDead())
-                {
-                    member.isDead = true;
-                }
-                break;
-            }
-        }
+        var member = currentPartyMember.FirstOrDefault(m => m.memberName == partyBattleEntity.memberName);
+        if (member == null) return;
+        member.currentHealth = partyBattleEntity.currentHealth;
+        member.leftHandEquipment.item = partyBattleEntity.leftHandEquipment.item;   // 回写手部
+        member.rightHandEquipment.item = partyBattleEntity.rightHandEquipment.item;
+        member.isDead = partyBattleEntity.EntityIsDead();
     }
 
     public void SetPlayerPosition(Vector3 newPosition)
@@ -66,7 +65,7 @@ public class PartyManager : MonoBehaviour
         playerPosition = newPosition;
     }
 
-    public Vector3 GetPlayerPositon()
+    public Vector3 GetPlayerPosition()
     {
         return playerPosition;
     }
@@ -99,12 +98,79 @@ public class CurrentPartyMemberInfo
 
     public EntityAI entityAI;
 
+    public HandSlot leftHandEquipment = new HandSlot();
+    public HandSlot rightHandEquipment = new HandSlot();
+    public EntityHandsSlot currentActiveHand = EntityHandsSlot.Left;
+
+    public event Action OnHealthChanged;
+
+    public ItemInstance GetCurrentActiveHandItem()
+    {
+        return currentActiveHand == EntityHandsSlot.Left ? leftHandEquipment?.item : rightHandEquipment?.item;
+    }
+
+    public void GetItemFromToInventory(ItemInstance item)
+    {
+        if (currentActiveHand == EntityHandsSlot.Left)
+        {
+            leftHandEquipment.item = item;
+            //overworldVisual.ActiveItemDisplyer(item.itemData.icon);
+        }
+        else if (currentActiveHand == EntityHandsSlot.Right)
+        {
+            rightHandEquipment.item = item;
+            //overworldVisual.ActiveItemDisplyer(item.itemData.icon);
+        }
+    }
+
+    public ItemInstance SentHoldItemToInventory()
+    {
+        ItemInstance itemToReturn = GetCurrentActiveHandItem();
+
+        if (currentActiveHand == EntityHandsSlot.Left)
+        {
+            leftHandEquipment.item = null;
+        }
+        else if (currentActiveHand == EntityHandsSlot.Right)
+        {
+            rightHandEquipment.item = null;
+        }
+
+        return itemToReturn;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        SetHealth(currentHealth - damage);
+
+        if(currentHealth < healthDead)
+        {
+            isDead = true;
+        }
+    }
+
+    private void SetHealth(int newHealth)
+    {
+        if (isDead)
+        {
+            return;
+        }
+
+        currentHealth = Mathf.Clamp(newHealth, healthDead, maxHealth);
+        OnHealthChanged?.Invoke();   
+    }
+
+    public void RevoverHealth(int recoverHealth)
+    {
+        SetHealth(currentHealth + recoverHealth);
+    }
+
     public CurrentPartyMemberInfo(PartyMemberInfo partyMember)
     {
         this.memberName = partyMember.memberName;
         this.currentLevel = partyMember.startLevel;
         this.maxHealth = partyMember.baseHealth;
-        this.currentHealth = this.maxHealth; 
+        this.currentHealth = this.maxHealth;
         this.maxAP = partyMember.MaxAP;
         this.eachTurnRecoveredAP = partyMember.eachTurnRecoveredAP;
         this.currentAP = (maxAP / 2);

@@ -7,12 +7,7 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private EnemyInfo[] allEnemiesInfo;
     [SerializeField] private List<CurrentEnemyInfo> currentEnemiesInfo;
 
-    private GameObject instance;//self
-
-    private static readonly string[] EnemyName =
-    {
-        "GiantLizard" // EnemyName[0] 
-    };
+    private static GameObject instance;//self
 
     private Dictionary<string, EnemyInfo> enemyDatabase = new Dictionary<string, EnemyInfo>();
 
@@ -21,18 +16,16 @@ public class EnemyManager : MonoBehaviour
         if (instance != null)
         {
             Destroy(this.gameObject);
+            return; 
         }
-        else
-        {
-            instance = this.gameObject;
-        }
+        instance = this.gameObject;
 
-            DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(gameObject);
 
         // 初始化字典Initialize dictionary
         foreach (var info in allEnemiesInfo)
         {
-            string fullName = info.FullName; 
+            string fullName = info.FullName;
             if (!enemyDatabase.ContainsKey(fullName))
                 enemyDatabase.Add(fullName, info);
         }

@@ -3,12 +3,12 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Localization;
-using UnityEngine.SceneManagement;
 
 public class BattleTurnManager : MonoBehaviour
 {
     [SerializeField] BattleEntityManager battleEntityManager;
     [SerializeField] BattleVisualGUI battleVisualGUI;
+    GameSceneManager gameSceneManager;
 
     [SerializeField] public BattleState battleState;
 
@@ -39,6 +39,10 @@ public class BattleTurnManager : MonoBehaviour
         BattleEnd
     }
 
+    private void Awake()
+    {
+        gameSceneManager = GameObject.FindFirstObjectByType<GameSceneManager>();
+    }
     private void Start()
     {
         SetUpBattleStart();
@@ -80,7 +84,7 @@ public class BattleTurnManager : MonoBehaviour
     private void SetBattleEnd()
     {
         battleEntityManager.SavePartyStats();
-        SceneManager.LoadScene(SceneName.OVER_WORLD);
+        gameSceneManager.ChangeToOverworldScene();
     }
     //----------------------Battle loop----------------------//
     //-------Player Turn Start--------/ 1 

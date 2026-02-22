@@ -4,13 +4,12 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
-// 这个类只显示战斗物品（即继承HoldbaleBase的类），同理它也只能在战斗场景使用
-//This class only displays combat items (classes that inherit from HoldbaleBase),it can only be used in combat scene.
-public class ItemContainerGUI : MonoBehaviour
+//这个类显示全部物品，它只能在overworld场景使用
+//This class displays all items and can only be used in the overworld scene.
+public class OverworldItemContainerGUI : MonoBehaviour
 {
     private InventoryManager inventoryManager;
-    private GameStateManager gameStateManager;
-    [SerializeField] private BattleVisualGUI battleVisualGUI;
+    [SerializeField] private OverworldVisualGUI overworldVisualGUI;
     [SerializeField] private GameObject ItemPrefab;
     [SerializeField] private Transform contentTransform;
     [SerializeField] private ScrollRect scrollRect;
@@ -18,7 +17,7 @@ public class ItemContainerGUI : MonoBehaviour
     [SerializeField] private Button exitButton;
     [SerializeField] private Button backgroundButton; // 收回物品
 
-    public BattleEntityManager battleEntityManager;
+    public PartyManager pratyManager;
 
     private void Awake()
     {
@@ -45,7 +44,7 @@ public class ItemContainerGUI : MonoBehaviour
         AddItems(items);
     }
 
-    private void AddItems(List<ItemInstance>items)
+    private void AddItems(List<ItemInstance> items)
     {
         if (this == null || scrollRect == null) return;
 
@@ -75,11 +74,11 @@ public class ItemContainerGUI : MonoBehaviour
     }
     private void HandBackgroundButtonPressed()
     {
-        ItemInstance itemInHand = battleEntityManager.currentPlayerEntity.GetCurrentActiveHandItem();
+        ItemInstance itemInHand = pratyManager.currentPlayerEntity.GetCurrentActiveHandItem();
         if (itemInHand != null)
         {
             inventoryManager.AddItem(itemInHand);
-            battleEntityManager.currentPlayerEntity.SentHoldItemToInventory();
+            pratyManager.currentPlayerEntity.SentHoldItemToInventory();
             UpdateCurrentGUI();
         }
 
@@ -87,13 +86,13 @@ public class ItemContainerGUI : MonoBehaviour
 
     private void HandleItemClicked(ItemInstance item)
     {
-        ItemInstance itemInHand = battleEntityManager.currentPlayerEntity.GetCurrentActiveHandItem();
+        ItemInstance itemInHand = pratyManager.currentPlayerEntity.GetCurrentActiveHandItem();
         if (itemInHand != null) return;
 
         if (item.itemData is HoldableBase)
         {
             inventoryManager.RemoveItem(item);
-            battleEntityManager.currentPlayerEntity.GetItemFromToInventory(item);
+            pratyManager.currentPlayerEntity.GetItemFromToInventory(item);
             UpdateCurrentGUI();
         }
     }
@@ -108,6 +107,6 @@ public class ItemContainerGUI : MonoBehaviour
     {
         UpdateItemContainerGUI(inventoryManager.GetAllItems());
 
-        battleVisualGUI.UpdateHandVisuals();
+        overworldVisualGUI?.UpdateHandVisuals();
     }
 }

@@ -400,7 +400,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dac6a4bfed9f154a83584a8b9745275, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemContainerGUI
-  inventoryManager: {fileID: 770401265}
+  inventoryManager: {fileID: 0}
   battleVisualGUI: {fileID: 1195785850}
   ItemPrefab: {fileID: 2860826216003511267, guid: 927b63c65ec3a054bb8bf84a6cf2c4b6, type: 3}
   contentTransform: {fileID: 774008978}
@@ -1458,53 +1458,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1617110054}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &770401264
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 770401266}
-  - component: {fileID: 770401265}
-  m_Layer: 0
-  m_Name: InventoryManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &770401265
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 770401264}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cbce74ea09488e4e957f3b23dc1d9ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InventoryManager
-  maxSlots: 50
-  testItems:
-  - {fileID: 11400000, guid: 1e838c8a1c8816b4c89634d42e203ad4, type: 2}
---- !u!4 &770401266
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 770401264}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 496.9211, y: 0, z: 823.71484}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &774008977
 GameObject:
   m_ObjectHideFlags: 0
@@ -2446,7 +2399,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BattleVisualGUI
   battleEntityManager: {fileID: 1668409896}
-  inventoryManager: {fileID: 770401265}
+  inventoryManager: {fileID: 0}
   healthBarsGUI:
   - {fileID: 1694740188}
   - {fileID: 1079943258}
@@ -3539,8 +3492,7 @@ MonoBehaviour:
     healthCRITShock: 0
     currentLevel: 0
     isAutoExecuteAction: 0
-    armorEquipment:
-      equipment: {fileID: 0}
+    armorEquipment: {}
     currentActiveHand: 0
 --- !u!4 &1668409897
 Transform:
@@ -5322,4 +5274,3 @@ SceneRoots:
   - {fileID: 414179631}
   - {fileID: 1668409897}
   - {fileID: 1865637675}
-  - {fileID: 770401266}

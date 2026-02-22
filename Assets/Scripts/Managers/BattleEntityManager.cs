@@ -172,8 +172,6 @@ public class PartyBattleEntity : BattleEntityBase
     public HandSlot rightHandEquipment = new HandSlot();
     public EquipmentSlot armorEquipment = new EquipmentSlot();
 
-    public enum EntityHandsSlot { Left, Right }
-
     public EntityHandsSlot currentActiveHand = EntityHandsSlot.Left;
 
     public ItemInstance GetCurrentActiveHandItem()
@@ -229,6 +227,11 @@ public class PartyBattleEntity : BattleEntityBase
         damageResistanceStats = memberInfo.damageResistanceStats;
 
         entityAI = memberInfo.entityAI;
+
+        leftHandEquipment.item = memberInfo.leftHandEquipment.item;
+        rightHandEquipment.item = memberInfo.rightHandEquipment.item;
+        currentActiveHand = memberInfo.currentActiveHand == EntityHandsSlot.Left
+            ? EntityHandsSlot.Left : EntityHandsSlot.Right;
     }
 
     public bool PartyMemberIsCrit()

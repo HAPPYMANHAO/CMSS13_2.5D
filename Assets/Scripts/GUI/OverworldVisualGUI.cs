@@ -1,21 +1,23 @@
 ﻿using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class BattleVisualGUI : MonoBehaviour
+public class OverworldVisualGUI : MonoBehaviour
 {
-    [SerializeField] private BattleEntityManager battleEntityManager;
-    private InventoryManager inventoryManager;
+    [SerializeField] private PlayerInteractionController interactionController;
+
+    [SerializeField] private PartyManager partyManager;
+    [SerializeField] private InventoryManager inventoryManager;
     [SerializeField] private HealthBarControllerGUI[] healthBarsGUI;
-    [SerializeField] private TargetSelectorGUI targetSelectorGUI;
-    [SerializeField] private ItemContainerGUI containerGUI;
+    [SerializeField] private OverworldItemContainerGUI containerGUI;
+    [SerializeField] private Button backpackGUI;
 
     [SerializeField] private HandControllerGUI rightHandButtonGUI;
     [SerializeField] private HandControllerGUI leftHandButtonGUI;
-
-    [SerializeField] private Button backpackGUI;
-    [SerializeField] public Button playerEndTurnButtonGUI;
+    [SerializeField] OverworldTargetSelectorGUI targetSelectorGUI;
+    
 
     public static Action OnPlayerEndTurn;
 
@@ -23,13 +25,12 @@ public class BattleVisualGUI : MonoBehaviour
     InputAction changeActiveHand;
 
     public bool isPlayerCanExecuteAction = true;
-    public float playerActionDelayTimer = 0f;   
+    public float playerActionDelayTimer = 0f;
 
     private PlayerControls inputActions;
 
     private void Awake()
     {
-        inventoryManager = GameObject.FindFirstObjectByType<InventoryManager>();
         inputActions = new PlayerControls();
     }
 
@@ -37,6 +38,7 @@ public class BattleVisualGUI : MonoBehaviour
     {
         inputActions.Enable();
     }
+
     private void OnDisable()
     {
         inputActions.Disable();
@@ -44,31 +46,29 @@ public class BattleVisualGUI : MonoBehaviour
 
     private void Start()
     {
-        containerGUI.battleEntityManager = battleEntityManager;
+        containerGUI.pratyManager = partyManager;
+        interactionController.targetSelectorGUI = targetSelectorGUI;
 
         activeHoldItem = InputSystem.actions.FindAction(CustomInputString.ACTIVE_HOLD_ITEM);
         changeActiveHand = InputSystem.actions.FindAction(CustomInputString.CHANGE_ACTIVE_HAND);
 
-        playerEndTurnButtonGUI.onClick.AddListener(HandleEndTurnClick);
-
         leftHandButtonGUI.handButton.onClick.AddListener(SelectLeftHand);
         rightHandButtonGUI.handButton.onClick.AddListener(SelectRightHand);
         backpackGUI.onClick.AddListener(HandleOpenBackpack);
+
+        UpdateHandVisuals();
     }
 
     private void Update()
     {
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            if (targetSelectorGUI.GetCurrentTarget() != null && isPlayerCanExecuteAction)
-            {
-                battleEntityManager.PlayerComfirmTarget(targetSelectorGUI.GetCurrentTarget());
-            }
-        }
-
         if (changeActiveHand.WasPressedThisFrame())
         {
             ChangeActiveHand();
+        }
+
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            interactionController.TryInteract(targetSelectorGUI.GetCurrentTarget());
         }
 
         if (!isPlayerCanExecuteAction)
@@ -85,34 +85,34 @@ public class BattleVisualGUI : MonoBehaviour
     //-----------------------HandsGUI------------------------//
     public void SelectLeftHand()
     {
-        battleEntityManager.currentPlayerEntity.currentActiveHand = EntityHandsSlot.Left;
+        partyManager.currentPlayerEntity.currentActiveHand = EntityHandsSlot.Left;
         UpdateHandVisuals();
     }
 
     public void SelectRightHand()
     {
-        battleEntityManager.currentPlayerEntity.currentActiveHand = EntityHandsSlot.Right;
+        partyManager.currentPlayerEntity.currentActiveHand = EntityHandsSlot.Right;
         UpdateHandVisuals();
     }
 
     public void ChangeActiveHand()
     {
-        if(battleEntityManager.currentPlayerEntity.currentActiveHand == EntityHandsSlot.Left)
+        if (partyManager.currentPlayerEntity.currentActiveHand == EntityHandsSlot.Left)
         {
-            battleEntityManager.currentPlayerEntity.currentActiveHand = EntityHandsSlot.Right;
+            partyManager.currentPlayerEntity.currentActiveHand = EntityHandsSlot.Right;
         }
-        else if (battleEntityManager.currentPlayerEntity.currentActiveHand == EntityHandsSlot.Right)
+        else if (partyManager.currentPlayerEntity.currentActiveHand == EntityHandsSlot.Right)
         {
-            battleEntityManager.currentPlayerEntity.currentActiveHand = EntityHandsSlot.Left;
+            partyManager.currentPlayerEntity.currentActiveHand = EntityHandsSlot.Left;
         }
         UpdateHandVisuals();
     }
 
     public void UpdateHandVisuals()
     {
-        if (battleEntityManager?.currentPlayerEntity == null) return;
+        if (partyManager?.currentPlayerEntity == null) return;
 
-        var player = battleEntityManager.currentPlayerEntity;
+        var player = partyManager.currentPlayerEntity;
 
         leftHandButtonGUI.baseSprite.sprite = player.currentActiveHand == EntityHandsSlot.Left ? leftHandButtonGUI.activeSprite : leftHandButtonGUI.disactiveSprite;
         rightHandButtonGUI.baseSprite.sprite = player.currentActiveHand == EntityHandsSlot.Left ? rightHandButtonGUI.disactiveSprite : rightHandButtonGUI.activeSprite;
@@ -151,14 +151,6 @@ public class BattleVisualGUI : MonoBehaviour
                 healthBarsGUI[i].HealthBarBind(entity);
                 break;
             }
-        }
-    }
-    //---------------------EndTurnGUI---------------------//
-    private void HandleEndTurnClick()
-    {
-        if (battleEntityManager.turnManager.battleState == BattleTurnManager.BattleState.PlayerTurnAction)
-        {
-            OnPlayerEndTurn.Invoke();
         }
     }
     //---------------------BackpackGUI---------------------//

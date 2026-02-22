@@ -78,6 +78,16 @@ public enum BattleEntityActionStates
     Idle,              //实体的已经行动完成或未开始，在下一次回合开始前不能行动
     Unconscious,       //这个状态下的实体不能行动
 }
+//----------/Hands
+public enum EntityHandsSlot { Left, Right }
+//----------/GameState
+public enum GameState
+{
+    Title,
+    Overworld,
+    Battle,
+    Pause,
+}
 
 //-----------------------结构体struct-----------------------//
 //----------/包含装甲计算两个值（int和float）的结构体A struct that contains two values (an int and a float) for armor calculation
@@ -132,7 +142,7 @@ public struct DecisionAI
 [System.Serializable]
 public class EquipmentSlot
 {
-    public ItemBase equipment;
+    public ItemInstance equipment;
 }
 //---------/Hand solt
 public class HandSlot
