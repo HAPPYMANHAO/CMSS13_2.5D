@@ -7,7 +7,7 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 public class PartyManager : MonoBehaviour
 {
-    [SerializeField] private OverworldVisualGUI overworldVisual;
+    private OverworldVisualGUI overworldVisual;
 
     [SerializeField] private PartyMemberInfo[] allPartyMember;
     [SerializeField] private List<CurrentPartyMemberInfo> currentPartyMember;
@@ -17,6 +17,8 @@ public class PartyManager : MonoBehaviour
     private Vector3 playerPosition;
 
     private static GameObject instance;//self
+
+    public static event Action OnPartyMemberUpdated;
 
     public CurrentPartyMemberInfo currentPlayerEntity;
     public void Awake()
@@ -31,6 +33,11 @@ public class PartyManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         AddPartyMemberByName(defaultMember.memberName);
         currentPlayerEntity = currentPartyMember.FirstOrDefault();
+    }
+
+    private void Start()
+    {
+        overworldVisual = FindFirstObjectByType<OverworldVisualGUI>();
     }
     public void AddPartyMemberByName(string memberName)
     {
@@ -57,7 +64,8 @@ public class PartyManager : MonoBehaviour
         member.currentHealth = partyBattleEntity.currentHealth;
         member.leftHandEquipment.item = partyBattleEntity.leftHandEquipment.item;   // 回写手部
         member.rightHandEquipment.item = partyBattleEntity.rightHandEquipment.item;
-        member.isDead = partyBattleEntity.EntityIsDead();
+        OnPartyMemberUpdated?.Invoke();
+        member.isDead = partyBattleEntity.EntityIsDead();     
     }
 
     public void SetPlayerPosition(Vector3 newPosition)

@@ -9,17 +9,14 @@ public class OverworldVisualGUI : MonoBehaviour
     [SerializeField] private PlayerInteractionController interactionController;
 
     [SerializeField] private PartyManager partyManager;
-    [SerializeField] private InventoryManager inventoryManager;
+    private InventoryManager inventoryManager;
     [SerializeField] private HealthBarControllerGUI[] healthBarsGUI;
     [SerializeField] private OverworldItemContainerGUI containerGUI;
     [SerializeField] private Button backpackGUI;
 
     [SerializeField] private HandControllerGUI rightHandButtonGUI;
     [SerializeField] private HandControllerGUI leftHandButtonGUI;
-    [SerializeField] OverworldTargetSelectorGUI targetSelectorGUI;
-    
-
-    public static Action OnPlayerEndTurn;
+    [SerializeField] OverworldTargetSelectorGUI targetSelectorGUI; 
 
     InputAction activeHoldItem;//TODO
     InputAction changeActiveHand;
@@ -31,21 +28,25 @@ public class OverworldVisualGUI : MonoBehaviour
 
     private void Awake()
     {
-        inputActions = new PlayerControls();
+        inputActions = new PlayerControls();      
     }
 
     private void OnEnable()
     {
         inputActions.Enable();
+        PartyManager.OnPartyMemberUpdated += UpdateHandVisuals;
     }
 
     private void OnDisable()
     {
         inputActions.Disable();
+        PartyManager.OnPartyMemberUpdated -= UpdateHandVisuals;
     }
 
     private void Start()
     {
+        inventoryManager = FindFirstObjectByType<InventoryManager>();
+
         containerGUI.pratyManager = partyManager;
         interactionController.targetSelectorGUI = targetSelectorGUI;
 
@@ -138,6 +139,11 @@ public class OverworldVisualGUI : MonoBehaviour
             handGUI.DisableHoldItemSprite();
             handGUI.UpdateQuantityDisplay(item);
         }
+    }
+
+    public void HandleHandStatsChanged()
+    {
+        UpdateHandVisuals();
     }
 
     //---------------------HealthBarGUI------------------------//

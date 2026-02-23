@@ -39,14 +39,12 @@ public class BattleTurnManager : MonoBehaviour
         BattleEnd
     }
 
-    private void Awake()
-    {
-        gameSceneManager = GameObject.FindFirstObjectByType<GameSceneManager>();
-    }
     private void Start()
     {
+        gameSceneManager = GameObject.FindFirstObjectByType<GameSceneManager>();
+
         SetUpBattleStart();
-        BattleVisualGUI.OnPlayerEndTurn += HandlePlayerEndTurn;
+        BattleVisualGUI.OnPlayerEndTurn += HandlePlayerEndTurn;    
     }
 
     private void Update()
@@ -82,9 +80,9 @@ public class BattleTurnManager : MonoBehaviour
 
     //-------------------Battle End-------------------//
     private void SetBattleEnd()
-    {
+    {     
         battleEntityManager.SavePartyStats();
-        gameSceneManager.ChangeToOverworldScene();
+        gameSceneManager.ExitBattle();
     }
     //----------------------Battle loop----------------------//
     //-------Player Turn Start--------/ 1 

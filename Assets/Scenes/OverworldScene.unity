@@ -1280,8 +1280,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   stepInDangerArea: 0
-  maxStepsToEncounter: 4
-  minStepsToEncounter: 2
+  maxStepsToEncounter: 8
+  minStepsToEncounter: 4
 --- !u!114 &511163763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3510,7 +3510,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OverworldVisualGUI
   interactionController: {fileID: 511163763}
   partyManager: {fileID: 1358020057}
-  inventoryManager: {fileID: 368366751}
   healthBarsGUI: []
   containerGUI: {fileID: 81318129}
   backpackGUI: {fileID: 605740143}
@@ -3623,7 +3622,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2135c40716302824fb8331799abfaaa0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PartyManager
-  overworldVisual: {fileID: 0}
   allPartyMember:
   - {fileID: 11400000, guid: 5ee539f250e4f6d479cbbac397530b91, type: 2}
   currentPartyMember: []
@@ -6538,6 +6536,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameSceneManager
   gameStateManager: {fileID: 880507773}
+  overworldCamera: {fileID: 330585545}
+  Player: {fileID: 511163757}
 --- !u!4 &1988909377
 Transform:
   m_ObjectHideFlags: 0
@@ -6734,7 +6734,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9585160a45341c04f901c14c2838ba45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LootContainerGUI
-  inventoryManager: {fileID: 368366751}
   itemPrefab: {fileID: 2860826216003511267, guid: 927b63c65ec3a054bb8bf84a6cf2c4b6, type: 3}
   contentTransform: {fileID: 1169232490}
   takeAllButton: {fileID: 1192173578}

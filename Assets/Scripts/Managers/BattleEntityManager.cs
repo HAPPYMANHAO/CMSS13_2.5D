@@ -24,17 +24,14 @@ public class BattleEntityManager : MonoBehaviour
 
     public PartyBattleEntity currentPlayerEntity;
 
-    private void Awake()
+    private void Start()
     {
         partyManager = FindFirstObjectByType<PartyManager>();
         enemyManager = FindFirstObjectByType<EnemyManager>();
         turnManager = FindFirstObjectByType<BattleTurnManager>();
 
         battleVisualGUI = FindFirstObjectByType<BattleVisualGUI>();
-    }
 
-    private void Start()
-    {
         SpawnPartyEntity();
         SpawnEnemyEntity();
     }

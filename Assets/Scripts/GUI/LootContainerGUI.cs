@@ -6,7 +6,7 @@ public class LootContainerGUI : MonoBehaviour
 {
     public static LootContainerGUI Instance { get; private set; }//self
 
-    [SerializeField] private InventoryManager inventoryManager;
+    private InventoryManager inventoryManager;
     [SerializeField] private GameObject itemPrefab;
 
     [SerializeField] private Transform contentTransform;
@@ -32,13 +32,18 @@ public class LootContainerGUI : MonoBehaviour
 
     private void Start()
     {
+        inventoryManager = FindFirstObjectByType<InventoryManager>();
+
         closeButton.onClick.AddListener(() => gameObject.SetActive(false));
         takeAllButton.onClick.AddListener(HandleTakeAll);     
     }
 
     public void OpenWith(ItemContainerBase container, CurrentPartyMemberInfo interactor)
     {
-        Debug.Log("open GUI");
+        if (_currentContainer != null)
+            _currentContainer.OnLootChanged -= Refresh;
+        InventoryManager.OnInventoryChanged -= Refresh;
+
         _currentContainer = container;
         _currentInteractor = interactor;
         container.OnLootChanged += Refresh;

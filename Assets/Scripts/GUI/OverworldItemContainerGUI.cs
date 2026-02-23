@@ -19,13 +19,14 @@ public class OverworldItemContainerGUI : MonoBehaviour
 
     public PartyManager pratyManager;
 
+
     private void Awake()
     {
-        inventoryManager = GameObject.FindFirstObjectByType<InventoryManager>();
+        inventoryManager = FindFirstObjectByType<InventoryManager>();
     }
 
     private void Start()
-    {
+    {     
         exitButton.onClick.AddListener(HandleExitButtonPressed);
         backgroundButton.onClick.AddListener(HandBackgroundButtonPressed);
     }

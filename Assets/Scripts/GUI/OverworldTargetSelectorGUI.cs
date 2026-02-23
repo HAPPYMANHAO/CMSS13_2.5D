@@ -46,16 +46,17 @@ public class OverworldTargetSelectorGUI : MonoBehaviour
         if (currentHits.Length > 0)
         {
             RaycastHit closestHit = GetClosestHit(currentHits);
-
             currentTargetCollider = closestHit.collider;
             IInteractable interactable = currentTargetCollider.GetComponentInParent<IInteractable>();
 
             if (interactable != null)
             {
-                if (currentTarget != interactable)
-                {
-                    SelectTarget(interactable);
-                }
+                SelectTarget(interactable);
+            }
+            else
+            {
+                currentTarget = null;       
+                currentTargetCollider = null;
             }
         }
         else
