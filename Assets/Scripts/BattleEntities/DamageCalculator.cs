@@ -1,10 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using static Unity.Cinemachine.CinemachineFreeLookModifier;
 
 public static class DamageCalculator
 {
+    /// <summary>
+    /// 标准伤害计算
+    /// </summary>
     public static DamageResult CalculateDamage(
         BattleEntityBase user,
         BattleEntityBase target,
@@ -20,6 +24,37 @@ public static class DamageCalculator
         float totalPenetration = CalculateTotalPenetration(baseArmorPenetration, modifiers, damageType);
         int damageAfterArmor = CalculateArmorReduction(
             finalDamage,
+            target,
+            damageType,
+            totalPenetration
+        );
+
+        int damageAfterResistance = CalculateDamageResistance(damageAfterArmor, target, damageType);
+
+        return new DamageResult
+        {
+            baseDamage = baseDamage,
+            finalDamage = damageAfterResistance,
+            damageType = damageType,
+            armorPenetration = totalPenetration,
+        };
+    }
+    /// <summary>
+    /// 用于BUFF等无user的场景
+    /// </summary>
+    public static DamageResult CalculateDamage(
+        int damage,
+        BattleEntityBase target,
+        DamageType damageType,
+        float armorPenetration = 0)
+    {
+        int baseDamage = damage;
+        float baseArmorPenetration = armorPenetration;
+
+        float totalPenetration = CalculateTotalPenetration(baseArmorPenetration, new List<DamageModifier>(), damageType);
+        //new List<DamageModifier>()实际上就是空的，因为buff不需要计算它
+        int damageAfterArmor = CalculateArmorReduction(
+            baseDamage,
             target,
             damageType,
             totalPenetration
@@ -102,9 +137,14 @@ public static class DamageCalculator
                 modifiers.AddRange(equipment.GetDamageModifiers(damageType));
             }
         }
-        // TODO
+
+        foreach (var buffMod in attacker.buffComponent.GetModifiers(BuffModifierType.DamageFlatBonus, damageType))
+            modifiers.Add(new DamageModifier { flatBonus = (int)buffMod.value, damageType = damageType });
+        foreach (var buffMod in attacker.buffComponent.GetModifiers(BuffModifierType.DamagePercentBonus, damageType))
+            modifiers.Add(new DamageModifier { percentBonus = buffMod.value, damageType = damageType });
 
         return modifiers;
+        // TODO
     }
     private static int ApplyModifiers(int baseDamage, List<DamageModifier> modifiers, DamageType damageType)
     {
@@ -138,9 +178,13 @@ public static class DamageCalculator
     {
         if (!target.damageResistanceStats.ContainsKey(type))
             return damage;
+        float buffDamageResistanceFlat = 0;
+        foreach (var buffMod in target.buffComponent.GetModifiers(BuffModifierType.DamageResistFlat, type))
+            buffDamageResistanceFlat = buffMod.value;
+
         float effectivedamageResistance = Mathf.Clamp(
-            target.damageResistanceStats[type],
-            0f,
+            target.damageResistanceStats[type] + buffDamageResistanceFlat,
+            -2.5f,//DamageResistance最多允许伤害增加到250%
             1f
         );
 
@@ -160,14 +204,28 @@ public static class DamageCalculator
             return damage;
 
         ArmorStats armor = target.armorStats[type];
+        float buffArmorIntegrityFlat = 0;
+        float buffArmorValueFlat = 0;
+        foreach (var buffMod in target.buffComponent.GetModifiers(BuffModifierType.ArmorIntegrityFlat, type))
+            buffArmorIntegrityFlat = buffMod.value;
+        foreach (var buffMod in target.buffComponent.GetModifiers(BuffModifierType.ArmorValueFlat, type))
+            buffArmorValueFlat = buffMod.value;
+
+
         float effectiveIntegrity = Mathf.Clamp(
-            armor.armorIntegrity - penetration,
-            0f,
-            1f
+        armor.armorIntegrity - penetration + buffArmorIntegrityFlat,
+        0f,
+        1f
+        );
+
+        int effectiveArmor = Mathf.Clamp(
+        armor.armorValue + (int)buffArmorValueFlat,
+        0,
+        int.MaxValue
         );
 
         int armorReduction = Mathf.FloorToInt(
-            Mathf.Min(armor.armorValue, effectiveIntegrity * damage)
+            Mathf.Min(effectiveArmor, effectiveIntegrity * damage)
         );
 
         return Mathf.Max(0, damage - armorReduction);

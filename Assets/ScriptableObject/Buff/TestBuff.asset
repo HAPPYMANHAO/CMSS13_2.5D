@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 363cc3198b596794d9fc1114f3e24053, type: 3}
+  m_Name: TestBuff
+  m_EditorClassIdentifier: Assembly-CSharp::BuffBase
+  buffName: TestBuff
+  icon: {fileID: 0}
+  isHealthChangeDamage: 1
+  durationType: 0
+  stackAddType: 0
+  durationAddType: 0
+  baseDuration: 5
+  baseStacks: 10
+  maxStacks: 999
+  modifiers:
+  - modType: 0
+    damageType: 3
+    value: 0

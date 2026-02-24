@@ -6,6 +6,7 @@ public class MeleeAction : ActionBase
 {
     [Header("Action Settings")]
     public DamageType damageType;
+    public BuffBase buffBase;
 
     public override bool CanExecute(BattleEntityBase userEntity, BattleEntityBase[] target)
     {
@@ -26,6 +27,10 @@ public class MeleeAction : ActionBase
         for (int i = 0; i < target.Length; i++)
         {
             int damage = target[i].EntityTakeDamage(userEntity ,damageType, this);
+            if(buffBase != null)
+            {
+                target[i].buffComponent.AddBuff(buffBase);
+            }
 
             BattleEntityBase currentTarget = target[i];
 

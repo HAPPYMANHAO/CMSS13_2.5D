@@ -4613,7 +4613,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyManager
   allEnemiesInfo:
   - {fileID: 11400000, guid: 980a275c18ec6a04ea3974f081ca85c9, type: 2}
-  - {fileID: 11400000, guid: ac3715bbbcc3a7d489c1c714a8857cb9, type: 2}
   currentEnemiesInfo: []
 --- !u!4 &1594349986
 Transform:

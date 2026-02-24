@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class _Define : MonoBehaviour
@@ -80,13 +81,25 @@ public enum BattleEntityActionStates
 }
 //----------/Hands
 public enum EntityHandsSlot { Left, Right }
-//----------/GameState
+//----------/Game State
 public enum GameState
 {
     Title,
     Overworld,
     Battle,
     Pause,
+}
+//----------/Buff Type
+public enum BuffModifierType
+{
+    HealthChangeFlat,      // 每轮生命改变
+    ArmorValueFlat,        // 护甲值加减
+    ArmorIntegrityFlat,    // 护甲完整性加减
+    DamageResistFlat,      // 伤害抗性加减
+    DamageFlatBonus,       // 伤害加值（攻击者）
+    DamagePercentBonus,    // 伤害百分比（攻击者）
+    MaxAPFlat,             // 最大AP加减
+    APRecoveryFlat,        // 每回合AP回复加减
 }
 
 //-----------------------结构体struct-----------------------//
@@ -104,7 +117,8 @@ public struct ArmorStats
 public struct DamageResistanceStats
 {
     public DamageType resistType;
-    [Range(0f, 1f)] public float damageResist; //对于伤害抗性来说，伤害抗性直接减少 伤害抗性*伤害值 的伤害，在护甲后结算
+    public float damageResist; //对于伤害抗性来说，伤害抗性直接减少 伤害抗性*伤害值 的伤害，在护甲后结算
+    //特别的，如果伤害抗性为负数，最多计算为-250%（即伤害提升250%），具体算法在DamageCalculator.cs
 }
 
 //----------/包含计算血条的结构体 A struct that includes the calculation of health bars
@@ -155,4 +169,12 @@ public class HandSlot
     {
         return item?.GetCurrentAction();
     }
+}
+//---------/Buff
+[System.Serializable]
+public struct BuffModifier
+{
+    public BuffModifierType modType;
+    public DamageType damageType;       // 只对特定伤害类型生效，None=全类型
+    public float value;
 }

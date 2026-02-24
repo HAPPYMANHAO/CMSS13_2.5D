@@ -141,8 +141,11 @@ public class BattleTurnManager : MonoBehaviour
     private void SetPlayerTurnEnd()
     {
         battleVisualGUI.isPlayerCanExecuteAction = false;
+        foreach (var entity in battleEntityManager.partyEntities)
+            entity.buffComponent.TickAllBuffs(entity);
+
         ChangeState(BattleState.EnemyTurnStart);
-        SetEnemyTurnStart();
+        SetEnemyTurnStart();       
     }
 
     //---------Enemy Turn Start----------/5
@@ -174,8 +177,12 @@ public class BattleTurnManager : MonoBehaviour
         CheckBattleVictoryOrDefeat();
         if (battleState == BattleState.BattleEnd) return;
 
+        foreach (var entity in battleEntityManager.enemyEntities)
+            entity.buffComponent.TickAllBuffs(entity);
+
         currentTurn++;
-        ChangeState(BattleState.PlayerTurnStart);
+
+        ChangeState(BattleState.PlayerTurnStart);     
         SetPlayerTurnStart();
     }
 

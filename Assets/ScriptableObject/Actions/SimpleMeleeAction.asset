@@ -25,8 +25,7 @@ MonoBehaviour:
     m_WaitForCompletion: 0
     m_LocalVariables: []
   damageType: 0
-  baseDamage: 25
-  armorPenetration: 0
+  buffBase: {fileID: 11400000, guid: 89a8286e16ed23d469d4abe205adaabc, type: 2}
   references:
     version: 2
     RefIds: []

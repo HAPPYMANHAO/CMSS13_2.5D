@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
@@ -28,6 +29,7 @@ public abstract class BattleEntityBase : IBattleEntity
 
     public Dictionary<DamageType, ArmorStats> armorStats;
     public Dictionary<DamageType, float> damageResistanceStats;
+    public BuffComponent buffComponent = new BuffComponent();
 
     public void ExecuteAction(ActionBase battleAction, BattleEntityBase[] target)
     {
@@ -56,6 +58,24 @@ public abstract class BattleEntityBase : IBattleEntity
         }
 
         EntitySetHealth(currentHealth - result.finalDamage);
+        return result.finalDamage;
+    }
+
+    public int EntityTakeDamageFromBuff(BuffInstance buff, BuffModifier buffModifier)
+    {
+        DamageResult result = DamageCalculator.CalculateDamage(
+            buff.currentStacks,
+            this,
+            buffModifier.damageType
+        );
+
+        if (battleVisual != null)
+        {
+            battleVisual.PlayHurt();
+        }
+
+        EntitySetHealth(currentHealth - result.finalDamage);
+
         return result.finalDamage;
     }
 
@@ -94,5 +114,123 @@ public abstract class BattleEntityBase : IBattleEntity
     {
         currentAP = Mathf.Clamp(newAP, 0, maxAP);
         OnApChanged?.Invoke();
+    }
+}
+
+public class BuffComponent
+{
+    private readonly List<BuffInstance> _activeBuffs = new List<BuffInstance>();
+    public IReadOnlyList<BuffInstance> ActiveBuffs => _activeBuffs;
+
+    public event Action OnBuffChanged; // GUI
+
+    public void AddBuff(BuffBase buffData)
+    {
+        // 检查是否已有同类Buff（叠加或刷新）
+        var existing = _activeBuffs.FirstOrDefault(b => b.buffData == buffData);
+        if (existing != null)
+        {
+            switch (buffData.stackAddType)
+            {
+                case BuffBase.StackAddType.Add:
+                    existing.AddStack(buffData);
+                    break;
+                case BuffBase.StackAddType.Cover:
+                    existing.CoverStack(buffData);
+                    break;
+                case BuffBase.StackAddType.None:
+                    break;
+                default:
+                    break;
+            }
+
+            switch (buffData.durationAddType)
+            {
+                case BuffBase.DurationAddType.Add:
+                    existing.AddDuration(buffData);
+                    break;
+                case BuffBase.DurationAddType.Cover:
+                    existing.CoverDuration(buffData);
+                    break;
+                case BuffBase.DurationAddType.None:
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
+        else
+        {
+            var newBuff = new BuffInstance(buffData, buffData.baseStacks);
+            newBuff.OnExpired += HandleBuffExpired;
+            _activeBuffs.Add(newBuff);
+        }
+        OnBuffChanged?.Invoke();
+    }
+
+    public void RemoveBuff(BuffBase buffData)
+    {
+        var buff = _activeBuffs.FirstOrDefault(b => b.buffData == buffData);
+        if (buff != null)
+        {
+            _activeBuffs.Remove(buff);
+            OnBuffChanged?.Invoke();
+        }
+    }
+
+    // 回合结束时由 TurnManager 调用
+    public void TickAllBuffs(BattleEntityBase owner)
+    {
+        foreach (var buff in _activeBuffs.ToList())
+            buff.Tick();
+        AllHealthChangeBuffTick(owner);
+    }
+
+    private void HandleBuffExpired(BuffInstance buff)
+    {
+        _activeBuffs.Remove(buff);
+        OnBuffChanged?.Invoke();
+    }
+
+    // DamageCalculator 用：取出指定类型的所有修改器
+    public IEnumerable<BuffModifier> GetModifiers(BuffModifierType modType, DamageType? damageType = null)
+    {
+        foreach (var buff in _activeBuffs)
+            foreach (var mod in buff.GetModifiers())
+            {
+                if (mod.modType != modType) continue;
+                if (damageType.HasValue && mod.damageType != damageType.Value) continue;
+                // 返回按叠层倍增的值
+                yield return new BuffModifier
+                {
+                    modType = mod.modType,
+                    damageType = mod.damageType,
+                    value = mod.value * buff.currentStacks
+                };
+            }
+    }
+
+    //HealthChangeFlat（DOT）类型BUFF，由TickAllBuffs调用
+    private void AllHealthChangeBuffTick(BattleEntityBase owner)
+    {
+        foreach(BuffInstance buff in ActiveBuffs)
+        {
+            foreach (BuffModifier modifier in buff.buffData.modifiers)
+            {
+                if(modifier.modType == BuffModifierType.HealthChangeFlat)
+                {
+                    if(!buff.buffData.isHealthChangeDamage)
+                    {
+                        owner.EntityRevoverHealth((int)buff.currentStacks);
+                    }
+                    else
+                    {
+                        owner.EntityTakeDamageFromBuff(buff, modifier);
+                        Debug.Log("buff active , damege" + buff.currentStacks);
+                    }
+                }
+            }      
+        }
     }
 }
