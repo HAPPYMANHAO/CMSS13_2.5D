@@ -101,6 +101,20 @@ public enum BuffModifierType
     MaxAPFlat,             // 最大AP加减
     APRecoveryFlat,        // 每回合AP回复加减
 }
+//----------/Equipment Type
+public enum EquipmentSlotType
+{
+    Head,
+    Mask,
+    Body,
+    Gloves,
+    Shoes,
+    Back,
+    Belt,
+    SuitStorage,
+    PocketLeft,
+    PocketRight,
+}
 
 //-----------------------结构体struct-----------------------//
 //----------/包含装甲计算两个值（int和float）的结构体A struct that contains two values (an int and a float) for armor calculation
@@ -177,4 +191,11 @@ public struct BuffModifier
     public BuffModifierType modType;
     public DamageType damageType;       // 只对特定伤害类型生效，None=全类型
     public float value;
+}
+//---------/Equipment Armor
+[System.Serializable]
+public struct ArmorBonus
+{
+    public ArmorStats armorStats;
+    [Range(0f, 1f)] public float resistanceBonus;
 }

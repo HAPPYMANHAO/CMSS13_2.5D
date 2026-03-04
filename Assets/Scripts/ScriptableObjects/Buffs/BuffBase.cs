@@ -11,7 +11,7 @@ public class BuffBase : ScriptableObject
 
     public enum StackAddType { Add, Cover, None }
     public enum DurationAddType { Add, Cover, None }
-    public enum DurationType { Turns, condition, Permanent }
+    public enum DurationType { Turns, Condition, Permanent }
     public DurationType durationType;
     public StackAddType stackAddType;
     public DurationAddType durationAddType;

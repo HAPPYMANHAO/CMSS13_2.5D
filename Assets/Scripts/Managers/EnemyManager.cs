@@ -7,7 +7,7 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private EnemyInfo[] allEnemiesInfo;
     [SerializeField] private List<CurrentEnemyInfo> currentEnemiesInfo;
 
-    private static GameObject instance;//self
+    public static EnemyManager instance;//self
 
     private Dictionary<string, EnemyInfo> enemyDatabase = new Dictionary<string, EnemyInfo>();
 
@@ -18,7 +18,7 @@ public class EnemyManager : MonoBehaviour
             Destroy(this.gameObject);
             return; 
         }
-        instance = this.gameObject;
+        instance = this;
 
         DontDestroyOnLoad(gameObject);
 
@@ -31,7 +31,7 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
-    public void SpawnEnemeisByCounter(EncountEnemy[] encountEnemy)
+    public void SpawnEnemiesByEncounter(EncountEnemy[] encountEnemy)
     {
         currentEnemiesInfo.Clear();
 

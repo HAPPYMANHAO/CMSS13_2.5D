@@ -18,7 +18,7 @@ public class InventoryManager : MonoBehaviour
     public int SlotCount => _slots.Count;
     public IReadOnlyList<ItemInstance> Slots => _slots;
     // ── 自身实例 self instance ──────────────────────────────────
-    private static GameObject instance;//self
+    public static InventoryManager instance;//self
 
     private void Awake()
     {
@@ -27,7 +27,7 @@ public class InventoryManager : MonoBehaviour
             Destroy(this.gameObject);
             return;
         }
-        instance = this.gameObject;
+        instance = this;
 
         DontDestroyOnLoad(gameObject);
     }

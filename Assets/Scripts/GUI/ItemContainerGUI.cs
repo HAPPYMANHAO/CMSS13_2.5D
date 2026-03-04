@@ -4,8 +4,6 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
-// 这个类只显示战斗物品（即继承HoldbaleBase的类），同理它也只能在战斗场景使用
-//This class only displays combat items (classes that inherit from HoldbaleBase),it can only be used in combat scene.
 public class ItemContainerGUI : MonoBehaviour
 {
     private InventoryManager inventoryManager;

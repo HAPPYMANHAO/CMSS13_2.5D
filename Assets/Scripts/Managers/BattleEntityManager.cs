@@ -26,8 +26,8 @@ public class BattleEntityManager : MonoBehaviour
 
     private void Start()
     {
-        partyManager = FindFirstObjectByType<PartyManager>();
-        enemyManager = FindFirstObjectByType<EnemyManager>();
+        partyManager = PartyManager.instance;
+        enemyManager = EnemyManager.instance;
         turnManager = FindFirstObjectByType<BattleTurnManager>();
 
         battleVisualGUI = FindFirstObjectByType<BattleVisualGUI>();
@@ -155,7 +155,7 @@ public class BattleEntityManager : MonoBehaviour
 //----------------------------Class----------------------------//
 //----------------BattleEntity Class/
 [System.Serializable]
-public class PartyBattleEntity : BattleEntityBase
+public class PartyBattleEntity : BattleEntityBase ,IHandsOwner
 {
     public int healthCRIT;
     public int healthCRITShock;
@@ -165,11 +165,11 @@ public class PartyBattleEntity : BattleEntityBase
 
     public bool isAutoExecuteAction = false;
 
-    public HandSlot leftHandEquipment = new HandSlot();
-    public HandSlot rightHandEquipment = new HandSlot();
-    public EquipmentSlot armorEquipment = new EquipmentSlot();
+    public HandSlot leftHandEquipment { get; set; } = new HandSlot();
+    public HandSlot rightHandEquipment { get; set; } = new HandSlot();
+    public EquipmentSlot armorEquipment { get; set; } = new EquipmentSlot();
 
-    public EntityHandsSlot currentActiveHand = EntityHandsSlot.Left;
+    public EntityHandsSlot currentActiveHand { get; set; } = EntityHandsSlot.Left;
 
     public ItemInstance GetCurrentActiveHandItem()
     {
@@ -220,8 +220,8 @@ public class PartyBattleEntity : BattleEntityBase
         healthDead = memberInfo.healthDead;
 
         skills = memberInfo.skills;
-        armorStats = memberInfo.armorStats;
-        damageResistanceStats = memberInfo.damageResistanceStats;
+        armorStats = new Dictionary<DamageType, ArmorStats>(memberInfo.armorStats);
+        damageResistanceStats = new Dictionary<DamageType, float>(memberInfo.damageResistanceStats);
 
         entityAI = memberInfo.entityAI;
 
@@ -263,8 +263,8 @@ public class EnemyBattleEntity : BattleEntityBase
         rangedStrength = enemyInfo.rangedStrength;
         armorPenetration = enemyInfo.armorPenetration;
 
-        armorStats = enemyInfo.armorStats;
-        damageResistanceStats = enemyInfo.damageResistanceStats;
+        armorStats = new Dictionary<DamageType, ArmorStats>(enemyInfo.armorStats);
+        damageResistanceStats = new Dictionary<DamageType, float>(enemyInfo.damageResistanceStats);
 
         entityAI = enemyInfo.entityAI;
     }

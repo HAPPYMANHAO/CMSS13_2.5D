@@ -41,7 +41,7 @@ public class BattleTurnManager : MonoBehaviour
 
     private void Start()
     {
-        gameSceneManager = GameObject.FindFirstObjectByType<GameSceneManager>();
+        gameSceneManager = GameSceneManager.instance;
 
         SetUpBattleStart();
         BattleVisualGUI.OnPlayerEndTurn += HandlePlayerEndTurn;    

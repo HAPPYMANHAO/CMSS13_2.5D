@@ -1,20 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class BattleVisualGUI : MonoBehaviour
+public class BattleVisualGUI : BaseVisualGUI
 {
     [SerializeField] private BattleEntityManager battleEntityManager;
     private InventoryManager inventoryManager;
     [SerializeField] private HealthBarControllerGUI[] healthBarsGUI;
     [SerializeField] private TargetSelectorGUI targetSelectorGUI;
     [SerializeField] private ItemContainerGUI containerGUI;
-
-    [SerializeField] private HandControllerGUI rightHandButtonGUI;
-    [SerializeField] private HandControllerGUI leftHandButtonGUI;
-
-    [SerializeField] private Button backpackGUI;
     [SerializeField] public Button playerEndTurnButtonGUI;
 
     public static Action OnPlayerEndTurn;
@@ -22,121 +18,36 @@ public class BattleVisualGUI : MonoBehaviour
     InputAction activeHoldItem;//TODO
     InputAction changeActiveHand;
 
-    public bool isPlayerCanExecuteAction = true;
-    public float playerActionDelayTimer = 0f;   
+    // ── 实现基类的抽象方法 ──
+    protected override IHandsOwner GetCurrentPlayer()
+        => battleEntityManager.currentPlayerEntity;
 
-    private PlayerControls inputActions;
+    protected override List<ItemInstance> GetInventoryItems()
+        => inventoryManager.GetAllItems();
 
-    private void Awake()
+    //---------------------BackpackGUI---------------------//
+    protected override void OnOpenBackpack()
     {
-        inventoryManager = GameObject.FindFirstObjectByType<InventoryManager>();
-        inputActions = new PlayerControls();
+        containerGUI.gameObject.SetActive(true);
+        containerGUI.UpdateItemContainerGUI(GetInventoryItems());
     }
 
-    private void OnEnable()
+    protected override void Start()
     {
-        inputActions.Enable();
-    }
-    private void OnDisable()
-    {
-        inputActions.Disable();
-    }
-
-    private void Start()
-    {
+        base.Start(); // 执行基类的按钮绑定等通用初始化
+        inventoryManager = FindFirstObjectByType<InventoryManager>();
         containerGUI.battleEntityManager = battleEntityManager;
-
-        activeHoldItem = InputSystem.actions.FindAction(CustomInputString.ACTIVE_HOLD_ITEM);
-        changeActiveHand = InputSystem.actions.FindAction(CustomInputString.CHANGE_ACTIVE_HAND);
-
         playerEndTurnButtonGUI.onClick.AddListener(HandleEndTurnClick);
-
-        leftHandButtonGUI.handButton.onClick.AddListener(SelectLeftHand);
-        rightHandButtonGUI.handButton.onClick.AddListener(SelectRightHand);
-        backpackGUI.onClick.AddListener(HandleOpenBackpack);
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update(); // 执行计时器和换手输入
+
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             if (targetSelectorGUI.GetCurrentTarget() != null && isPlayerCanExecuteAction)
-            {
                 battleEntityManager.PlayerComfirmTarget(targetSelectorGUI.GetCurrentTarget());
-            }
-        }
-
-        if (changeActiveHand.WasPressedThisFrame())
-        {
-            ChangeActiveHand();
-        }
-
-        if (!isPlayerCanExecuteAction)
-        {
-            playerActionDelayTimer -= Time.deltaTime;
-            if (playerActionDelayTimer < 0)
-            {
-                isPlayerCanExecuteAction = true;
-                playerActionDelayTimer = 0;
-            }
-        }
-    }
-
-    //-----------------------HandsGUI------------------------//
-    public void SelectLeftHand()
-    {
-        battleEntityManager.currentPlayerEntity.currentActiveHand = EntityHandsSlot.Left;
-        UpdateHandVisuals();
-    }
-
-    public void SelectRightHand()
-    {
-        battleEntityManager.currentPlayerEntity.currentActiveHand = EntityHandsSlot.Right;
-        UpdateHandVisuals();
-    }
-
-    public void ChangeActiveHand()
-    {
-        if(battleEntityManager.currentPlayerEntity.currentActiveHand == EntityHandsSlot.Left)
-        {
-            battleEntityManager.currentPlayerEntity.currentActiveHand = EntityHandsSlot.Right;
-        }
-        else if (battleEntityManager.currentPlayerEntity.currentActiveHand == EntityHandsSlot.Right)
-        {
-            battleEntityManager.currentPlayerEntity.currentActiveHand = EntityHandsSlot.Left;
-        }
-        UpdateHandVisuals();
-    }
-
-    public void UpdateHandVisuals()
-    {
-        if (battleEntityManager?.currentPlayerEntity == null) return;
-
-        var player = battleEntityManager.currentPlayerEntity;
-
-        leftHandButtonGUI.baseSprite.sprite = player.currentActiveHand == EntityHandsSlot.Left ? leftHandButtonGUI.activeSprite : leftHandButtonGUI.disactiveSprite;
-        rightHandButtonGUI.baseSprite.sprite = player.currentActiveHand == EntityHandsSlot.Left ? rightHandButtonGUI.disactiveSprite : rightHandButtonGUI.activeSprite;
-
-        UpdateSingleHandVisual(leftHandButtonGUI, player.leftHandEquipment?.item);
-        UpdateSingleHandVisual(rightHandButtonGUI, player.rightHandEquipment?.item);
-
-        leftHandButtonGUI.handButton.interactable = true;
-        rightHandButtonGUI.handButton.interactable = true;
-    }
-
-    private void UpdateSingleHandVisual(HandControllerGUI handGUI, ItemInstance item)
-    {
-        if (item != null)
-        {
-            handGUI.EnableHoldItemSprite();
-            handGUI.holdItemImage.sprite = item.itemData.icon;
-            handGUI.UpdateQuantityDisplay(item);
-        }
-        else
-        {
-            handGUI.holdItemImage.sprite = null;
-            handGUI.DisableHoldItemSprite();
-            handGUI.UpdateQuantityDisplay(item);
         }
     }
 
@@ -158,13 +69,7 @@ public class BattleVisualGUI : MonoBehaviour
     {
         if (battleEntityManager.turnManager.battleState == BattleTurnManager.BattleState.PlayerTurnAction)
         {
-            OnPlayerEndTurn.Invoke();
+            OnPlayerEndTurn?.Invoke();
         }
-    }
-    //---------------------BackpackGUI---------------------//
-    private void HandleOpenBackpack()
-    {
-        containerGUI.gameObject.SetActive(true);
-        containerGUI.UpdateItemContainerGUI(inventoryManager.GetAllItems());
     }
 }

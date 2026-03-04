@@ -44,9 +44,10 @@ public class ProjectileInstance : MonoBehaviour
     }
 
     private void Update()
-    {
-        ChangeDirection();
+    {      
         if (!isFlying) return;
+
+        ChangeDirection();
 
         if (ReachedTarget())
         {

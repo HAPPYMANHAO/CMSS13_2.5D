@@ -7,7 +7,7 @@ public class GameStateManager : MonoBehaviour
 
     public Action<GameState> gameStateChanged;
 
-    private static GameObject instance;//self
+    public static GameStateManager instance;//self
 
     public void Awake()
     {
@@ -16,7 +16,7 @@ public class GameStateManager : MonoBehaviour
             Destroy(this.gameObject);
             return;
         }
-        instance = this.gameObject;
+        instance = this;
 
         DontDestroyOnLoad(gameObject);
     }

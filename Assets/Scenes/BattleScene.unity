@@ -2318,6 +2318,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9115b4901b7958b4992c99bf94a515d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BattleVisualGUI
+  rightHandButtonGUI: {fileID: 471915619}
+  leftHandButtonGUI: {fileID: 1294563942}
+  backpackGUI: {fileID: 2114462118}
+  isPlayerCanExecuteAction: 0
+  playerActionDelayTimer: 0
   battleEntityManager: {fileID: 1668409896}
   healthBarsGUI:
   - {fileID: 1694740188}
@@ -2325,12 +2330,7 @@ MonoBehaviour:
   - {fileID: 1892379030}
   targetSelectorGUI: {fileID: 603003211}
   containerGUI: {fileID: 110164122}
-  rightHandButtonGUI: {fileID: 471915619}
-  leftHandButtonGUI: {fileID: 1294563942}
-  backpackGUI: {fileID: 2114462118}
   playerEndTurnButtonGUI: {fileID: 1863399007}
-  isPlayerCanExecuteAction: 0
-  playerActionDelayTimer: 0
 --- !u!1 &1293946007
 GameObject:
   m_ObjectHideFlags: 0
@@ -3411,8 +3411,6 @@ MonoBehaviour:
     healthCRITShock: 0
     currentLevel: 0
     isAutoExecuteAction: 0
-    armorEquipment: {}
-    currentActiveHand: 0
 --- !u!4 &1668409897
 Transform:
   m_ObjectHideFlags: 0
@@ -4800,8 +4798,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -232, y: 87}
-  m_SizeDelta: {x: 160, y: 160}
+  m_AnchoredPosition: {x: -200, y: 80}
+  m_SizeDelta: {x: 120, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2114462118
 MonoBehaviour:

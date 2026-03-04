@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static Unity.Cinemachine.CinemachineFreeLookModifier;
 
 [System.Serializable]
 public abstract class BattleEntityBase : IBattleEntity
@@ -63,8 +64,10 @@ public abstract class BattleEntityBase : IBattleEntity
 
     public int EntityTakeDamageFromBuff(BuffInstance buff, BuffModifier buffModifier)
     {
+        int damageAmount = (int)(buffModifier.value * buff.currentStacks);
+
         DamageResult result = DamageCalculator.CalculateDamage(
-            buff.currentStacks,
+            damageAmount,
             this,
             buffModifier.damageType
         );
@@ -222,12 +225,14 @@ public class BuffComponent
                 {
                     if(!buff.buffData.isHealthChangeDamage)
                     {
-                        owner.EntityRevoverHealth((int)buff.currentStacks);
+                        // 使用 modifier.value * stacks
+                        int healAmount = (int)(modifier.value * buff.currentStacks);
+                        owner.EntityRevoverHealth(healAmount);
                     }
                     else
                     {
-                        owner.EntityTakeDamageFromBuff(buff, modifier);
-                        Debug.Log("buff active , damege" + buff.currentStacks);
+                        // 使用 modifier.value * stacks(在TakeDamageFromBuff函数内)
+                        owner.EntityTakeDamageFromBuff(buff, modifier);              
                     }
                 }
             }      

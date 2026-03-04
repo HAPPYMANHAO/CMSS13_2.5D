@@ -180,7 +180,7 @@ public static class DamageCalculator
             return damage;
         float buffDamageResistanceFlat = 0;
         foreach (var buffMod in target.buffComponent.GetModifiers(BuffModifierType.DamageResistFlat, type))
-            buffDamageResistanceFlat = buffMod.value;
+            buffDamageResistanceFlat += buffMod.value;
 
         float effectivedamageResistance = Mathf.Clamp(
             target.damageResistanceStats[type] + buffDamageResistanceFlat,
@@ -207,9 +207,9 @@ public static class DamageCalculator
         float buffArmorIntegrityFlat = 0;
         float buffArmorValueFlat = 0;
         foreach (var buffMod in target.buffComponent.GetModifiers(BuffModifierType.ArmorIntegrityFlat, type))
-            buffArmorIntegrityFlat = buffMod.value;
+            buffArmorIntegrityFlat += buffMod.value;
         foreach (var buffMod in target.buffComponent.GetModifiers(BuffModifierType.ArmorValueFlat, type))
-            buffArmorValueFlat = buffMod.value;
+            buffArmorValueFlat += buffMod.value;
 
 
         float effectiveIntegrity = Mathf.Clamp(

@@ -16,7 +16,7 @@ public class PartyManager : MonoBehaviour
 
     private Vector3 playerPosition;
 
-    private static GameObject instance;//self
+    public static PartyManager instance;//self
 
     public static event Action OnPartyMemberUpdated;
 
@@ -26,9 +26,9 @@ public class PartyManager : MonoBehaviour
         if (instance != null)
         {
             Destroy(this.gameObject);
-            return; 
+            return;
         }
-        instance = this.gameObject;
+        instance = this;
 
         DontDestroyOnLoad(gameObject);
         AddPartyMemberByName(defaultMember.memberName);
@@ -52,6 +52,11 @@ public class PartyManager : MonoBehaviour
         }
     }
 
+    public static void PartyUpdated()
+    {
+        OnPartyMemberUpdated?.Invoke();
+    }
+
     public List<CurrentPartyMemberInfo> GetCurrentPartyMember()
     {
         return currentPartyMember;
@@ -65,7 +70,8 @@ public class PartyManager : MonoBehaviour
         member.leftHandEquipment.item = partyBattleEntity.leftHandEquipment.item;   // 回写手部
         member.rightHandEquipment.item = partyBattleEntity.rightHandEquipment.item;
         OnPartyMemberUpdated?.Invoke();
-        member.isDead = partyBattleEntity.EntityIsDead();     
+        member.isDead = partyBattleEntity.EntityIsDead();
+        overworldVisual.UpdateHandVisuals();
     }
 
     public void SetPlayerPosition(Vector3 newPosition)
@@ -80,7 +86,7 @@ public class PartyManager : MonoBehaviour
 }
 
 [System.Serializable]
-public class CurrentPartyMemberInfo
+public class CurrentPartyMemberInfo : IHandsOwner
 {
     public string memberName;
     public int currentLevel;
@@ -106,9 +112,9 @@ public class CurrentPartyMemberInfo
 
     public EntityAI entityAI;
 
-    public HandSlot leftHandEquipment = new HandSlot();
-    public HandSlot rightHandEquipment = new HandSlot();
-    public EntityHandsSlot currentActiveHand = EntityHandsSlot.Left;
+    public HandSlot leftHandEquipment { get; set; } = new HandSlot();
+    public HandSlot rightHandEquipment { get; set; } = new HandSlot();
+    public EntityHandsSlot currentActiveHand { get; set; } = EntityHandsSlot.Left;
 
     public event Action OnHealthChanged;
 
@@ -147,11 +153,89 @@ public class CurrentPartyMemberInfo
         return itemToReturn;
     }
 
+    // ── 装备栏 Equipment Slots ──────────────────────
+    // 防护槽
+    public Dictionary<EquipmentSlotType, ItemInstance> protectionSlots
+        = new Dictionary<EquipmentSlotType, ItemInstance>();
+
+    // 存储槽（背包/腰带/口袋）
+    public Dictionary<EquipmentSlotType, StorageItemInstance> storageSlots
+        = new Dictionary<EquipmentSlotType, StorageItemInstance>();
+
+    // ── 装备操作 ────────────────────────────────────
+    public bool TryEquip(ItemInstance item)
+    {
+        // 判断是防护装备还是存储装备
+        if (item.itemData is ArmorItemBase armor)
+        {
+            return TryEquipArmor(item, armor.slotType);
+        }
+        if (item.itemData is StorageItemBase storage)
+        {
+            return TryEquipStorage(item as StorageItemInstance, storage.slotType);
+        }
+        return false;
+    }
+
+    private bool TryEquipArmor(ItemInstance item, EquipmentSlotType slot)
+    {
+        // 如果槽位已有装备，先卸下
+        if (protectionSlots.TryGetValue(slot, out var existing) && existing != null)
+        {
+            return false;
+        }
+
+        protectionSlots[slot] = item;
+        (item.itemData as ArmorItemBase)?.OnEquip(this);
+        return true;
+    }
+
+    private bool TryEquipStorage(StorageItemInstance item, EquipmentSlotType slot)
+    {
+        if (storageSlots.TryGetValue(slot, out var existing) && existing != null)
+        {
+            return false;
+        }
+
+        storageSlots[slot] = item;
+        return true;
+    }
+
+    public ItemInstance UnequipSlot(EquipmentSlotType slot)
+    {
+        if (protectionSlots.TryGetValue(slot, out var item) && item != null)
+        {
+            (item.itemData as ArmorItemBase)?.OnUnEquip(this);
+            protectionSlots[slot] = null;
+            return item;
+        }
+        if (storageSlots.TryGetValue(slot, out var storage) && storage != null)
+        {
+            foreach (var storageItem in storage.StoredItems)
+            {
+                InventoryManager.instance.AddItem(storageItem);
+            }
+
+            storage.RemoveAllItem();
+            storageSlots[slot] = null;
+            return storage;
+        }
+        return null;
+    }
+
+    public ItemInstance GetEquipped(EquipmentSlotType slot)
+    {
+        if (protectionSlots.TryGetValue(slot, out var item)) return item;
+        if (storageSlots.TryGetValue(slot, out var storage)) return storage;
+        return null;
+    }
+
+
     public void TakeDamage(int damage)
     {
         SetHealth(currentHealth - damage);
 
-        if(currentHealth < healthDead)
+        if (currentHealth < healthDead)
         {
             isDead = true;
         }
@@ -165,7 +249,7 @@ public class CurrentPartyMemberInfo
         }
 
         currentHealth = Mathf.Clamp(newHealth, healthDead, maxHealth);
-        OnHealthChanged?.Invoke();   
+        OnHealthChanged?.Invoke();
     }
 
     public void RevoverHealth(int recoverHealth)

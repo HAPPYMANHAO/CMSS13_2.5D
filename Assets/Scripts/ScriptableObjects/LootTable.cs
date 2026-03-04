@@ -15,9 +15,20 @@ public class LootTable : ScriptableObject
             if (UnityEngine.Random.value <= entry.dropChance)
             {
                 int qty = UnityEngine.Random.Range(entry.minQuantity, entry.maxQuantity + 1);
-                result.Add(entry.item.isStackable
-                    ? new StackableItemInstance(entry.item, qty)
-                    : entry.item.CreateInstance());
+
+                if (entry.item.isStackable)
+                {
+                    // 堆叠物品
+                    result.Add(new StackableItemInstance(entry.item, qty));
+                }
+                else
+                {
+                    // 非堆叠物品
+                    for (int i = 0; i < qty; i++)
+                    {
+                        result.Add(entry.item.CreateInstance());
+                    }
+                }
             }
         }
         return result;

@@ -2,19 +2,19 @@
 
 public class EncounterManager : MonoBehaviour
 {
-    [SerializeField] private EncountEnemy[] encountEnemies;
+    [SerializeField] private EncountEnemy[] encounterEnemies;
          
     private EnemyManager enemyManager;
 
     private void Awake()
     {
-        enemyManager = GameObject.FindFirstObjectByType<EnemyManager>();
+        enemyManager = EnemyManager.instance;
         
     }
 
     private void Start()
     {
-        enemyManager.SpawnEnemeisByCounter(encountEnemies);
+        enemyManager.SpawnEnemiesByEncounter(encounterEnemies);
     }
 }
 

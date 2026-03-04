@@ -7,7 +7,7 @@ public class GameSceneManager : MonoBehaviour
 {
     [SerializeField] GameStateManager gameStateManager;
 
-    private static GameObject instance;//self
+    public static GameSceneManager instance;//self
 
     [SerializeField] private Camera overworldCamera;
     private OverworldVisualGUI overworldUI;
@@ -22,7 +22,7 @@ public class GameSceneManager : MonoBehaviour
             Destroy(this.gameObject);
             return;
         }
-        instance = this.gameObject;
+        instance = this;
 
         DontDestroyOnLoad(gameObject);
     }

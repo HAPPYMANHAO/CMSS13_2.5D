@@ -20,7 +20,7 @@ public class BuffInstance
     // 回合结束时调用
     public void Tick()
     {
-        if (buffData.durationType == BuffBase.DurationType.Permanent && buffData.durationType == BuffBase.DurationType.condition) return;
+        if (buffData.durationType == BuffBase.DurationType.Permanent || buffData.durationType == BuffBase.DurationType.Condition) return;
         remainingTurns--;
         if (remainingTurns <= 0)
             OnExpired?.Invoke(this);

@@ -19,9 +19,13 @@ MonoBehaviour:
     maxQuantity: 1
   - item: {fileID: 11400000, guid: 1e838c8a1c8816b4c89634d42e203ad4, type: 2}
     dropChance: 1
-    minQuantity: 1
-    maxQuantity: 2
+    minQuantity: 2
+    maxQuantity: 3
   - item: {fileID: 11400000, guid: c9f3c020e35607a42afc39e8af3e9dc0, type: 2}
     dropChance: 1
     minQuantity: 1
     maxQuantity: 10
+  - item: {fileID: 11400000, guid: 3eccfda4571fb0b48937293345ecc939, type: 2}
+    dropChance: 1
+    minQuantity: 1
+    maxQuantity: 1
