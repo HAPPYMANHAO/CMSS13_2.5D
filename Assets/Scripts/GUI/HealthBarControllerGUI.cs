@@ -13,6 +13,7 @@ public class HealthBarControllerGUI : MonoBehaviour
     public List<HealthBarEntry> healthBarDefine;
 
     public PartyBattleEntity owner;
+    public CurrentPartyMemberInfo ownerOverworld;
 
     private bool IsCritAnimationActive = false;
 
@@ -38,23 +39,45 @@ public class HealthBarControllerGUI : MonoBehaviour
 
         this.gameObject.SetActive(true);
         overlayCRIT.gameObject.SetActive(false);
-        UpdateHealth();
+        HandleHealthUpdate();
         UpdateAP();
+    }
+
+    public void HealthBarBind(CurrentPartyMemberInfo memberInfo)
+    {
+        if (ownerOverworld != null)
+        {
+            ownerOverworld.OnHealthChanged -= HandleHealthUpdateOverworld;
+        }
+
+        this.ownerOverworld = memberInfo;
+        //绑定health bar GUI
+        ownerOverworld.OnHealthChanged += HandleHealthUpdateOverworld;
+
+        this.gameObject.SetActive(true);
+        APValue.gameObject.SetActive(false);//不需要在overworld显示AP
+        overlayCRIT.gameObject.SetActive(false);
+        HandleHealthUpdateOverworld();
     }
 
     private void HandleHealthUpdate()
     {
-        UpdateHealth();
+        UpdateHealth(owner.currentHealth, owner.maxHealth,owner.healthCRITShock);
     }
+    private void HandleHealthUpdateOverworld()
+    { 
+        UpdateHealth(ownerOverworld.currentHealth, ownerOverworld.maxHealth, ownerOverworld.healthCRITShock);
+    }
+
     private void HandleUpdateAP()
     {
         UpdateAP();
     }
 
-    public void UpdateHealth()
+    public void UpdateHealth(int currentHealth, int maxHealth, int healthCRITShock)
     {
-        bool healthCRIT = owner.currentHealth < 0;//没有血条在0以下的精灵，血条CRIT条件始终设置为 < 0
-        bool healthShock = owner.currentHealth < owner.healthCRITShock;
+        bool healthCRIT = currentHealth < 0;//没有血条在0以下的精灵，血条CRIT条件始终设置为 < 0
+        bool healthShock = currentHealth < healthCRITShock;
 
         if (healthCRIT != IsCritAnimationActive)
         {
@@ -76,7 +99,7 @@ public class HealthBarControllerGUI : MonoBehaviour
             overlayCRIT.gameObject.SetActive(false);
             for (int i = 0; i < healthBarDefine.Count; i++)
             {
-                if ((float)owner.currentHealth / owner.maxHealth >= healthBarDefine[i].healthThreshold)
+                if ((float)currentHealth / maxHealth >= healthBarDefine[i].healthThreshold)
                 {
                     healthBarImage.sprite = healthBarDefine[i].sprite;
                     break;
@@ -84,6 +107,7 @@ public class HealthBarControllerGUI : MonoBehaviour
             }
         }
     }
+ 
 
     private void UpdateAP()
     {

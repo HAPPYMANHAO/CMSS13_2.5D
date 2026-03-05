@@ -19,8 +19,8 @@ public abstract class ArmorItemBase : ItemBase, IEquippable
             {
                 // 修改现有护甲
                 var existing = member.armorStats[bonus.armorStats.armorType];
-                existing.armorValue = Mathf.Max(0, existing.armorValue - bonus.armorStats.armorValue);
-                existing.armorIntegrity = Mathf.Clamp01(existing.armorIntegrity - bonus.armorStats.armorIntegrity);
+                existing.armorValue = Mathf.Max(0, existing.armorValue += bonus.armorStats.armorValue);
+                existing.armorIntegrity = Mathf.Clamp01(existing.armorIntegrity += bonus.armorStats.armorIntegrity);
                 member.armorStats[bonus.armorStats.armorType] = existing;
             }
             else
@@ -37,7 +37,7 @@ public abstract class ArmorItemBase : ItemBase, IEquippable
             // 伤害抗性叠加
             if (member.damageResistanceStats.ContainsKey(bonus.armorStats.armorType))
                 member.damageResistanceStats[bonus.armorStats.armorType] =
-                    Mathf.Clamp01(member.damageResistanceStats[bonus.armorStats.armorType] + bonus.resistanceBonus);
+                    Mathf.Clamp01(member.damageResistanceStats[bonus.armorStats.armorType] += bonus.resistanceBonus);
             else
                 member.damageResistanceStats[bonus.armorStats.armorType] = bonus.resistanceBonus;
         }
@@ -60,7 +60,7 @@ public abstract class ArmorItemBase : ItemBase, IEquippable
 
             if (member.damageResistanceStats.ContainsKey(bonus.armorStats.armorType))
                 member.damageResistanceStats[bonus.armorStats.armorType] =
-                    Mathf.Clamp01(member.damageResistanceStats[bonus.armorStats.armorType] - bonus.resistanceBonus);
+                    Mathf.Clamp01(member.damageResistanceStats[bonus.armorStats.armorType] -= bonus.resistanceBonus);
         }
 
         OnUnEquipEffect(member);

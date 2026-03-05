@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -17,6 +18,8 @@ public class BattleVisualGUI : BaseVisualGUI
 
     InputAction activeHoldItem;//TODO
     InputAction changeActiveHand;
+
+    private Coroutine _autoFireCoroutine;
 
     // ── 实现基类的抽象方法 ──
     protected override IHandsOwner GetCurrentPlayer()
@@ -42,14 +45,74 @@ public class BattleVisualGUI : BaseVisualGUI
 
     protected override void Update()
     {
-        base.Update(); // 执行计时器和换手输入
+        base.Update();
 
-        if (Mouse.current.leftButton.wasPressedThisFrame)
+        var gun = GetGunInHand();
+
+        // 左键逻辑根据射击模式分叉
+        if (gun != null)
         {
-            if (targetSelectorGUI.GetCurrentTarget() != null && isPlayerCanExecuteAction)
-                battleEntityManager.PlayerComfirmTarget(targetSelectorGUI.GetCurrentTarget());
+            switch (gun.currentFireMode)
+            {
+                case FireMode.SemiAuto:
+                    if (Mouse.current.leftButton.wasPressedThisFrame)
+                        TryExecuteAction();
+                    break;
+
+                case FireMode.FullAuto:
+                    if (Mouse.current.leftButton.wasPressedThisFrame)
+                        _autoFireCoroutine = StartCoroutine(AutoFireRoutine(gun));
+                    if (Mouse.current.leftButton.wasReleasedThisFrame && _autoFireCoroutine != null)
+                    {
+                        StopCoroutine(_autoFireCoroutine);
+                        _autoFireCoroutine = null;
+                    }
+                    break;
+
+                case FireMode.Burst:
+                    if (Mouse.current.leftButton.wasPressedThisFrame)
+                        StartCoroutine(BurstFireRoutine(gun));
+                    break;
+            }
+        }
+        else
+        {
+            // 没有枪，走原来的点击逻辑
+            if (Mouse.current.leftButton.wasPressedThisFrame)
+                TryExecuteAction();
         }
     }
+
+    private void TryExecuteAction()
+    {
+        var target = targetSelectorGUI.GetCurrentTarget();
+        if (target != null && isPlayerCanExecuteAction)
+            battleEntityManager.PlayerComfirmTarget(target);
+    }
+
+    private IEnumerator AutoFireRoutine(GunInstance gun)
+    {
+        while (!gun.IsEmpty)
+        {
+            TryExecuteAction();
+            yield return new WaitForSeconds(gun.GunData.fireInterval);
+            if (!isPlayerCanExecuteAction) // AP 不足时停止
+                yield break;
+        }
+    }
+
+    private IEnumerator BurstFireRoutine(GunInstance gun)
+    {
+        int shots = gun.GunData.burstCount;
+        for (int i = 0; i < shots && !gun.IsEmpty; i++)
+        {
+            TryExecuteAction();
+            yield return new WaitForSeconds(gun.GunData.fireInterval);
+        }
+    }
+
+    private GunInstance GetGunInHand()
+        => battleEntityManager.currentPlayerEntity?.GetCurrentActiveHandItem() as GunInstance;
 
     //---------------------HealthBarGUI------------------------//
 

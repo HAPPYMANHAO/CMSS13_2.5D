@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e628e9919fd142449e3802bd073af33, type: 3}
+  m_Name: GunBaseTest
+  m_EditorClassIdentifier: Assembly-CSharp::GunItemBase
+  itemName: Test Gun
+  icon: {fileID: -503791159, guid: ee9f6a5afda6ce04da734eddcd547d4b, type: 3}
+  description: 
+  isStackable: 0
+  maxStackSize: 1
+  _providedActions:
+  - {fileID: 11400000, guid: a796b34b068c31d46a1dbdbafcc0ddde, type: 2}
+  primaryDamageType: 1
+  primaryActionType: 1
+  meleeDamage: 10
+  armorPenetration: 0
+  damageModifiers: []
+  allowUseOfBothHands: 0
+  holdInRightHandSprite: {fileID: 0}
+  holdInLeftHandSprite: {fileID: 0}
+  holdInBothHandsSprite: {fileID: 0}
+  costAP: 10
+  acceptedAmmoType: 1
+  magazineCapacity: 3
+  availableFireModes: 0100000000000000
+  burstCount: 3
+  fireInterval: 0.25

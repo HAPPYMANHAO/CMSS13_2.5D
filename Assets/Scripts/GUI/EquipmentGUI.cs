@@ -17,6 +17,8 @@ public class EquipmentGUI : MonoBehaviour
         inventoryManager = InventoryManager.instance;
         partyManager = PartyManager.instance;
 
+        CurrentPartyMemberInfo.OnEquipmentChanged += Refresh;
+
         foreach (var slot in slots)
         {
             var capturedSlot = slot; // 捕获变量
@@ -60,7 +62,7 @@ public class EquipmentGUI : MonoBehaviour
         }
     }
 
-    // 点击槽位：如果有装备就卸下到背包；如果空着就从背包中拾取对应装备，不完善，仅供测试
+    // 点击槽位：如果有装备就卸下到背包
     //TODO
     private void HandleSlotClicked(EquipmentSlotType slotType)
     {
@@ -72,20 +74,6 @@ public class EquipmentGUI : MonoBehaviour
             // 卸下 → 放回背包
             player.UnequipSlot(slotType);
             inventoryManager.AddItem(currentEquipped);
-        }
-        else
-        {
-            // 从背包找第一个匹配槽位的装备
-            var matchingItem = inventoryManager.GetAllItems()
-                .FirstOrDefault(item =>
-                    (item.itemData is ArmorItemBase a && a.slotType == slotType) ||
-                    (item.itemData is StorageItemBase s && s.slotType == slotType));
-
-            if (matchingItem != null)
-            {
-                inventoryManager.RemoveItem(matchingItem);
-                player.TryEquip(matchingItem);
-            }
         }
 
         Refresh();

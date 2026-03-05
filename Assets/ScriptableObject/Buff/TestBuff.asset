@@ -24,4 +24,4 @@ MonoBehaviour:
   modifiers:
   - modType: 0
     damageType: 3
-    value: 0
+    value: 1

@@ -6,14 +6,9 @@ public class EncounterManager : MonoBehaviour
          
     private EnemyManager enemyManager;
 
-    private void Awake()
-    {
-        enemyManager = EnemyManager.instance;
-        
-    }
-
     private void Start()
     {
+        enemyManager = EnemyManager.instance;
         enemyManager.SpawnEnemiesByEncounter(encounterEnemies);
     }
 }

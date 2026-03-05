@@ -13,14 +13,10 @@ MonoBehaviour:
   m_Name: TestLootTable
   m_EditorClassIdentifier: Assembly-CSharp::LootTable
   entries:
-  - item: {fileID: 11400000, guid: 7807c36ff7539f7459775d3dc2351471, type: 2}
+  - item: {fileID: 11400000, guid: 1e838c8a1c8816b4c89634d42e203ad4, type: 2}
     dropChance: 1
     minQuantity: 1
     maxQuantity: 1
-  - item: {fileID: 11400000, guid: 1e838c8a1c8816b4c89634d42e203ad4, type: 2}
-    dropChance: 1
-    minQuantity: 2
-    maxQuantity: 3
   - item: {fileID: 11400000, guid: c9f3c020e35607a42afc39e8af3e9dc0, type: 2}
     dropChance: 1
     minQuantity: 1
@@ -29,3 +25,11 @@ MonoBehaviour:
     dropChance: 1
     minQuantity: 1
     maxQuantity: 1
+  - item: {fileID: 11400000, guid: 2c72b61cc997a2b4b8198988a2747e8d, type: 2}
+    dropChance: 1
+    minQuantity: 1
+    maxQuantity: 1
+  - item: {fileID: 11400000, guid: ecb6fa9d3c2340b49a5cdd7a05499f63, type: 2}
+    dropChance: 1
+    minQuantity: 100
+    maxQuantity: 200

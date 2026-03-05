@@ -96,6 +96,11 @@ public class OverworldItemContainerGUI : MonoBehaviour
             pratyManager.currentPlayerEntity.GetItemFromToInventory(item);
             UpdateCurrentGUI();
         }
+        if (item.itemData is ArmorItemBase || item.itemData is StorageItemBase)
+        {
+            inventoryManager.RemoveItem(item);
+            pratyManager.currentPlayerEntity.TryEquip(item);
+        }
     }
 
     private void HandleInventoryChanged()

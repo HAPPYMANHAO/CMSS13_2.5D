@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using static PartyMemberInfo;
 using static UnityEngine.EventSystems.EventTrigger;
@@ -31,14 +32,13 @@ public class PartyManager : MonoBehaviour
         instance = this;
 
         DontDestroyOnLoad(gameObject);
+              
+        overworldVisual = FindFirstObjectByType<OverworldVisualGUI>();
+
         AddPartyMemberByName(defaultMember.memberName);
         currentPlayerEntity = currentPartyMember.FirstOrDefault();
     }
 
-    private void Start()
-    {
-        overworldVisual = FindFirstObjectByType<OverworldVisualGUI>();
-    }
     public void AddPartyMemberByName(string memberName)
     {
         for (int i = 0; i < allPartyMember.Length; i++)
@@ -46,7 +46,7 @@ public class PartyManager : MonoBehaviour
             if (memberName == allPartyMember[i].memberName)
             {
                 CurrentPartyMemberInfo newPartyMember = new CurrentPartyMemberInfo(allPartyMember[i]);
-
+                overworldVisual.BindHealthBar(newPartyMember);
                 currentPartyMember.Add(newPartyMember);
             }
         }
@@ -66,7 +66,7 @@ public class PartyManager : MonoBehaviour
     {
         var member = currentPartyMember.FirstOrDefault(m => m.memberName == partyBattleEntity.memberName);
         if (member == null) return;
-        member.currentHealth = partyBattleEntity.currentHealth;
+        member.SetHealth(partyBattleEntity.currentHealth);
         member.leftHandEquipment.item = partyBattleEntity.leftHandEquipment.item;   // 回写手部
         member.rightHandEquipment.item = partyBattleEntity.rightHandEquipment.item;
         OnPartyMemberUpdated?.Invoke();
@@ -117,7 +117,8 @@ public class CurrentPartyMemberInfo : IHandsOwner
     public EntityHandsSlot currentActiveHand { get; set; } = EntityHandsSlot.Left;
 
     public event Action OnHealthChanged;
-
+    public static event Action OnEquipmentChanged;
+    // ── 手操作 ────────────────────────────────────
     public ItemInstance GetCurrentActiveHandItem()
     {
         return currentActiveHand == EntityHandsSlot.Left ? leftHandEquipment?.item : rightHandEquipment?.item;
@@ -187,6 +188,7 @@ public class CurrentPartyMemberInfo : IHandsOwner
 
         protectionSlots[slot] = item;
         (item.itemData as ArmorItemBase)?.OnEquip(this);
+        OnEquipmentChanged?.Invoke();
         return true;
     }
 
@@ -198,6 +200,7 @@ public class CurrentPartyMemberInfo : IHandsOwner
         }
 
         storageSlots[slot] = item;
+        OnEquipmentChanged?.Invoke();
         return true;
     }
 
@@ -220,6 +223,7 @@ public class CurrentPartyMemberInfo : IHandsOwner
             storageSlots[slot] = null;
             return storage;
         }
+        OnEquipmentChanged?.Invoke();
         return null;
     }
 
@@ -229,7 +233,7 @@ public class CurrentPartyMemberInfo : IHandsOwner
         if (storageSlots.TryGetValue(slot, out var storage)) return storage;
         return null;
     }
-
+    // ── 血量操作 ────────────────────────────────────
 
     public void TakeDamage(int damage)
     {
@@ -241,7 +245,7 @@ public class CurrentPartyMemberInfo : IHandsOwner
         }
     }
 
-    private void SetHealth(int newHealth)
+    public void SetHealth(int newHealth)
     {
         if (isDead)
         {
@@ -256,7 +260,7 @@ public class CurrentPartyMemberInfo : IHandsOwner
     {
         SetHealth(currentHealth + recoverHealth);
     }
-
+    // ── 构造函数 ────────────────────────────────────
     public CurrentPartyMemberInfo(PartyMemberInfo partyMember)
     {
         this.memberName = partyMember.memberName;

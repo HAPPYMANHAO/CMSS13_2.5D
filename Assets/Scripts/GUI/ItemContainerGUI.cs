@@ -85,6 +85,21 @@ public class ItemContainerGUI : MonoBehaviour
 
     private void HandleItemClicked(ItemInstance item)
     {
+        var gun = battleEntityManager.currentPlayerEntity.GetCurrentActiveHandItem() as GunInstance;
+
+        // 情况1：手里有枪，点击的是匹配弹药 → 装弹
+        if (gun != null && item is StackableItemInstance ammoStack
+            && ammoStack.itemData is AmmoBase ammo
+            && ammo.ammoType == gun.GunData.acceptedAmmoType)
+        {
+            int loaded = gun.Reload(ammoStack);
+            if (ammoStack.IsEmpty)
+                inventoryManager.RemoveItem(ammoStack);
+            UpdateCurrentGUI();
+            // Log
+            return;
+        }
+
         ItemInstance itemInHand = battleEntityManager.currentPlayerEntity.GetCurrentActiveHandItem();
         if (itemInHand != null) return;
 
@@ -93,7 +108,7 @@ public class ItemContainerGUI : MonoBehaviour
             inventoryManager.RemoveItem(item);
             battleEntityManager.currentPlayerEntity.GetItemFromToInventory(item);
             UpdateCurrentGUI();
-        }
+        }  
     }
 
     private void HandleInventoryChanged()

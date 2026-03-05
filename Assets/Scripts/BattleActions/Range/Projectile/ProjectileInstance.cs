@@ -12,7 +12,7 @@ public class ProjectileInstance : MonoBehaviour
 
     private BattleEntityBase user; // user
     private BattleEntityBase targetEntity; // trget
-    private RangedAction actionSource; // action
+    private ActionBase actionSource; // action
 
     private void Awake()
     {
@@ -20,9 +20,39 @@ public class ProjectileInstance : MonoBehaviour
         projectileSpriteGlows = GetComponent<Light>();
     }
 
-    public void ProjectileSetup(BattleEntityBase user, BattleEntityBase target, RangedAction action)
+    /// <summary>
+    /// 从action直接设置投射物，用于simple range
+    /// </summary>
+    public void ProjectileSetup(BattleEntityBase user, BattleEntityBase target, ActionBase action)
     {
-        projectileConfig = action.projectileInfo;
+        var rangedAction = action as RangedAction; 
+        projectileConfig = rangedAction.projectileInfo;
+        this.user = user;
+        this.targetEntity = target;
+        this.actionSource = rangedAction;
+
+        var collider = target.battleVisual.GetComponentInChildren<BoxCollider>();
+        if (collider != null)
+        {
+            targetPos = collider.bounds.center;
+        }
+        else
+        {
+            targetPos = target.battleVisual.transform.position + Vector3.up;
+        }
+
+        projectileSprite.sprite = rangedAction.projectileInfo.projectileSprite;
+        projectileSpriteGlows.color = rangedAction.projectileInfo.projectileGlowsColor;
+        ChangeDirection();
+        isFlying = true;
+    }
+
+    /// <summary>
+    /// 从ProjectileInfo设置投射物，用于gun fire
+    /// </summary>
+    public void ProjectileSetup(BattleEntityBase user, BattleEntityBase target, ActionBase action, ProjectileInfo projectileInfo)
+    {
+        projectileConfig = projectileInfo;
         this.user = user;
         this.targetEntity = target;
         this.actionSource = action;
@@ -37,8 +67,8 @@ public class ProjectileInstance : MonoBehaviour
             targetPos = target.battleVisual.transform.position + Vector3.up;
         }
 
-        projectileSprite.sprite = action.projectileInfo.projectileSprite;
-        projectileSpriteGlows.color = action.projectileInfo.projectileGlowsColor;
+        projectileSprite.sprite = projectileInfo.projectileSprite;
+        projectileSpriteGlows.color = projectileInfo.projectileGlowsColor;
         ChangeDirection();
         isFlying = true;
     }

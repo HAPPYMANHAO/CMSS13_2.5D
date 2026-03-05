@@ -62,9 +62,6 @@ public class GameSceneManager : MonoBehaviour
         overworldUI.gameObject.SetActive(true);
         playerController.enabled = true;
         playerEventTrigger.enabled = true;
-
-        Debug.Log("Overworld Camera Active: " + overworldCamera.gameObject.activeSelf);
-        Debug.Log("Active Scene: " + SceneManager.GetActiveScene().name);
     }
 
     public void ExitBattle()

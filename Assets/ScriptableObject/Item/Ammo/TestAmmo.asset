@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86074258dd094f340a79fce5fb3323f3, type: 3}
+  m_Name: TestAmmo
+  m_EditorClassIdentifier: Assembly-CSharp::AmmoBase
+  itemName: 10*24 caseless standard ammo
+  icon: {fileID: -1374765517, guid: 58f18dc247d0aff47b9d3e30dc17d117, type: 3}
+  description: 
+  isStackable: 1
+  maxStackSize: 999
+  _providedActions: []
+  _maxStackSize: 999
+  ammoType: 1
+  projectileInfo: {fileID: 11400000, guid: e9f83f3d5cafb694ca022ddac39595a8, type: 2}
+  caliberName: '10*24 caseless standard '

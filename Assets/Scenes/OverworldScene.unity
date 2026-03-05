@@ -3880,7 +3880,10 @@ MonoBehaviour:
   interactionController: {fileID: 511163763}
   containerGUI: {fileID: 81318129}
   targetSelectorGUI: {fileID: 1689913663}
-  healthBarsGUI: []
+  healthBarsGUI:
+  - {fileID: 1613143467}
+  - {fileID: 1911848498}
+  - {fileID: 1897372537}
 --- !u!1 &1347075459
 GameObject:
   m_ObjectHideFlags: 0
@@ -4240,7 +4243,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EncounterManager
   encounterEnemies:
-  - enemy: {fileID: 11400000, guid: 980a275c18ec6a04ea3974f081ca85c9, type: 2}
+  - enemy: {fileID: 11400000, guid: ac3715bbbcc3a7d489c1c714a8857cb9, type: 2}
 --- !u!4 &1439645420
 Transform:
   m_ObjectHideFlags: 0
@@ -4990,6 +4993,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyManager
   allEnemiesInfo:
   - {fileID: 11400000, guid: 980a275c18ec6a04ea3974f081ca85c9, type: 2}
+  - {fileID: 11400000, guid: ac3715bbbcc3a7d489c1c714a8857cb9, type: 2}
   currentEnemiesInfo: []
 --- !u!4 &1594349986
 Transform:
@@ -5022,6 +5026,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d511a9ed829f4b649ba2ad58376dbd26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlotUI
+--- !u!114 &1613143467 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -2385681131083977036, guid: 6bf73bdeeb405fd41a4c82b8c469d705, type: 3}
+  m_PrefabInstance: {fileID: 1565008439}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d161b4a9354b0114297d2fbb07a4c010, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthBarControllerGUI
 --- !u!1 &1624192569
 GameObject:
   m_ObjectHideFlags: 0
@@ -6777,6 +6792,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1334487052926021101, guid: 6bf73bdeeb405fd41a4c82b8c469d705, type: 3}
   m_PrefabInstance: {fileID: 1897372535}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1897372537 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -2385681131083977036, guid: 6bf73bdeeb405fd41a4c82b8c469d705, type: 3}
+  m_PrefabInstance: {fileID: 1897372535}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d161b4a9354b0114297d2fbb07a4c010, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthBarControllerGUI
 --- !u!1 &1910474093
 GameObject:
   m_ObjectHideFlags: 0
@@ -6914,6 +6940,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1334487052926021101, guid: 6bf73bdeeb405fd41a4c82b8c469d705, type: 3}
   m_PrefabInstance: {fileID: 1911848496}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1911848498 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -2385681131083977036, guid: 6bf73bdeeb405fd41a4c82b8c469d705, type: 3}
+  m_PrefabInstance: {fileID: 1911848496}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d161b4a9354b0114297d2fbb07a4c010, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthBarControllerGUI
 --- !u!1 &1988909375
 GameObject:
   m_ObjectHideFlags: 0

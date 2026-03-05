@@ -69,4 +69,16 @@ public class OverworldVisualGUI : BaseVisualGUI
             }
         }
     }
+
+    public void BindHealthBar(CurrentPartyMemberInfo memberInfo)
+    {
+        for (int i = 0; i < healthBarsGUI.Length; i++)
+        {
+            if (healthBarsGUI[i].ownerOverworld == null || string.IsNullOrEmpty(healthBarsGUI[i].ownerOverworld.memberName))
+            {
+                healthBarsGUI[i].HealthBarBind(memberInfo);
+                break;
+            }
+        }
+    }
 }

@@ -23,7 +23,7 @@ public class WeaponBase : HoldableBase, IEquippable
     [SerializeField] public Sprite holdInLeftHandSprite;
     [SerializeField] public Sprite holdInBothHandsSprite;
 
-    public int GetBaseDamage()
+    public virtual int GetBaseDamage()
     {
         if (primaryActionType == ActionType.Melee)
         {
@@ -41,7 +41,7 @@ public class WeaponBase : HoldableBase, IEquippable
         }
     }
 
-    public float GetArmorPenetration()
+    public virtual float GetArmorPenetration()
     {
         if (primaryActionType == ActionType.Melee)
         {

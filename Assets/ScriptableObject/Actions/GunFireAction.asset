@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f7333a1a857a3644a5c9c769a8379f5, type: 3}
+  m_Name: GunFireAction
+  m_EditorClassIdentifier: Assembly-CSharp::GunAction
+  _actionName: GunFire
+  _costAP: 10
+  actionDelay: 0.25
+  actionLogTemplate:
+    m_TableReference:
+      m_TableCollectionName: GUID:a9ee409725d7f1647b49ba6a0d11fb9e
+    m_TableEntryReference:
+      m_KeyId: 274340355497984
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
