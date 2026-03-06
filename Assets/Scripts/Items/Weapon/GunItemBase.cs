@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Equipment/Gun")]
 public class GunItemBase : WeaponBase
 {
-    public int costAP;
+    public int apPerShot;
     [Header("Magazine")]
     public AmmoType acceptedAmmoType; // 只接受这种弹药
     public int magazineCapacity;      // 弹夹容量
@@ -25,23 +25,17 @@ public class GunItemBase : WeaponBase
             return null;
         }
         ActionBase action = providedActions.FirstOrDefault();//直接返回第一个行动，我们会有更好的办法的 TODO
-        action.costAP = costAP;
-        action.actionDelay = fireInterval;
         return action;
     }
-
-    public override int GetBaseDamage()
+    //注意，枪械在DamageCalculator.cs读取枪械实例的投射物伤害，这两个方法在这里是无用的
+    /*public override int GetBaseDamage()
     {
-        GunFireAction action = GetCurrentActions() as GunFireAction;
-        if (action == null) return 0;
-        return action.gunInstance.GetCurrentProjectileInfo().projectileDamage;
+        
     }
 
     public override float GetArmorPenetration()
     {
-        GunFireAction action = GetCurrentActions() as GunFireAction;
-        if (action == null) return 0;
-        return action.gunInstance.GetCurrentProjectileInfo().projectileArmorPenetration;
-    }
+        
+    }*/
 }
 public enum FireMode { SemiAuto, FullAuto, Burst }

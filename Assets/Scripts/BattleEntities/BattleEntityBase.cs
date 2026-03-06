@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static Unity.Cinemachine.CinemachineFreeLookModifier;
 
 [System.Serializable]
 public abstract class BattleEntityBase : IBattleEntity
@@ -39,7 +38,8 @@ public abstract class BattleEntityBase : IBattleEntity
             return;
         }
 
-        EntityConsumeAP(battleAction.costAP);
+        int actualCost = battleAction.GetCostAP(this);
+        EntityConsumeAP(actualCost);
 
         battleAction.Execute(this, target);
     }

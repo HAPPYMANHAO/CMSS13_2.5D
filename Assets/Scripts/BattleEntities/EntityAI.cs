@@ -37,7 +37,8 @@ public class EntityAI : ScriptableObject, IEntityAI
     // ExecuteAI目前没有被使用------------------
 
     public ActionBase ComfirmAction()
-    {
+    {    
+        if (!actionPool.Any()) return null;
         //Random
         return actionPool[Random.Range(0, actionPool.Count)].action;
     }

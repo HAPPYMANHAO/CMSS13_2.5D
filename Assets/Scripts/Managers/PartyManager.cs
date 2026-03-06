@@ -71,7 +71,7 @@ public class PartyManager : MonoBehaviour
         member.rightHandEquipment.item = partyBattleEntity.rightHandEquipment.item;
         OnPartyMemberUpdated?.Invoke();
         member.isDead = partyBattleEntity.EntityIsDead();
-        overworldVisual.UpdateHandVisuals();
+        overworldVisual?.UpdateHandVisuals();
     }
 
     public void SetPlayerPosition(Vector3 newPosition)

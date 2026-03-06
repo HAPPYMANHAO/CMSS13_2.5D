@@ -33,3 +33,7 @@ MonoBehaviour:
     dropChance: 1
     minQuantity: 100
     maxQuantity: 200
+  - item: {fileID: 11400000, guid: f3e8deeabe85ce94ba97d0415f716f9f, type: 2}
+    dropChance: 1
+    minQuantity: 50
+    maxQuantity: 100

@@ -25,4 +25,7 @@ public abstract class ActionBase : ScriptableObject, IBattleAction
 
     public abstract bool CanExecute(BattleEntityBase user, BattleEntityBase[] target);
     public abstract void Execute(BattleEntityBase user, BattleEntityBase[] target);
+
+    public virtual int GetCostAP(BattleEntityBase user) => _costAP;
+    public virtual float GetActionDelay(BattleEntityBase user) => actionDelay;
 }

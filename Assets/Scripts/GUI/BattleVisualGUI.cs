@@ -92,13 +92,12 @@ public class BattleVisualGUI : BaseVisualGUI
 
     private IEnumerator AutoFireRoutine(GunInstance gun)
     {
-        while (!gun.IsEmpty)
+        while (!gun.IsEmpty && isPlayerCanExecuteAction) 
         {
             TryExecuteAction();
             yield return new WaitForSeconds(gun.GunData.fireInterval);
-            if (!isPlayerCanExecuteAction) // AP 不足时停止
-                yield break;
         }
+        _autoFireCoroutine = null; 
     }
 
     private IEnumerator BurstFireRoutine(GunInstance gun)
@@ -106,6 +105,7 @@ public class BattleVisualGUI : BaseVisualGUI
         int shots = gun.GunData.burstCount;
         for (int i = 0; i < shots && !gun.IsEmpty; i++)
         {
+            if (!isPlayerCanExecuteAction) yield break; 
             TryExecuteAction();
             yield return new WaitForSeconds(gun.GunData.fireInterval);
         }

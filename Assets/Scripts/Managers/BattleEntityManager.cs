@@ -124,7 +124,7 @@ public class BattleEntityManager : MonoBehaviour
         battleVisualGUI.UpdateHandVisuals();
 
         battleVisualGUI.isPlayerCanExecuteAction = false;
-        battleVisualGUI.playerActionDelayTimer = currentAction.actionDelay;
+        battleVisualGUI.playerActionDelayTimer = currentAction.GetActionDelay(currentPlayerEntity);
     }
     //----------------------------Event----------------------------//
     private void HandleEntityDead(BattleEntityBase deadEntity)

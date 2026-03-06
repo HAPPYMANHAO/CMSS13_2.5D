@@ -89,12 +89,13 @@ public static class DamageCalculator
         if (attacker is PartyBattleEntity party)
         {
             var handItem = party.GetCurrentActiveHandItem();
-            WeaponBase equipment = handItem?.itemData as WeaponBase;
-            if (equipment != null)
+            if (handItem is GunInstance gun)
             {
-                return equipment.GetBaseDamage();
-            }
-            return 5;//徒手伤害。TODO
+                Debug.Log(gun.GetCurrentProjectileInfo().name);
+                return gun.GetCurrentProjectileInfo()?.projectileDamage ?? 0;
+            }                       
+            WeaponBase weapon = handItem?.itemData as WeaponBase;
+            return weapon?.GetBaseDamage() ?? 5;//徒手伤害，但是目前没有实现，TODO
         }
 
         return 0;
@@ -111,6 +112,9 @@ public static class DamageCalculator
         if (attacker is PartyBattleEntity party)
         {
             var handItem = party.GetCurrentActiveHandItem();
+            if (handItem is GunInstance gun)
+                return gun.GetCurrentProjectileInfo()?.projectileArmorPenetration ?? 0;
+
             WeaponBase equipment = handItem?.itemData as WeaponBase;
             if (equipment != null)
             {

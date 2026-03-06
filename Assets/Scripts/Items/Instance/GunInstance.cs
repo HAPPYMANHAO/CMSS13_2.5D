@@ -17,7 +17,7 @@ public class GunInstance : ItemInstance
 
     public GunInstance(GunItemBase data) : base(data) { }
 
-    // 获取当前弹药的 ProjectileInfo（供 gunFireAction 使用）
+    // 获取当前弹药的 ProjectileInfo（供 DamageCalculator.cs 使用）
     public ProjectileInfo GetCurrentProjectileInfo()
         => loadedAmmoType?.projectileInfo;
 
@@ -25,15 +25,23 @@ public class GunInstance : ItemInstance
     // 返回实际装入的数量
     public int Reload(StackableItemInstance ammoStack)
     {
-        if (ammoStack.itemData is not AmmoBase ammo) return 0;
-        if (ammo.ammoType != GunData.acceptedAmmoType) return 0;
+        if (ammoStack.itemData is not AmmoBase newAmmo) return 0;
+        if (newAmmo.ammoType != GunData.acceptedAmmoType) return 0;
+
+        if (loadedAmmoType != null && loadedAmmoType != newAmmo && currentAmmoCount > 0)
+        {
+            InventoryManager.instance.AddItemFromData(loadedAmmoType, currentAmmoCount);
+            currentAmmoCount = 0;
+        }
+
+        loadedAmmoType = newAmmo;
 
         int canLoad = GunData.magazineCapacity - currentAmmoCount;
         int toLoad = Mathf.Min(canLoad, ammoStack.currentQuantity);
 
-        loadedAmmoType = ammo;
         currentAmmoCount += toLoad;
         ammoStack.currentQuantity -= toLoad;
+
         return toLoad;
     }
 

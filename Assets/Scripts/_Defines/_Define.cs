@@ -116,26 +116,42 @@ public enum EquipmentSlotType
     PocketRight,
 }
 
-//-----------------------结构体struct-----------------------//
-//----------/包含装甲计算两个值（int和float）的结构体A struct that contains two values (an int and a float) for armor calculation
+//-----------------------class-----------------------//
+//----------/包含装甲计算两个值（int和float）的类 class that contains two values (an int and a float) for armor calculation
 [System.Serializable]
-public struct ArmorStats
+public class ArmorStats 
 {
     public DamageType armorType;
-    public int armorValue;        // 护甲值armor value
-                                  //对于护甲来说，护甲抵消的伤害值为护甲值和护甲完整性*伤害值中的较小值
-    [Range(0f, 1f)] public float armorIntegrity;   // 护甲强度（0%~100%）armor strength（0%~100%）
+
+    [SerializeField] private int _armorValue;
+    public int armorValue
+    {
+        get => _armorValue;
+        set => _armorValue = Mathf.Max(0, value); // 永远不小于 0
+    }
+
+    [SerializeField][Range(0f, 1f)] private float _armorIntegrity;
+    public float armorIntegrity
+    {
+        get => _armorIntegrity;
+        set => _armorIntegrity = Mathf.Clamp01(value); // 永远在 0 到 1 之间
+    }
 }
-//----------/包含伤害抗性的值的结构体
+//----------/包含伤害抗性的值的类
 [System.Serializable]
-public struct DamageResistanceStats
+public class DamageResistanceStats 
 {
     public DamageType resistType;
-    public float damageResist; //对于伤害抗性来说，伤害抗性直接减少 伤害抗性*伤害值 的伤害，在护甲后结算
-    //特别的，如果伤害抗性为负数，最多计算为-250%（即伤害提升250%），具体算法在DamageCalculator.cs
+
+    [SerializeField] private float _damageResist;
+    public float damageResist
+    {
+        get => _damageResist;
+        set => _damageResist = Mathf.Clamp(value, -2.5f, 1f); // 约束最小值为 -250%
+    }
 }
 
-//----------/包含计算血条的结构体 A struct that includes the calculation of health bars
+//----------/包含计算血条的类 A class that includes the calculation of health bars
 [System.Serializable]
 public class HealthBarEntry
 {
@@ -194,8 +210,8 @@ public struct BuffModifier
 }
 //---------/Equipment Armor
 [System.Serializable]
-public struct ArmorBonus
+public class ArmorBonus 
 {
-    public ArmorStats armorStats;
+    public ArmorStats armorStats = new ArmorStats(); // 确保初始化
     [Range(0f, 1f)] public float resistanceBonus;
 }
