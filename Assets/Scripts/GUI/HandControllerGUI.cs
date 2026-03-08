@@ -36,6 +36,11 @@ public class HandControllerGUI : MonoBehaviour
             quantityText.gameObject.SetActive(true);
             quantityText.text = stackable.currentQuantity.ToString();
         }
+        else if (item is GunInstance gun)
+        {
+            quantityText.gameObject.SetActive(true);
+            quantityText.text = gun.currentAmmoCount.ToString() + "/" + gun.GunData.magazineCapacity;
+        }
         else
         {
             quantityText.gameObject.SetActive(false);

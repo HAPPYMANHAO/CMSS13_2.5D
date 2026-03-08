@@ -21,7 +21,7 @@ MonoBehaviour:
   armorBonuses:
   - armorStats:
       armorType: 0
-      armorValue: 15
-      armorIntegrity: 1
+      _armorValue: 15
+      _armorIntegrity: 1
     resistanceBonus: 0
   resistanceBonusFlat: 0

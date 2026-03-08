@@ -27,6 +27,12 @@ public class OverworldVisualGUI : BaseVisualGUI
         containerGUI.UpdateItemContainerGUI(GetInventoryItems());
     }
 
+    public void UpdateGUI()
+    {
+        UpdateHandVisuals();
+        containerGUI.UpdateItemContainerGUI(GetInventoryItems());
+    }
+
     protected override void OnEnable()
     {
         base.OnEnable();

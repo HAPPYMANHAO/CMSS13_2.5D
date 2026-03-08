@@ -24,29 +24,29 @@ MonoBehaviour:
   enemyBattleVisualPerfab: {fileID: 8061482746390470737, guid: bf81f737200d36e49a11a487a34dc671, type: 3}
   armorStats:
   - armorType: 0
-    armorValue: 0
-    armorIntegrity: 0
+    _armorValue: 0
+    _armorIntegrity: 0
   - armorType: 1
-    armorValue: 0
-    armorIntegrity: 0
+    _armorValue: 50
+    _armorIntegrity: 0.5
   - armorType: 2
-    armorValue: 0
-    armorIntegrity: 0
+    _armorValue: 0
+    _armorIntegrity: 0
   - armorType: 3
-    armorValue: 0
-    armorIntegrity: 0
+    _armorValue: 0
+    _armorIntegrity: 0
   - armorType: 4
-    armorValue: 0
-    armorIntegrity: 0
+    _armorValue: 0
+    _armorIntegrity: 0
   damageResistanceStats:
   - resistType: 0
-    damageResist: 0
+    _damageResist: 0
   - resistType: 1
-    damageResist: 0
+    _damageResist: 0
   - resistType: 2
-    damageResist: 0
+    _damageResist: 0
   - resistType: 3
-    damageResist: 0
+    _damageResist: 0
   - resistType: 4
-    damageResist: 0
+    _damageResist: 0
   entityAI: {fileID: 11400000, guid: 4004377941b2a364fab57732fd3c69d5, type: 2}

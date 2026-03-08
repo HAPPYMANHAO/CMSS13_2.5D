@@ -28,9 +28,9 @@ MonoBehaviour:
   holdInRightHandSprite: {fileID: 0}
   holdInLeftHandSprite: {fileID: 0}
   holdInBothHandsSprite: {fileID: 0}
-  costAP: 10
+  apPerShot: 10
   acceptedAmmoType: 1
-  magazineCapacity: 3
+  magazineCapacity: 30
   availableFireModes: 0100000000000000
   burstCount: 3
   fireInterval: 0.25

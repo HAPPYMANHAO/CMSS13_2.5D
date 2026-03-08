@@ -15,6 +15,6 @@ MonoBehaviour:
   projectileSprite: {fileID: -1673625374, guid: 58f18dc247d0aff47b9d3e30dc17d117, type: 3}
   projectileGlowsColor: {r: 1, g: 0.6062992, b: 0, a: 0}
   projectileDamageType: 1
-  projectileDamage: 100
+  projectileDamage: 44
   projectileArmorPenetration: 0.05
   projectileSpeed: 25
