@@ -30,6 +30,7 @@ public class MeleeAction : ActionBase
             if(buffBase != null)
             {
                 target[i].buffComponent.AddBuff(buffBase);
+                Debug.Log("buff apply");
             }
 
             BattleEntityBase currentTarget = target[i];

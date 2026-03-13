@@ -126,6 +126,7 @@ public class BuffComponent
     public IReadOnlyList<BuffInstance> ActiveBuffs => _activeBuffs;
 
     public event Action OnBuffChanged; // GUI
+    public event Action OnBuffDataChanged; // GUI
 
     public void AddBuff(BuffBase buffData)
     {
@@ -141,6 +142,9 @@ public class BuffComponent
                 case BuffBase.StackAddType.Cover:
                     existing.CoverStack(buffData);
                     break;
+                case BuffBase.StackAddType.CoverWithLarger:
+                    existing.CoverStackWithLarger(buffData);
+                    break;
                 case BuffBase.StackAddType.None:
                     break;
                 default:
@@ -154,6 +158,9 @@ public class BuffComponent
                     break;
                 case BuffBase.DurationAddType.Cover:
                     existing.CoverDuration(buffData);
+                    break;
+                case BuffBase.DurationAddType.CoverWithLarger:
+                    existing.CoverDurationWithLarger(buffData);
                     break;
                 case BuffBase.DurationAddType.None:
                     break;
@@ -187,7 +194,8 @@ public class BuffComponent
     {
         foreach (var buff in _activeBuffs.ToList())
             buff.Tick();
-        AllHealthChangeBuffTick(owner);
+        OnBuffDataChanged?.Invoke();
+        AllHealthChangeBuffTick(owner);      
     }
 
     private void HandleBuffExpired(BuffInstance buff)

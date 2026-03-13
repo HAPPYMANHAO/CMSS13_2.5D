@@ -10,6 +10,10 @@ public class CharacterBattleVisual : MonoBehaviour
     [SerializeField] private SpriteRenderer[] overlayRenderer;
     [SerializeField] private SpriteRenderer[] mainRenderers;
     [SerializeField] private Light rightLight;
+    [SerializeField] private GameObject buffContainer;
+
+    [Header("prefab")]
+    [SerializeField] private BuffIconGUI buffIconPrefab;
 
     [Header("For Player Praty")]
     [SerializeField] private SpriteRenderer mainHoldItemRenderer;
@@ -43,6 +47,8 @@ public class CharacterBattleVisual : MonoBehaviour
     private void Start()
     {
         battleEntity.OnEntityDeath += HandleEntityDead;
+        battleEntity.buffComponent.OnBuffChanged += HandleBuffChanged;
+        battleEntity.buffComponent.OnBuffDataChanged += HandleBuffDateChanged;
     }
 
     private void OnDestroy()
@@ -50,6 +56,8 @@ public class CharacterBattleVisual : MonoBehaviour
         if (battleEntity != null)
         {
             battleEntity.OnEntityDeath -= HandleEntityDead;
+            battleEntity.buffComponent.OnBuffChanged -= HandleBuffChanged;
+            battleEntity.buffComponent.OnBuffDataChanged -= HandleBuffDateChanged;
         }
     }
 
@@ -103,6 +111,38 @@ public class CharacterBattleVisual : MonoBehaviour
     {
         characterAnimator.SetBool(IS_DEAD_PARAM, true);
         Destroy(gameObject, DEAD_ANIMATION_DURATION);  
+    }
+
+    private void HandleBuffChanged()
+    {
+        // 1. 清理旧的图标（或者使用对象池优化）
+        foreach (Transform child in buffContainer.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        // 2. 遍历当前所有活跃的 Buff
+        foreach (var buff in battleEntity.buffComponent.ActiveBuffs)
+        {
+            // 3. 实例化预制体并填充数据
+            BuffIconGUI icon = Instantiate(buffIconPrefab);
+            icon.transform.SetParent(buffContainer.transform, false);
+            icon.SetBuff(buff.buffData.icon, buff.currentStacks, buff.remainingTurns);
+        }
+    }
+
+    private void HandleBuffDateChanged()
+    {
+        foreach (var buff in battleEntity.buffComponent.ActiveBuffs)
+        {
+            foreach(BuffIconGUI child in buffContainer.transform)
+            {
+                if(child.buffIcon.sprite = buff.buffData.icon)
+                {
+                    child.RefreshBuff(buff.currentStacks, buff.remainingTurns);
+                }                     
+            }     
+        }
     }
 
     public void ActiveItemDisplyer(Sprite sprite)

@@ -36,6 +36,14 @@ public class BuffInstance
     {
         currentStacks = newBuff.baseStacks;
     }
+    // 如果新值更大，覆盖层数
+    public void CoverStackWithLarger(BuffBase newBuff)
+    {
+        if(currentStacks <= newBuff.baseStacks)
+        {
+            CoverStack(newBuff);
+        }
+    }
     // 叠加持续回合数
     public void AddDuration(BuffBase newBuff)
     {
@@ -45,6 +53,14 @@ public class BuffInstance
     public void CoverDuration(BuffBase newBuff)
     {
         remainingTurns = newBuff.baseDuration;
+    }
+    // 如果新值更大，覆盖持续回合数
+    public void CoverDurationWithLarger(BuffBase newBuff)
+    {
+        if (remainingTurns <= newBuff.baseDuration)
+        {
+            CoverDuration(newBuff);
+        }
     }
 
     public IEnumerable<BuffModifier> GetModifiers() => buffData.modifiers;
