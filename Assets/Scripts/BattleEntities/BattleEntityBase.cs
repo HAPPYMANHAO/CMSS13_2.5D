@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [System.Serializable]
@@ -126,7 +127,8 @@ public class BuffComponent
     public IReadOnlyList<BuffInstance> ActiveBuffs => _activeBuffs;
 
     public event Action OnBuffChanged; // GUI
-    public event Action OnBuffDataChanged; // GUI
+
+    public BattleEntityBase owner;
 
     public void AddBuff(BuffBase buffData)
     {
@@ -137,13 +139,13 @@ public class BuffComponent
             switch (buffData.stackAddType)
             {
                 case BuffBase.StackAddType.Add:
-                    existing.AddStack(buffData);
+                    existing.AddStack(owner,buffData);
                     break;
                 case BuffBase.StackAddType.Cover:
-                    existing.CoverStack(buffData);
+                    existing.CoverStack(owner, buffData);
                     break;
                 case BuffBase.StackAddType.CoverWithLarger:
-                    existing.CoverStackWithLarger(buffData);
+                    existing.CoverStackWithLarger(owner, buffData);
                     break;
                 case BuffBase.StackAddType.None:
                     break;
@@ -154,13 +156,13 @@ public class BuffComponent
             switch (buffData.durationAddType)
             {
                 case BuffBase.DurationAddType.Add:
-                    existing.AddDuration(buffData);
+                    existing.AddDuration(owner, buffData);
                     break;
                 case BuffBase.DurationAddType.Cover:
-                    existing.CoverDuration(buffData);
+                    existing.CoverDuration(owner, buffData);
                     break;
                 case BuffBase.DurationAddType.CoverWithLarger:
-                    existing.CoverDurationWithLarger(buffData);
+                    existing.CoverDurationWithLarger(owner, buffData);
                     break;
                 case BuffBase.DurationAddType.None:
                     break;
@@ -174,6 +176,7 @@ public class BuffComponent
         {
             var newBuff = new BuffInstance(buffData, buffData.baseStacks);
             newBuff.OnExpired += HandleBuffExpired;
+            newBuff.OnApply(owner, newBuff);
             _activeBuffs.Add(newBuff);
         }
         OnBuffChanged?.Invoke();
@@ -184,22 +187,27 @@ public class BuffComponent
         var buff = _activeBuffs.FirstOrDefault(b => b.buffData == buffData);
         if (buff != null)
         {
-            _activeBuffs.Remove(buff);
-            OnBuffChanged?.Invoke();
+            HandleBuffExpired(buff);
         }
     }
 
     // 回合结束时由 TurnManager 调用
-    public void TickAllBuffs(BattleEntityBase owner)
+    public void TickAllBuffsEndTurn(BattleEntityBase owner)
     {
         foreach (var buff in _activeBuffs.ToList())
-            buff.Tick();
-        OnBuffDataChanged?.Invoke();
-        AllHealthChangeBuffTick(owner);      
+            if (buff.buffData.triggeringTime == BuffBase.TriggeringTime.EndTurn) buff.Tick(owner);
+        OnBuffChanged?.Invoke();
+    }
+    public void TickAllBuffsStartTurn(BattleEntityBase owner)
+    {
+        foreach (var buff in _activeBuffs.ToList())
+            if (buff.buffData.triggeringTime == BuffBase.TriggeringTime.StartTurn) buff.Tick(owner);
+        OnBuffChanged?.Invoke();
     }
 
     private void HandleBuffExpired(BuffInstance buff)
     {
+        buff.OnRemove(owner, buff);
         _activeBuffs.Remove(buff);
         OnBuffChanged?.Invoke();
     }
@@ -220,30 +228,5 @@ public class BuffComponent
                     value = mod.value * buff.currentStacks
                 };
             }
-    }
-
-    //HealthChangeFlat（DOT）类型BUFF，由TickAllBuffs调用
-    private void AllHealthChangeBuffTick(BattleEntityBase owner)
-    {
-        foreach(BuffInstance buff in ActiveBuffs)
-        {
-            foreach (BuffModifier modifier in buff.buffData.modifiers)
-            {
-                if(modifier.modType == BuffModifierType.HealthChangeFlat)
-                {
-                    if(!buff.buffData.isHealthChangeDamage)
-                    {
-                        // 使用 modifier.value * stacks
-                        int healAmount = (int)(modifier.value * buff.currentStacks);
-                        owner.EntityRevoverHealth(healAmount);
-                    }
-                    else
-                    {
-                        // 使用 modifier.value * stacks(在TakeDamageFromBuff函数内)
-                        owner.EntityTakeDamageFromBuff(buff, modifier);              
-                    }
-                }
-            }      
-        }
     }
 }

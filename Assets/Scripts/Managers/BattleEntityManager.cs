@@ -54,6 +54,7 @@ public class BattleEntityManager : MonoBehaviour
                 .GetComponent<CharacterBattleVisual>();
             tempBattleVisual.battleEntity = partyBattleEntity;
             partyBattleEntity.battleVisual = tempBattleVisual;
+            partyBattleEntity.buffComponent.owner = partyBattleEntity;
 
             battleVisualGUI.BindHealthBar(partyBattleEntity);
 
@@ -81,6 +82,7 @@ public class BattleEntityManager : MonoBehaviour
                 .GetComponent<CharacterBattleVisual>();
             tempBattleVisual.battleEntity = enemyBattleEntity;
             enemyBattleEntity.battleVisual = tempBattleVisual;
+            enemyBattleEntity.buffComponent.owner = enemyBattleEntity;
 
             tempBattleVisual.GetComponentInChildren<EnemyHealthBarGUI>().EnemyHealthBarBind(enemyBattleEntity);
 

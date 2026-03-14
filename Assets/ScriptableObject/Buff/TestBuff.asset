@@ -13,15 +13,17 @@ MonoBehaviour:
   m_Name: TestBuff
   m_EditorClassIdentifier: Assembly-CSharp::BuffBase
   buffName: TestBuff
-  icon: {fileID: 22506135, guid: 37cddb5bf699f6047a66ba9b05e09b9d, type: 3}
+  icon: {fileID: 1040909868, guid: 3dbfb3c6de4d97d47949ed5ff624019b, type: 3}
   isHealthChangeDamage: 1
-  durationType: 0
+  durationType: 2
   stackAddType: 0
-  durationAddType: 0
-  baseDuration: 5
-  baseStacks: 10
-  maxStacks: 20
+  durationAddType: 3
+  triggeringTime: 3
+  baseDuration: 1
+  baseStacks: 6
+  maxStacks: 999
+  maxDuration: 1
   modifiers:
-  - modType: 0
-    damageType: 3
-    value: 1
+  - modType: 1
+    damageType: 0
+    value: -1

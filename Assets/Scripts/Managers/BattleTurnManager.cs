@@ -63,6 +63,11 @@ public class BattleTurnManager : MonoBehaviour
                 break;
         }
     }
+
+    private void OnDestroy()
+    {
+        BattleVisualGUI.OnPlayerEndTurn -= HandlePlayerEndTurn;
+    }
     //----------------Battle Start Set Up---------------//
     private void SetUpBattleStart()
     {
@@ -100,6 +105,10 @@ public class BattleTurnManager : MonoBehaviour
                     EntityRecoverAP(battleEntityManager.partyEntities.ElementAt(i).eachTurnRecoveredAP);
             }
         }
+
+        foreach (var entity in battleEntityManager.enemyEntities)
+            entity.buffComponent.TickAllBuffsStartTurn(entity);
+
         ChangeState(BattleState.PlayerTurnAction);
         SetPlayerTurnAtion();
     }
@@ -142,7 +151,7 @@ public class BattleTurnManager : MonoBehaviour
     {
         battleVisualGUI.isPlayerCanExecuteAction = false;
         foreach (var entity in battleEntityManager.partyEntities)
-            entity.buffComponent.TickAllBuffs(entity);
+            entity.buffComponent.TickAllBuffsEndTurn(entity);
 
         ChangeState(BattleState.EnemyTurnStart);
         SetEnemyTurnStart();       
@@ -159,6 +168,10 @@ public class BattleTurnManager : MonoBehaviour
                     EntityRecoverAP(battleEntityManager.enemyEntities.ElementAt(i).eachTurnRecoveredAP);
             }
         }
+
+        foreach (var entity in battleEntityManager.enemyEntities)
+            entity.buffComponent.TickAllBuffsStartTurn(entity);
+
         ChangeState(BattleState.EnemyTurnAction);
         StartCoroutine(SetEnemyAction());
     }
@@ -178,7 +191,7 @@ public class BattleTurnManager : MonoBehaviour
         if (battleState == BattleState.BattleEnd) return;
 
         foreach (var entity in battleEntityManager.enemyEntities)
-            entity.buffComponent.TickAllBuffs(entity);
+            entity.buffComponent.TickAllBuffsEndTurn(entity);
 
         currentTurn++;
 

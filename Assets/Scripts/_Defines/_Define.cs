@@ -99,7 +99,10 @@ public enum BuffModifierType
     DamageFlatBonus,       // 伤害加值（攻击者）
     DamagePercentBonus,    // 伤害百分比（攻击者）
     MaxAPFlat,             // 最大AP加减
+    MaxAPPercent,          // 最大AP加减百分比
+    CurrentAPFlat,         // 当前AP加减
     APRecoveryFlat,        // 每回合AP回复加减
+    APRecoveryPercent,     // 每回合AP回复加减百分比
 }
 //----------/Equipment Type
 public enum EquipmentSlotType
@@ -123,19 +126,8 @@ public class ArmorStats
 {
     public DamageType armorType;
 
-    [SerializeField] private int _armorValue;
-    public int armorValue
-    {
-        get => _armorValue;
-        set => _armorValue = Mathf.Max(0, value); // 永远不小于 0
-    }
-
-    [SerializeField][Range(0f, 1f)] private float _armorIntegrity;
-    public float armorIntegrity
-    {
-        get => _armorIntegrity;
-        set => _armorIntegrity = Mathf.Clamp01(value); // 永远在 0 到 1 之间
-    }
+    [SerializeField] public int armorValue;
+    [SerializeField][Range(0f, 1f)] public float armorIntegrity;
 }
 //----------/包含伤害抗性的值的类
 [System.Serializable]
@@ -143,12 +135,7 @@ public class DamageResistanceStats
 {
     public DamageType resistType;
 
-    [SerializeField] private float _damageResist;
-    public float damageResist
-    {
-        get => _damageResist;
-        set => _damageResist = Mathf.Clamp(value, -2.5f, 1f); // 约束最小值为 -250%
-    }
+    [SerializeField] public float damageResist;
 }
 
 //----------/包含计算血条的类 A class that includes the calculation of health bars

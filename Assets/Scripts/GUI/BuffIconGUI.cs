@@ -6,7 +6,7 @@ public class BuffIconGUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI buffStacks;
     [SerializeField] private TextMeshProUGUI buffDuration;
-    [SerializeField] public Image buffIcon;
+    [SerializeField] private Image buffIcon;
 
     public void SetBuff(Sprite icon, int stacks,int duration)
     {

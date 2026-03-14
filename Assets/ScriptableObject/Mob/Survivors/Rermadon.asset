@@ -55,8 +55,8 @@ MonoBehaviour:
     level: 0
   armorStats:
   - armorType: 0
-    armorValue: 0
-    armorIntegrity: 0
+    armorValue: 93
+    armorIntegrity: -83
   - armorType: 1
     armorValue: 0
     armorIntegrity: 0
@@ -69,4 +69,15 @@ MonoBehaviour:
   - armorType: 4
     armorValue: 0
     armorIntegrity: 0
+  damageResistanceStats:
+  - resistType: 0
+    damageResist: 0
+  - resistType: 1
+    damageResist: 0
+  - resistType: 2
+    damageResist: 0
+  - resistType: 3
+    damageResist: 0
+  - resistType: 4
+    damageResist: 0
   entityAI: {fileID: 0}

@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -48,7 +50,6 @@ public class CharacterBattleVisual : MonoBehaviour
     {
         battleEntity.OnEntityDeath += HandleEntityDead;
         battleEntity.buffComponent.OnBuffChanged += HandleBuffChanged;
-        battleEntity.buffComponent.OnBuffDataChanged += HandleBuffDateChanged;
     }
 
     private void OnDestroy()
@@ -57,7 +58,6 @@ public class CharacterBattleVisual : MonoBehaviour
         {
             battleEntity.OnEntityDeath -= HandleEntityDead;
             battleEntity.buffComponent.OnBuffChanged -= HandleBuffChanged;
-            battleEntity.buffComponent.OnBuffDataChanged -= HandleBuffDateChanged;
         }
     }
 
@@ -113,36 +113,62 @@ public class CharacterBattleVisual : MonoBehaviour
         Destroy(gameObject, DEAD_ANIMATION_DURATION);  
     }
 
+    private Dictionary<BuffInstance, BuffIconGUI> buffIconMap = new Dictionary<BuffInstance, BuffIconGUI>();
+    private Queue<BuffIconGUI> iconPool = new Queue<BuffIconGUI>();
+
     private void HandleBuffChanged()
     {
-        // 1. 清理旧的图标（或者使用对象池优化）
-        foreach (Transform child in buffContainer.transform)
-        {
-            Destroy(child.gameObject);
-        }
+        // 1. 标记所有现有图标为未使用
+        HashSet<BuffIconGUI> unusedIcons = new HashSet<BuffIconGUI>(buffIconMap.Values);
 
-        // 2. 遍历当前所有活跃的 Buff
+        // 2. 更新或创建图标
         foreach (var buff in battleEntity.buffComponent.ActiveBuffs)
         {
-            // 3. 实例化预制体并填充数据
-            BuffIconGUI icon = Instantiate(buffIconPrefab);
-            icon.transform.SetParent(buffContainer.transform, false);
-            icon.SetBuff(buff.buffData.icon, buff.currentStacks, buff.remainingTurns);
+            BuffIconGUI icon;
+
+            if (buffIconMap.TryGetValue(buff, out icon))
+            {
+                // 已存在，刷新
+                icon.RefreshBuff(buff.currentStacks, buff.remainingTurns);
+                unusedIcons.Remove(icon);
+            }
+            else
+            {
+                // 新buff，从池中获取或创建
+                icon = GetOrCreateIcon();
+                icon.SetBuff(buff.buffData.icon, buff.currentStacks, buff.remainingTurns);
+                buffIconMap[buff] = icon;
+            }
+        }
+
+        // 3. 回收未使用的图标
+        foreach (var unusedIcon in unusedIcons)
+        {
+            ReturnIconToPool(unusedIcon);
+            // 从map中移除
+            var buffToRemove = buffIconMap.FirstOrDefault(x => x.Value == unusedIcon).Key;
+            if (buffToRemove != null)
+                buffIconMap.Remove(buffToRemove);
         }
     }
 
-    private void HandleBuffDateChanged()
+    private BuffIconGUI GetOrCreateIcon()
     {
-        foreach (var buff in battleEntity.buffComponent.ActiveBuffs)
+        if (iconPool.Count > 0)
         {
-            foreach(BuffIconGUI child in buffContainer.transform)
-            {
-                if(child.buffIcon.sprite = buff.buffData.icon)
-                {
-                    child.RefreshBuff(buff.currentStacks, buff.remainingTurns);
-                }                     
-            }     
+            var icon = iconPool.Dequeue();
+            icon.gameObject.SetActive(true);
+            return icon;
         }
+
+        var newIcon = Instantiate(buffIconPrefab, buffContainer.transform);
+        return newIcon;
+    }
+
+    private void ReturnIconToPool(BuffIconGUI icon)
+    {
+        icon.gameObject.SetActive(false);
+        iconPool.Enqueue(icon);
     }
 
     public void ActiveItemDisplyer(Sprite sprite)

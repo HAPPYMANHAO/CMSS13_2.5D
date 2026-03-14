@@ -181,12 +181,9 @@ public static class DamageCalculator
     {
         if (!target.damageResistanceStats.ContainsKey(type))
             return damage;
-        float buffDamageResistanceFlat = 0;
-        foreach (var buffMod in target.buffComponent.GetModifiers(BuffModifierType.DamageResistFlat, type))
-            buffDamageResistanceFlat += buffMod.value;
 
         float effectivedamageResistance = Mathf.Clamp(
-            target.damageResistanceStats[type] + buffDamageResistanceFlat,
+            target.damageResistanceStats[type],
             -2.5f,//DamageResistance最多允许伤害增加到250%
             1f
         );
@@ -207,22 +204,15 @@ public static class DamageCalculator
             return damage;
 
         ArmorStats armor = target.armorStats[type];
-        float buffArmorIntegrityFlat = 0;
-        float buffArmorValueFlat = 0;
-        foreach (var buffMod in target.buffComponent.GetModifiers(BuffModifierType.ArmorIntegrityFlat, type))
-            buffArmorIntegrityFlat += buffMod.value;
-        foreach (var buffMod in target.buffComponent.GetModifiers(BuffModifierType.ArmorValueFlat, type))
-            buffArmorValueFlat += buffMod.value;
-
 
         float effectiveIntegrity = Mathf.Clamp(
-        armor.armorIntegrity - penetration + buffArmorIntegrityFlat,
+        armor.armorIntegrity - penetration,
         0f,
         1f
         );
 
         int effectiveArmor = Mathf.Clamp(
-        armor.armorValue + (int)buffArmorValueFlat,
+        armor.armorValue,
         0,
         int.MaxValue
         );
