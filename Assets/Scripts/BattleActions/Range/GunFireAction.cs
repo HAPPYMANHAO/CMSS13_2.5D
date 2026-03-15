@@ -16,13 +16,15 @@ public class GunFireAction : ActionBase
         if (user is not PartyBattleEntity party) return;
         var gun = party.GetCurrentActiveHandItem() as GunInstance; 
         if (gun == null) return;
+        float projectileAccuracy = gun.GetAccuracy((PartyBattleEntity)user);
         var launcher = user.battleVisual.GetComponentInChildren<ProjectileLauncher>();
         var projectileInfo = gun.GetCurrentProjectileInfo();
         if (launcher != null && projectileInfo != null && targets.Length > 0)
         {
-            launcher.ProjectileLaunch(user, targets[0], this, projectileInfo);
+            launcher.ProjectileLaunch(user, targets[0], this, projectileInfo, projectileAccuracy);
             gun.ConsumeAmmo();
             user.battleVisual.RightLightOn();
+            gun.AddRecoil((PartyBattleEntity)user);
         }
     }
 

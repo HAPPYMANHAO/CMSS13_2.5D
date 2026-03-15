@@ -36,10 +36,15 @@ public class PartyMemberInfo : ScriptableObject
 
     public Dictionary<DamageType, ArmorStats> GetArmorDictionary()
     {
-        Dictionary<DamageType, ArmorStats> dict = new Dictionary<DamageType, ArmorStats>();
+        var dict = new Dictionary<DamageType, ArmorStats>();
         foreach (var armor in armorStats)
         {
-            dict[armor.armorType] = armor;
+            dict[armor.armorType] = new ArmorStats   
+            {
+                armorType = armor.armorType,
+                armorValue = armor.armorValue,
+                armorIntegrity = armor.armorIntegrity,
+            };
         }
         return dict;
     }

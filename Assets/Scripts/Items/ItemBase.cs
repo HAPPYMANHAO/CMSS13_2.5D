@@ -22,6 +22,7 @@ public abstract class ItemBase : ScriptableObject
         return new ItemInstance(this);
     }
 
+
 #if UNITY_EDITOR
     private void OnValidate()
     {

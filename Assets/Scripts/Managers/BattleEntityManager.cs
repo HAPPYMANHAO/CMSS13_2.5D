@@ -133,7 +133,7 @@ public class BattleEntityManager : MonoBehaviour
     {
         if (allBattleEntities.Contains(deadEntity))
         {
-            if(deadEntity is PartyBattleEntity)
+            if (deadEntity is PartyBattleEntity)
             {
                 SavePartyStats();
             }
@@ -156,7 +156,7 @@ public class BattleEntityManager : MonoBehaviour
 //----------------------------Class----------------------------//
 //----------------BattleEntity Class/
 [System.Serializable]
-public class PartyBattleEntity : BattleEntityBase ,IHandsOwner
+public class PartyBattleEntity : BattleEntityBase, IHandsOwner
 {
     public int healthCRIT;
     public int healthCRITShock;
@@ -240,6 +240,28 @@ public class PartyBattleEntity : BattleEntityBase ,IHandsOwner
     public bool PartyMemberIsCritShock()
     {
         return currentHealth <= healthCRITShock;
+    }
+
+    public int accumulatedRecoil = 0;
+
+    public void RecoverRecoil()
+    {
+        int recoverRecoiAmount = 0;
+        switch (skills[SkillType.Firearms])
+        {
+            case 0:
+                recoverRecoiAmount = 35;
+                break;
+            case 1:
+                recoverRecoiAmount = 50;
+                break;
+            case 2:
+                recoverRecoiAmount = 70;
+                break;
+            default:
+                break;
+        }
+        accumulatedRecoil = Mathf.Max(0, accumulatedRecoil - recoverRecoiAmount);
     }
 }
 [System.Serializable]

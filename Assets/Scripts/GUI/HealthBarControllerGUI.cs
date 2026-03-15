@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public class HealthBarControllerGUI : MonoBehaviour
 {
@@ -121,5 +120,10 @@ public class HealthBarControllerGUI : MonoBehaviour
             owner.OnHealthChanged -= HandleHealthUpdate;
             owner.OnApChanged -= HandleUpdateAP;
         }
+    }
+
+    private void OnDisable()
+    {
+        if (ownerOverworld != null) ownerOverworld.OnHealthChanged -= HandleHealthUpdateOverworld;
     }
 }

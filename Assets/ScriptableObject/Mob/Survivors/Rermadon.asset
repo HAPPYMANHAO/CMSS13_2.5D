@@ -55,8 +55,8 @@ MonoBehaviour:
     level: 0
   armorStats:
   - armorType: 0
-    armorValue: 93
-    armorIntegrity: -83
+    armorValue: 0
+    armorIntegrity: 1
   - armorType: 1
     armorValue: 0
     armorIntegrity: 0

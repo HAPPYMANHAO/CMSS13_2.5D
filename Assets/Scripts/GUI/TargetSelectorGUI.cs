@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
-using static Unity.Cinemachine.IInputAxisOwner.AxisDescriptor;
 
 public class TargetSelectorGUI : MonoBehaviour
 {
@@ -56,6 +55,7 @@ public class TargetSelectorGUI : MonoBehaviour
                     SelectTarget(visual.battleEntity);
                 }
             }
+            else currentTarget = null;
         }
         else
         {

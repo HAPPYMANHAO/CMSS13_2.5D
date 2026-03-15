@@ -23,6 +23,7 @@ public class GunInstance : ItemInstance
 
     // 装弹：从一个 StackableItemInstance（弹药）中填充弹夹
     // 返回实际装入的数量
+
     public int Reload(StackableItemInstance ammoStack)
     {
         if (ammoStack.itemData is not AmmoBase newAmmo) return 0;
@@ -58,5 +59,25 @@ public class GunInstance : ItemInstance
     public void CycleFireMode()
     {
         _fireModeIndex = (_fireModeIndex + 1) % GunData.availableFireModes.Count;
+    }
+
+    public float GetAccuracy(PartyBattleEntity shooter)
+    {
+        float baseAcc = isBothHandsUsing
+            ? GunData.baseAccuracy + GunData.bothHandAccuracyBonus
+            : GunData.baseAccuracy;
+
+        float recoilMult = isBothHandsUsing
+            ? (1f - GunData.bothHandRecoilReduce)
+            : 1f;
+
+        // 从实体身上读后坐力，不是从枪上
+        float recoilPenalty = (shooter.accumulatedRecoil * recoilMult) / 100f;
+        return Mathf.Max(0f, baseAcc - recoilPenalty);
+    }
+
+    public void AddRecoil(PartyBattleEntity shooter)
+    {
+        shooter.accumulatedRecoil += GunData.recoil;
     }
 }

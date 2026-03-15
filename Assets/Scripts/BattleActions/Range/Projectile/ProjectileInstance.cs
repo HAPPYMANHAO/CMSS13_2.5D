@@ -9,10 +9,17 @@ public class ProjectileInstance : MonoBehaviour
     private Light projectileSpriteGlows;
     private Vector3 targetPos;
     private bool isFlying = false;
+    private bool isMiss = false;
+
+    private const float MAX_EXIST_TIME = 5f;
+    private float exist_timer = 0;
 
     private BattleEntityBase user; // user
     private BattleEntityBase targetEntity; // trget
     private ActionBase actionSource; // action
+
+    private Vector3 originalTargetPos; // 记录敌人原本位置
+    private bool hasTriggeredMissLog = false;
 
     private void Awake()
     {
@@ -50,12 +57,14 @@ public class ProjectileInstance : MonoBehaviour
     /// <summary>
     /// 从ProjectileInfo设置投射物，用于gun fire
     /// </summary>
-    public void ProjectileSetup(BattleEntityBase user, BattleEntityBase target, ActionBase action, ProjectileInfo projectileInfo)
+    public void ProjectileSetup(BattleEntityBase user, BattleEntityBase target, ActionBase action, ProjectileInfo projectileInfo, float projectileAccuracy)
     {
         projectileConfig = projectileInfo;
         this.user = user;
         this.targetEntity = target;
         this.actionSource = action;
+
+        isMiss = projectileAccuracy < Random.Range(0f, 1f);
 
         var collider = target.battleVisual.GetComponentInChildren<BoxCollider>();
         if (collider != null)
@@ -67,6 +76,18 @@ public class ProjectileInstance : MonoBehaviour
             targetPos = target.battleVisual.transform.position + Vector3.up;
         }
 
+        originalTargetPos = targetPos;
+
+        if (isMiss)
+        {
+            Vector2 randomOffset = Random.insideUnitCircle * 0.5f;
+            Vector3 missPoint = originalTargetPos + new Vector3(randomOffset.x, randomOffset.y, 0);
+
+            Vector3 shootDirection = (missPoint - transform.position).normalized;
+
+            targetPos = transform.position + shootDirection * 30f;
+        }
+
         projectileSprite.sprite = projectileInfo.projectileSprite;
         projectileSpriteGlows.color = projectileInfo.projectileGlowsColor;
         ChangeDirection();
@@ -76,12 +97,30 @@ public class ProjectileInstance : MonoBehaviour
     private void Update()
     {      
         if (!isFlying) return;
-
         ChangeDirection();
-
-        if (ReachedTarget())
+        exist_timer += Time.deltaTime;
+        if (isMiss && !hasTriggeredMissLog)
         {
-            OnHit();
+            // 当子弹飞行到距离敌人原本位置足够近时（例如距离小于 1.0f）
+            if (Vector3.Distance(transform.position, originalTargetPos) < 1.0f)
+            {
+                hasTriggeredMissLog = true;
+                Debug.Log("Miss!");
+                // 这里以后可以调用 UI 飘字，比如：targetEntity.battleVisual.ShowMissText();
+            }
+        }
+
+        // 当子弹到达终点（无论是打中还是飞到屏幕外），或者超时
+        if (exist_timer > MAX_EXIST_TIME || ReachedTarget())
+        {
+            isFlying = false;
+
+            if (!isMiss)
+            {
+                OnHit(); // 只有真正命中时才计算伤害
+            }
+
+            Destroy(gameObject);
         }
     }
 

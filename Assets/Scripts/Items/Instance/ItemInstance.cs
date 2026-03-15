@@ -19,6 +19,8 @@ public class ItemInstance
     public string ItemName => itemData.itemName;
     public Sprite Icon => itemData.icon;
 
+    public bool isBothHandsUsing = false;
+
     public virtual ActionBase GetCurrentAction()
     {
         if (itemData is HoldableBase holdable)
@@ -29,5 +31,56 @@ public class ItemInstance
     public virtual ItemInstance CloneItemInstance()
     {
         return new ItemInstance(itemData);
+    }
+
+    public virtual int GetBaseDamage()
+    {
+        if(itemData is WeaponBase)
+        {
+            WeaponBase weapon = itemData as WeaponBase;
+            if (weapon.allowUseOfBothHands && isBothHandsUsing)
+            {
+                return weapon.bothHandsUseDamage;
+            }
+            return weapon.GetBaseDamage();
+        }
+        return 0;
+    }
+    public virtual float GetBaseArmorPenetration()
+    {
+        if (itemData is WeaponBase)
+        {
+            WeaponBase weapon = itemData as WeaponBase;
+            if(weapon.allowUseOfBothHands && isBothHandsUsing)
+            {
+                return weapon.bothHandsUseArmorPiercing;
+            }
+            return weapon.GetArmorPenetration();
+        }
+        return 0f;
+    }
+
+    public virtual void OnBothHandUse()
+    {
+        if(!(itemData is WeaponBase))
+        {
+            return;
+        }
+        var weapon = itemData as WeaponBase;
+        if (!weapon.allowUseOfBothHands) { return; }
+        ApplyBothHandBonus();
+    }
+    public virtual void OnExitBothHandUse()
+    {
+        var weapon = itemData as WeaponBase;
+        CancelBothHandBonus();
+    }
+    public virtual void ApplyBothHandBonus()
+    {
+        isBothHandsUsing = true;
+    }
+    public virtual void CancelBothHandBonus()
+    {
+        isBothHandsUsing = false;
     }
 }

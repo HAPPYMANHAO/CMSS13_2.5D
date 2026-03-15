@@ -12,11 +12,11 @@ public class ProjectileLauncher : MonoBehaviour
         projectile.ProjectileSetup(user, target, action);
     }
 
-    public void ProjectileLaunch(BattleEntityBase user, BattleEntityBase target, ActionBase action, ProjectileInfo projectile)
+    public void ProjectileLaunch(BattleEntityBase user, BattleEntityBase target, ActionBase action, ProjectileInfo projectile, float projectileAccuracy)
     {
         GameObject go = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
         ProjectileInstance projectileInstance = go.GetComponent<ProjectileInstance>();
 
-        projectileInstance.ProjectileSetup(user, target, action, projectile);
+        projectileInstance.ProjectileSetup(user, target, action, projectile, projectileAccuracy);
     }
 }

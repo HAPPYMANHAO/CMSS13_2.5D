@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using static UnityEngine.Rendering.DebugUI;
 [CreateAssetMenu(menuName = "Battle/MeleeAction")]
 public class MeleeAction : ActionBase
 {
@@ -54,5 +53,15 @@ public class MeleeAction : ActionBase
                 OnActionLogged?.Invoke(finalLog);
             }
         };
+    }
+
+    public override int GetCostAP(BattleEntityBase user)
+    {
+        if (user is PartyBattleEntity party && party.GetCurrentActiveHandItem() is ItemInstance item)
+        {
+            var weapon = item.itemData as WeaponBase;
+            return weapon.bothHandsUseCostAP;
+        }
+        return base.GetCostAP(user);
     }
 }

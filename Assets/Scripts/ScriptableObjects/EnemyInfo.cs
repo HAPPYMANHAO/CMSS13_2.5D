@@ -25,10 +25,15 @@ public class EnemyInfo : ScriptableObject
 
     public Dictionary<DamageType, ArmorStats> GetArmorDictionary()
     {
-        Dictionary<DamageType, ArmorStats> dict = new Dictionary<DamageType, ArmorStats>();
+        var dict = new Dictionary<DamageType, ArmorStats>();
         foreach (var armor in armorStats)
         {
-            dict[armor.armorType] = armor;
+            dict[armor.armorType] = new ArmorStats   
+            {
+                armorType = armor.armorType,
+                armorValue = armor.armorValue,
+                armorIntegrity = armor.armorIntegrity,
+            };
         }
         return dict;
     }
@@ -37,7 +42,7 @@ public class EnemyInfo : ScriptableObject
         Dictionary<DamageType, float> dict = new Dictionary<DamageType, float>();
         foreach (DamageResistanceStats damageResistanceStat in damageResistanceStats)
         {
-            dict[damageResistanceStat.resistType] = damageResistanceStat.damageResist;
+            dict[damageResistanceStat.resistType] = damageResistanceStat.damageResist; 
         }
         return dict;
     }

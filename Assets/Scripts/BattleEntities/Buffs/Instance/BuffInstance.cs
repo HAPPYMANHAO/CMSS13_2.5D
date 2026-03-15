@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static Unity.Cinemachine.CinemachineFreeLookModifier;
-using static UnityEngine.UI.GridLayoutGroup;
+
 
 public class BuffInstance
 {
@@ -34,31 +33,7 @@ public class BuffInstance
     {
         foreach (BuffModifier buffModifier in buff.buffData.modifiers)
         {
-            switch (buffModifier.modType)
-            {
-                case BuffModifierType.ArmorValueFlat:
-                    ArmorValueFlatApply(target, buff, buffModifier);
-                    break;
-                case BuffModifierType.ArmorIntegrityFlat:
-                    ArmorIntegrityFlatApply(target, buff, buffModifier);
-                    break;
-                case BuffModifierType.DamageResistFlat:
-                    break;
-                case BuffModifierType.DamageFlatBonus:
-                    break;
-                case BuffModifierType.DamagePercentBonus:
-                    break;
-                case BuffModifierType.MaxAPFlat:
-                    break;
-                case BuffModifierType.MaxAPPercent:
-                    break;
-                case BuffModifierType.APRecoveryFlat:
-                    break;
-                case BuffModifierType.APRecoveryPercent:
-                    break;
-                default:
-                    break;
-            }
+            ApplyStatEffect(target, buffModifier);
         }
     }
 
@@ -84,31 +59,7 @@ public class BuffInstance
     {
         foreach (BuffModifier buffModifier in buff.buffData.modifiers)
         {
-            switch (buffModifier.modType)
-            {
-                case BuffModifierType.ArmorValueFlat:
-                    ArmorValueFlatRemove(target, buff, buffModifier);
-                    break;
-                case BuffModifierType.ArmorIntegrityFlat:
-                    ArmorIntegrityFlatRemove(target, buff, buffModifier);
-                    break;
-                case BuffModifierType.DamageResistFlat:
-                    break;
-                case BuffModifierType.DamageFlatBonus:
-                    break;
-                case BuffModifierType.DamagePercentBonus:
-                    break;
-                case BuffModifierType.MaxAPFlat:
-                    break;
-                case BuffModifierType.MaxAPPercent:
-                    break;
-                case BuffModifierType.APRecoveryFlat:
-                    break;
-                case BuffModifierType.APRecoveryPercent:
-                    break;
-                default:
-                    break;
-            }
+            RemoveStatEffect(target, buffModifier);
         }
     }
 
@@ -117,16 +68,24 @@ public class BuffInstance
     // 叠加层数
     public void AddStack(BattleEntityBase target, BuffBase newBuff)
     {
-        currentStacks = Mathf.Min(currentStacks + newBuff.baseStacks, buffData.maxStacks);
         foreach (BuffModifier buffModifier in newBuff.modifiers)
-        {
-            RefreshBuff(target, buffModifier);
-        }
+            RemoveStatEffect(target, buffModifier);
+
+        currentStacks = Mathf.Min(currentStacks + newBuff.baseStacks, buffData.maxStacks);
+
+        foreach (BuffModifier buffModifier in newBuff.modifiers)
+            ApplyStatEffect(target, buffModifier);
     }
-    // 覆盖层数
+    //覆盖层数
     public void CoverStack(BattleEntityBase target, BuffBase newBuff)
     {
+        foreach (BuffModifier buffModifier in newBuff.modifiers)
+            RemoveStatEffect(target, buffModifier);
+
         currentStacks = Mathf.Min(newBuff.baseStacks, buffData.maxStacks);
+
+        foreach (BuffModifier buffModifier in newBuff.modifiers)
+            ApplyStatEffect(target, buffModifier);
     }
     // 如果新值更大，覆盖层数
     public void CoverStackWithLarger(BattleEntityBase target, BuffBase newBuff)
@@ -170,23 +129,24 @@ public class BuffInstance
         }
     }
 
-    private void RefreshBuff(BattleEntityBase target, BuffModifier buffModifier)
+    private void RemoveStatEffect(BattleEntityBase target, BuffModifier buffModifier)
     {
+            
         switch (buffModifier.modType)
         {
             case BuffModifierType.ArmorValueFlat:
                 ArmorValueFlatRemove(target, this, buffModifier);
-                ArmorIntegrityFlatApply(target, this, buffModifier);
                 break;
             case BuffModifierType.ArmorIntegrityFlat:
                 ArmorIntegrityFlatRemove(target, this, buffModifier);
-                ArmorIntegrityFlatApply(target, this, buffModifier);
                 break;
             case BuffModifierType.DamageResistFlat:
                 break;
             case BuffModifierType.DamageFlatBonus:
+                //在DamageCalculator.cs的GetAllModifiers方法里实现
                 break;
             case BuffModifierType.DamagePercentBonus:
+                //在DamageCalculator.cs的GetAllModifiers方法里实现
                 break;
             case BuffModifierType.MaxAPFlat:
                 break;
@@ -196,10 +156,45 @@ public class BuffInstance
                 break;
             case BuffModifierType.APRecoveryPercent:
                 break;
+            case BuffModifierType.CurrentAPFlat:
+                break;
             default:
                 break;
         }
+    }
 
+    private void ApplyStatEffect(BattleEntityBase target, BuffModifier buffModifier)
+    {
+
+        switch (buffModifier.modType)
+        {
+            case BuffModifierType.ArmorValueFlat:
+                ArmorValueFlatApply(target, this, buffModifier);
+                break;
+            case BuffModifierType.ArmorIntegrityFlat:
+                ArmorIntegrityFlatApply(target, this, buffModifier);
+                break;
+            case BuffModifierType.DamageResistFlat:
+                break;
+            case BuffModifierType.DamageFlatBonus:
+                //
+                break;
+            case BuffModifierType.DamagePercentBonus:
+                //
+                break;
+            case BuffModifierType.MaxAPFlat:
+                break;
+            case BuffModifierType.MaxAPPercent:
+                break;
+            case BuffModifierType.APRecoveryFlat:
+                break;
+            case BuffModifierType.APRecoveryPercent:
+                break;
+            case BuffModifierType.CurrentAPFlat:
+                break;
+            default:
+                break;
+        }
     }
 
     private void ArmorValueFlatApply(BattleEntityBase target, BuffInstance buff, BuffModifier buffModifier)

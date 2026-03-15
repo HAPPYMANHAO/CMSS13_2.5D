@@ -11,13 +11,16 @@ public class WeaponBase : HoldableBase, IEquippable
 
     [Header("Base Damage")]
     public int meleeDamage = 25;
-
     [Range(0f, 1f)] public float armorPenetration = 0f;
-
 
     [Header("Modifiers")]
     public List<DamageModifier> damageModifiers = new List<DamageModifier>();
-
+    [Header("Both Hand")]  
+    [SerializeField] public int enterBothHandsUseCostAP = 0;
+    [SerializeField] public int bothHandsUseDamage = 0;
+    [SerializeField] public int bothHandsUseCostAP = 0;
+    [SerializeField] public float bothHandsUseArmorPiercing = 0f;
+    [Header("On Hand Sprite")]
     [SerializeField] public bool allowUseOfBothHands;
     [SerializeField] public Sprite holdInRightHandSprite;
     [SerializeField] public Sprite holdInLeftHandSprite;
@@ -86,6 +89,12 @@ public class WeaponBase : HoldableBase, IEquippable
 
     public void OnUnEquip(CurrentPartyMemberInfo character)
     {
+    }
+
+    public virtual bool CanBothHandUse(PartyBattleEntity character)
+    {
+        if (!allowUseOfBothHands || character.currentAP < enterBothHandsUseCostAP) return false;
+        return true;
     }
 
     public enum ActionType

@@ -106,9 +106,12 @@ public class BattleTurnManager : MonoBehaviour
             }
         }
 
-        foreach (var entity in battleEntityManager.enemyEntities)
+        foreach (var entity in battleEntityManager.partyEntities)
+        {
             entity.buffComponent.TickAllBuffsStartTurn(entity);
-
+            entity.RecoverRecoil();
+        }
+            
         ChangeState(BattleState.PlayerTurnAction);
         SetPlayerTurnAtion();
     }

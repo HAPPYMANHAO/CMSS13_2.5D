@@ -16,9 +16,6 @@ public class BattleVisualGUI : BaseVisualGUI
 
     public static Action OnPlayerEndTurn;
 
-    InputAction activeHoldItem;//TODO
-    InputAction changeActiveHand;
-
     private Coroutine _autoFireCoroutine;
 
     // ── 实现基类的抽象方法 ──
@@ -46,6 +43,9 @@ public class BattleVisualGUI : BaseVisualGUI
     protected override void Update()
     {
         base.Update();
+
+        if (activeHoldItem.WasPerformedThisFrame())
+            ToggleBothHandsUse();
 
         var gun = GetGunInHand();
 
@@ -88,6 +88,32 @@ public class BattleVisualGUI : BaseVisualGUI
         var target = targetSelectorGUI.GetCurrentTarget();
         if (target != null && isPlayerCanExecuteAction)
             battleEntityManager.PlayerComfirmTarget(target);
+    }
+
+    public void ToggleBothHandsUse()
+    {
+        var player = battleEntityManager.currentPlayerEntity;
+        var item = player.GetCurrentActiveHandItem();
+        if (item == null) return;
+        if (item.itemData is WeaponBase)
+        {
+            var weapon = item.itemData as WeaponBase;
+            if (weapon.CanBothHandUse(player))
+            {
+                if (item.isBothHandsUsing)
+                {
+                    item.OnExitBothHandUse();      
+                    Debug.Log("exit both hand use");
+                }
+                else
+                {
+                    item.OnBothHandUse();
+                    player.EntityConsumeAP(weapon.enterBothHandsUseCostAP);
+                    Debug.Log("both hand use");
+                }             
+                UpdateHandVisuals();
+            } 
+        }
     }
 
     private IEnumerator AutoFireRoutine(GunInstance gun)

@@ -24,7 +24,11 @@ MonoBehaviour:
   meleeDamage: 10
   armorPenetration: 0
   damageModifiers: []
-  allowUseOfBothHands: 0
+  enterBothHandsUseCostAP: 10
+  bothHandsUseDamage: 0
+  bothHandsUseCostAP: 0
+  bothHandsUseArmorPiercing: 0
+  allowUseOfBothHands: 1
   holdInRightHandSprite: {fileID: 0}
   holdInLeftHandSprite: {fileID: 0}
   holdInBothHandsSprite: {fileID: 0}
@@ -34,3 +38,8 @@ MonoBehaviour:
   availableFireModes: 0100000000000000
   burstCount: 3
   fireInterval: 0.25
+  baseAccuracy: 0.5
+  recoil: 50
+  reloadAmmoAP: 10
+  bothHandAccuracyBonus: 0.5
+  bothHandRecoilReduce: 0

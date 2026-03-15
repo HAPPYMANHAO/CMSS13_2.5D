@@ -15,6 +15,14 @@ public class GunItemBase : WeaponBase
     public int burstCount = 3;                // 爆发射击发数
     public float fireInterval = 0.25f;        // 两发之间的间隔（秒）
 
+    public float baseAccuracy = 0;
+    public int recoil = 0;
+
+    public int reloadAmmoAP = 0;
+    [Header("Both Hand")]
+    public float bothHandAccuracyBonus = 0;// 直接增加精准度
+    public float bothHandRecoilReduce = 0;// 百分比减少原有后坐力
+
     // 覆盖基类：枪械创建 GunInstance
     public override ItemInstance CreateInstance() => new GunInstance(this);
 

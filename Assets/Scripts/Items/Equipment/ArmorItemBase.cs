@@ -53,7 +53,7 @@ public abstract class ArmorItemBase : ItemBase, IEquippable
             if (member.armorStats.ContainsKey(bonus.armorStats.armorType))
             {
                 var existing = member.armorStats[bonus.armorStats.armorType];
-                existing.armorIntegrity = Mathf.Clamp(existing.armorValue -= bonus.armorStats.armorValue, 0, int.MaxValue);
+                existing.armorValue = Mathf.Clamp(existing.armorValue -= bonus.armorStats.armorValue, 0, int.MaxValue);
                 existing.armorIntegrity = Mathf.Clamp(existing.armorIntegrity -= bonus.armorStats.armorIntegrity, 0f, 1f);
                 member.armorStats[bonus.armorStats.armorType] = existing;
             }

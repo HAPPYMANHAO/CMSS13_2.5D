@@ -10,7 +10,6 @@ public abstract class BaseVisualGUI : MonoBehaviour
     protected abstract List<ItemInstance> GetInventoryItems();
     protected abstract void OnOpenBackpack();   
 
-
     [SerializeField] protected HandControllerGUI rightHandButtonGUI;
     [SerializeField] protected HandControllerGUI leftHandButtonGUI;
     [SerializeField] protected Button backpackGUI;
@@ -19,7 +18,8 @@ public abstract class BaseVisualGUI : MonoBehaviour
     public float playerActionDelayTimer = 0f;
 
     protected PlayerControls inputActions;
-    private InputAction changeActiveHand;
+    protected InputAction changeActiveHand;
+    protected InputAction activeHoldItem;//TODO
 
     protected virtual void Awake()
     {
@@ -32,6 +32,7 @@ public abstract class BaseVisualGUI : MonoBehaviour
     protected virtual void Start()
     {
         changeActiveHand = InputSystem.actions.FindAction(CustomInputString.CHANGE_ACTIVE_HAND);
+        activeHoldItem = InputSystem.actions.FindAction(CustomInputString.ACTIVE_HOLD_ITEM);
         leftHandButtonGUI.handButton.onClick.AddListener(SelectLeftHand);
         rightHandButtonGUI.handButton.onClick.AddListener(SelectRightHand);
         backpackGUI.onClick.AddListener(OnOpenBackpack);
