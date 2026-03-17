@@ -8,7 +8,10 @@ public class BuffBase : ScriptableObject
     public Sprite icon;
     public bool isHealthChangeDamage = false;//为health change buff使用，false为恢复生命，true为造成伤害
     //如果是恢复，则modifiers伤害类型是无用的
-
+    
+    [Header("Queue Invalidation")]
+    //这个buff影响敌人action，会重建敌人行动表
+    public bool invalidatesActionQueue = false;
     public enum StackAddType { Add, Cover, CoverWithLarger, None }
     public enum DurationAddType { Add, Cover, CoverWithLarger, None }
     public enum TriggeringTime { StartTurn, EndTurn, Condition, None } 

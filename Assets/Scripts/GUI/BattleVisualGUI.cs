@@ -13,6 +13,8 @@ public class BattleVisualGUI : BaseVisualGUI
     [SerializeField] private TargetSelectorGUI targetSelectorGUI;
     [SerializeField] private ItemContainerGUI containerGUI;
     [SerializeField] public Button playerEndTurnButtonGUI;
+    [SerializeField] private AccuracyDisplayGUI accuracyDisplay;
+    [SerializeField] protected EnemyActionQueueGUI enemyActionQueueGUI;
 
     public static Action OnPlayerEndTurn;
 
@@ -38,20 +40,44 @@ public class BattleVisualGUI : BaseVisualGUI
         inventoryManager = FindFirstObjectByType<InventoryManager>();
         containerGUI.battleEntityManager = battleEntityManager;
         playerEndTurnButtonGUI.onClick.AddListener(HandleEndTurnClick);
+        UpdateHandVisuals();
+    }
+
+    protected override void OnEnable()
+    {
+        if (battleEntityManager != null)
+            battleEntityManager.OnPartyEntitiesSpawned += UpdateHandVisuals;
+    }
+
+    protected override void OnDisable()
+    {
+        if (battleEntityManager != null)
+            battleEntityManager.OnPartyEntitiesSpawned -= UpdateHandVisuals;
     }
 
     protected override void Update()
     {
         base.Update();
 
-        if (activeHoldItem.WasPerformedThisFrame())
-            ToggleBothHandsUse();
-
         var gun = GetGunInHand();
+        if (_autoFireCoroutine != null)
+        {
+            if (gun == null)
+            {
+                StopCoroutine(_autoFireCoroutine);
+                _autoFireCoroutine = null;
+            }
+        }
 
         // 左键逻辑根据射击模式分叉
         if (gun != null)
         {
+
+            float accuracy = gun.GetAccuracy(battleEntityManager.currentPlayerEntity);
+            accuracyDisplay.UpdateAccuracy(accuracy);
+            accuracyDisplay.transform.position = Mouse.current.position.ReadValue();
+            accuracyDisplay.Show();
+
             switch (gun.currentFireMode)
             {
                 case FireMode.SemiAuto:
@@ -80,6 +106,8 @@ public class BattleVisualGUI : BaseVisualGUI
             // 没有枪，走原来的点击逻辑
             if (Mouse.current.leftButton.wasPressedThisFrame)
                 TryExecuteAction();
+
+            accuracyDisplay.Hide();
         }
     }
 
@@ -87,43 +115,25 @@ public class BattleVisualGUI : BaseVisualGUI
     {
         var target = targetSelectorGUI.GetCurrentTarget();
         if (target != null && isPlayerCanExecuteAction)
-            battleEntityManager.PlayerComfirmTarget(target);
-    }
-
-    public void ToggleBothHandsUse()
-    {
-        var player = battleEntityManager.currentPlayerEntity;
-        var item = player.GetCurrentActiveHandItem();
-        if (item == null) return;
-        if (item.itemData is WeaponBase)
         {
-            var weapon = item.itemData as WeaponBase;
-            if (weapon.CanBothHandUse(player))
+            var gun = GetGunInHand();
+            bool isActionExecuted = battleEntityManager.PlayerComfirmTarget(target);
+            if (gun != null && isActionExecuted)
             {
-                if (item.isBothHandsUsing)
-                {
-                    item.OnExitBothHandUse();      
-                    Debug.Log("exit both hand use");
-                }
-                else
-                {
-                    item.OnBothHandUse();
-                    player.EntityConsumeAP(weapon.enterBothHandsUseCostAP);
-                    Debug.Log("both hand use");
-                }             
-                UpdateHandVisuals();
-            } 
-        }
+                float accuracy = gun.GetAccuracy(battleEntityManager.currentPlayerEntity);
+                accuracyDisplay.PlayFireFeedback(accuracy);
+            }
+        }      
     }
 
     private IEnumerator AutoFireRoutine(GunInstance gun)
     {
-        while (!gun.IsEmpty && isPlayerCanExecuteAction) 
+        while (!gun.IsEmpty && isPlayerCanExecuteAction)
         {
             TryExecuteAction();
             yield return new WaitForSeconds(gun.GunData.fireInterval);
         }
-        _autoFireCoroutine = null; 
+        _autoFireCoroutine = null;
     }
 
     private IEnumerator BurstFireRoutine(GunInstance gun)
@@ -131,7 +141,7 @@ public class BattleVisualGUI : BaseVisualGUI
         int shots = gun.GunData.burstCount;
         for (int i = 0; i < shots && !gun.IsEmpty; i++)
         {
-            if (!isPlayerCanExecuteAction) yield break; 
+            if (!isPlayerCanExecuteAction) yield break;
             TryExecuteAction();
             yield return new WaitForSeconds(gun.GunData.fireInterval);
         }

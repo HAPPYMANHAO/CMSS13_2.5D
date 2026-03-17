@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class EquipmentGUI : MonoBehaviour
 {
     [SerializeField] private List<SlotUI> slots;
+    [SerializeField] private List<SlotUI> storageSlots;
     private InventoryManager inventoryManager;
     private PartyManager partyManager;
     [SerializeField] private Button menuButton;
@@ -20,6 +21,11 @@ public class EquipmentGUI : MonoBehaviour
         CurrentPartyMemberInfo.OnEquipmentChanged += Refresh;
 
         foreach (var slot in slots)
+        {
+            var capturedSlot = slot; // 捕获变量
+            slot.button.onClick.AddListener(() => HandleSlotClicked(capturedSlot.slotType));
+        }
+        foreach (var slot in storageSlots)
         {
             var capturedSlot = slot; // 捕获变量
             slot.button.onClick.AddListener(() => HandleSlotClicked(capturedSlot.slotType));
@@ -45,6 +51,22 @@ public class EquipmentGUI : MonoBehaviour
     {
         var player = partyManager.currentPlayerEntity;
         foreach (var slot in slots)
+        {
+            var equipped = player.GetEquipped(slot.slotType);
+            bool hasItem = equipped != null;
+
+            slot.icon.sprite = hasItem ? equipped.itemData.icon : null;
+            if (hasItem)
+            {
+                slot.EnableItemSprite();
+            }
+            else
+            {
+                slot.DisableItemSprite();
+            }
+            slot.icon.gameObject.SetActive(hasItem);
+        }
+        foreach(var slot in storageSlots)
         {
             var equipped = player.GetEquipped(slot.slotType);
             bool hasItem = equipped != null;

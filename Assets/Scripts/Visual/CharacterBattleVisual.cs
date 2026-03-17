@@ -129,14 +129,14 @@ public class CharacterBattleVisual : MonoBehaviour
             if (buffIconMap.TryGetValue(buff, out icon))
             {
                 // 已存在，刷新
-                icon.RefreshBuff(buff.currentStacks, buff.remainingTurns);
+                icon.RefreshBuff(buff.buffData ,buff.currentStacks, buff.remainingTurns);
                 unusedIcons.Remove(icon);
             }
             else
             {
                 // 新buff，从池中获取或创建
                 icon = GetOrCreateIcon();
-                icon.SetBuff(buff.buffData.icon, buff.currentStacks, buff.remainingTurns);
+                icon.SetBuff(buff.buffData.icon, buff.currentStacks, buff.remainingTurns, buff.buffData);
                 buffIconMap[buff] = icon;
             }
         }

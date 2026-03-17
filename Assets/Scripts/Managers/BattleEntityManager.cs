@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -22,6 +23,7 @@ public class BattleEntityManager : MonoBehaviour
     private BattleVisualGUI battleVisualGUI;
 
     public PartyBattleEntity currentPlayerEntity;
+    public event Action OnPartyEntitiesSpawned;
 
     private void Start()
     {
@@ -33,6 +35,7 @@ public class BattleEntityManager : MonoBehaviour
 
         SpawnPartyEntity();
         SpawnEnemyEntity();
+        OnPartyEntitiesSpawned.Invoke();
     }
 
     //----------------------------SpawnEntity----------------------------//
@@ -98,21 +101,22 @@ public class BattleEntityManager : MonoBehaviour
             .ToList();
     }
     //----------------------------Target----------------------------//
-    public void PlayerComfirmTarget(BattleEntityBase entity)
+    public bool PlayerComfirmTarget(BattleEntityBase entity)
     {
         if (currentPlayerEntity == null || currentPlayerEntity.EntityIsDead())
         {
-            return;
+            return false;
         }
 
         ItemInstance handItem = currentPlayerEntity.GetCurrentActiveHandItem();
-        if (handItem == null || handItem.itemData == null) return;
+        if (handItem == null || handItem.itemData == null) return false;
 
         ActionBase currentAction = handItem.GetCurrentAction();
-        if (currentAction == null || string.IsNullOrEmpty(currentAction.actionName)) return;
+        if (currentAction == null || string.IsNullOrEmpty(currentAction.actionName)) return false;
 
         BattleEntityBase[] targetEntities = { entity };
-        currentPlayerEntity.ExecuteAction(currentAction, targetEntities);
+        bool isExecuteSuccess;
+        isExecuteSuccess = currentPlayerEntity.ExecuteAction(currentAction, targetEntities);
 
         if (handItem is StackableItemInstance)
         {
@@ -127,6 +131,7 @@ public class BattleEntityManager : MonoBehaviour
 
         battleVisualGUI.isPlayerCanExecuteAction = false;
         battleVisualGUI.playerActionDelayTimer = currentAction.GetActionDelay(currentPlayerEntity);
+        return isExecuteSuccess;
     }
     //----------------------------Event----------------------------//
     private void HandleEntityDead(BattleEntityBase deadEntity)
@@ -142,6 +147,7 @@ public class BattleEntityManager : MonoBehaviour
 
         //turnManager.logGUI.UpdateLog();
         turnManager.CheckBattleVictoryOrDefeat();
+        turnManager.BuildAllEnemyDecisions();
     }
     //----------------------------Save Stats----------------------------//
     public void SavePartyStats()

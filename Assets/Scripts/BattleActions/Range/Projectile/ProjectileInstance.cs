@@ -64,7 +64,7 @@ public class ProjectileInstance : MonoBehaviour
         this.targetEntity = target;
         this.actionSource = action;
 
-        isMiss = projectileAccuracy < Random.Range(0f, 1f);
+        isMiss = Random.Range(0f, 1f) > projectileAccuracy;
 
         var collider = target.battleVisual.GetComponentInChildren<BoxCollider>();
         if (collider != null)

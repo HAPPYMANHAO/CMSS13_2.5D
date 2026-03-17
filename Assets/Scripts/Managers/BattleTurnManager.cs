@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Localization;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class BattleTurnManager : MonoBehaviour
 {
@@ -22,6 +24,9 @@ public class BattleTurnManager : MonoBehaviour
     private const float PLAYER_END_TURN_DURATION = 0.8f;
 
     public static Action<string, Color> OnBattleTurnLoggedColor;
+
+    public static event Action<List<(EnemyBattleEntity, ActionBase)>> OnEnemyQueueBuilt;
+    public static event Action<EnemyBattleEntity> OnEnemyActionExecuted;
 
     public enum BattleState
     {
@@ -52,9 +57,6 @@ public class BattleTurnManager : MonoBehaviour
         switch (battleState)
         {
             case BattleState.Victory:
-                ChangeState(BattleState.BattleEnd);
-                SetBattleEnd();
-                break;
             case BattleState.Defeat:
                 ChangeState(BattleState.BattleEnd);
                 SetBattleEnd();
@@ -64,10 +66,33 @@ public class BattleTurnManager : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        BuffComponent.OnQueueInvalidated += HandleQueueInvalidated;
+    }
+
+    private void OnDisable()
+    {
+        BuffComponent.OnQueueInvalidated -= HandleQueueInvalidated;
+    }
+
     private void OnDestroy()
     {
         BattleVisualGUI.OnPlayerEndTurn -= HandlePlayerEndTurn;
     }
+
+    private void HandleQueueInvalidated(BattleEntityBase entity)
+    {
+        // 只在玩家回合期间重建（敌人回合时队列已经在执行，不能打断）
+        if (battleState != BattleState.PlayerTurnAction &&
+            battleState != BattleState.PlayerTurnStart) return;
+
+        if (entity is not EnemyBattleEntity enemy) return;
+        if (enemy.EntityIsDead()) return;
+
+        BuildAllEnemyDecisions();
+    }
+
     //----------------Battle Start Set Up---------------//
     private void SetUpBattleStart()
     {
@@ -84,8 +109,11 @@ public class BattleTurnManager : MonoBehaviour
     }
 
     //-------------------Battle End-------------------//
+    private bool _battleEndTriggered = false;
     private void SetBattleEnd()
-    {     
+    {
+        if (_battleEndTriggered) return;
+        _battleEndTriggered = true;
         battleEntityManager.SavePartyStats();
         gameSceneManager.ExitBattle();
     }
@@ -96,13 +124,12 @@ public class BattleTurnManager : MonoBehaviour
     {
         isEndingTurn = false;
         battleVisualGUI.isPlayerCanExecuteAction = true;
-
+        //恢复所有实体AP
         if (currentTurn != 1)
         {
-            for (int i = 0; i < battleEntityManager.partyEntities.Count(); i++)
+            foreach (var entity in battleEntityManager.allBattleEntities)
             {
-                battleEntityManager.partyEntities.ElementAt(i).
-                    EntityRecoverAP(battleEntityManager.partyEntities.ElementAt(i).eachTurnRecoveredAP);
+                entity.EntityRecoverAP(entity.eachTurnRecoveredAP);
             }
         }
 
@@ -111,9 +138,38 @@ public class BattleTurnManager : MonoBehaviour
             entity.buffComponent.TickAllBuffsStartTurn(entity);
             entity.RecoverRecoil();
         }
-            
+
+        BuildAllEnemyDecisions();
+
         ChangeState(BattleState.PlayerTurnAction);
         SetPlayerTurnAtion();
+    }
+
+    // ── 初始建立全部敌人队列（玩家回合开始时调用）──
+    public void BuildAllEnemyDecisions()
+    {
+        var displayQueue = new List<(EnemyBattleEntity, ActionBase)>();
+
+        foreach (var enemy in battleEntityManager.enemyEntities)
+        {
+            enemy.pendingDecisions.Clear();
+            if (enemy.EntityIsDead())
+            {
+                return;
+            }
+
+            int projectedAP = enemy.currentAP;
+
+            var actions = enemy.entityAI.BuildActionQueue(enemy, projectedAP);
+
+            foreach (var action in actions)
+            {
+                enemy.pendingDecisions.Enqueue(new DecisionAI { action = action, targets = null });
+                displayQueue.Add((enemy as EnemyBattleEntity, action));
+            }
+        }
+
+        OnEnemyQueueBuilt?.Invoke(displayQueue);
     }
     //--------Player Turn Action--------/2          
     private void SetPlayerTurnAtion()
@@ -163,15 +219,6 @@ public class BattleTurnManager : MonoBehaviour
     //---------Enemy Turn Start----------/5
     private void SetEnemyTurnStart()
     {
-        if (currentTurn != 1)
-        {
-            for (int i = 0; i < battleEntityManager.enemyEntities.Count(); i++)
-            {
-                battleEntityManager.enemyEntities.ElementAt(i).
-                    EntityRecoverAP(battleEntityManager.enemyEntities.ElementAt(i).eachTurnRecoveredAP);
-            }
-        }
-
         foreach (var entity in battleEntityManager.enemyEntities)
             entity.buffComponent.TickAllBuffsStartTurn(entity);
 
@@ -250,8 +297,6 @@ public class BattleTurnManager : MonoBehaviour
                 yield return StartCoroutine(AutoExecuteActionRoutine(entity, faction));
             }
         }
-
-        yield return null;
     }
 
     private IEnumerator AutoExecuteActionRoutine(BattleEntityBase currentEntity, Faction faction)
@@ -263,16 +308,29 @@ public class BattleTurnManager : MonoBehaviour
                 //Execute ToDo
                 break;
             case Faction.Enemy:
-                while (!currentEntity.EntityIsDead())
+                while (currentEntity.pendingDecisions.Count > 0 && !currentEntity.EntityIsDead())
                 {
-                    DecisionAI decision = currentEntity.entityAI.GetDecisionAI(currentEntity, battleEntityManager);
+                    DecisionAI pending = currentEntity.pendingDecisions.Dequeue();
+                    ActionBase action = pending.action;
 
-                    if (decision.action != null && decision.action.CanExecute(currentEntity, decision.targets))
+                    // 执行时临时选目标
+                    BattleEntityBase[] targets = currentEntity.entityAI
+                        .ResolveTarget(currentEntity, battleEntityManager);
+
+                    if (targets == null || targets.Length == 0) break; // 无有效目标，本回合结束
+
+                    DecisionAI resolved = new DecisionAI { action = action, targets = targets };
+
+                    if (action.CanExecute(currentEntity, resolved.targets))
                     {
-                        ActionBase action = AutoBattleExecuteAI(currentEntity, decision);
-                        yield return new WaitForSeconds(action.actionDelay);
+                        AutoBattleExecuteAI(currentEntity, resolved);
+                        OnEnemyActionExecuted?.Invoke(currentEntity as EnemyBattleEntity);
+                        yield return new WaitForSeconds(action.GetActionDelay(currentEntity)); 
                     }
-                    else { break; }
+                    else
+                    {
+                        break; 
+                    }
                 }
                 break;
             case Faction.neutral:

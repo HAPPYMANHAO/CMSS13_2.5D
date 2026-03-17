@@ -69,6 +69,7 @@ public class ItemInstance
         var weapon = itemData as WeaponBase;
         if (!weapon.allowUseOfBothHands) { return; }
         ApplyBothHandBonus();
+        Debug.Log("both hand");
     }
     public virtual void OnExitBothHandUse()
     {

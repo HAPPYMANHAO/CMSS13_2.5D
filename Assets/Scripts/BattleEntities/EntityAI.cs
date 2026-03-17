@@ -7,6 +7,36 @@ public class EntityAI : ScriptableObject, IEntityAI
 {
     [SerializeField] public List<AIActionWeight> actionPool;
 
+    // ── 执行时选目标：action已确定，临时选一个当前存活的目标 ──
+    public BattleEntityBase[] ResolveTarget(BattleEntityBase self, BattleEntityManager entityManager)
+    {
+        return SetRandomTarget(self, entityManager); 
+    }
+
+    public List<ActionBase> BuildActionQueue(BattleEntityBase self, int simulatedAP)
+    {
+        var queue = new List<ActionBase>();
+
+        while (simulatedAP > 0)
+        {
+            ActionBase action = ComfirmAction();
+            if (action == null) break;
+
+            // GetCostAP 会读取实体身上的Buff修改（击倒Buff此时已生效）
+            int cost = action.GetCostAP(self);
+            if (simulatedAP < cost) break;
+
+            queue.Add(action);
+            simulatedAP -= cost;
+        }
+
+        return queue;
+    }
+
+    // 原有的无参版本直接调用新版本
+    public List<ActionBase> BuildActionQueue(BattleEntityBase self)
+        => BuildActionQueue(self, self.currentAP);
+
     public DecisionAI GetDecisionAI(BattleEntityBase self, BattleEntityManager entityManager)
     {
         BattleEntityBase[] targets = SetRandomTarget(self, entityManager);

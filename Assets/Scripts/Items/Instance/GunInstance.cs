@@ -51,7 +51,6 @@ public class GunInstance : ItemInstance
     {
         if (IsEmpty) return false;
         currentAmmoCount--;
-        Debug.Log(currentAmmoCount);
         return true;
     }
 
@@ -67,17 +66,17 @@ public class GunInstance : ItemInstance
             ? GunData.baseAccuracy + GunData.bothHandAccuracyBonus
             : GunData.baseAccuracy;
 
-        float recoilMult = isBothHandsUsing
-            ? (1f - GunData.bothHandRecoilReduce)
-            : 1f;
-
         // 从实体身上读后坐力，不是从枪上
-        float recoilPenalty = (shooter.accumulatedRecoil * recoilMult) / 100f;
+        float recoilPenalty = (shooter.accumulatedRecoil) / 100f;
         return Mathf.Max(0f, baseAcc - recoilPenalty);
     }
 
     public void AddRecoil(PartyBattleEntity shooter)
     {
-        shooter.accumulatedRecoil += GunData.recoil;
+        float recoilMult = isBothHandsUsing
+            ? (1f - GunData.bothHandRecoilReduce)
+            : 1f;
+
+        shooter.accumulatedRecoil += (int)(GunData.recoil * recoilMult);
     }
 }

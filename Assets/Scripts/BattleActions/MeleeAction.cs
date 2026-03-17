@@ -57,11 +57,17 @@ public class MeleeAction : ActionBase
 
     public override int GetCostAP(BattleEntityBase user)
     {
-        if (user is PartyBattleEntity party && party.GetCurrentActiveHandItem() is ItemInstance item)
+        if (user is PartyBattleEntity party &&
+            party.GetCurrentActiveHandItem() is ItemInstance item)
         {
             var weapon = item.itemData as WeaponBase;
-            return weapon.bothHandsUseCostAP;
+
+            if (item.isBothHandsUsing && weapon.allowUseOfBothHands)
+            {
+                return weapon.bothHandsUseCostAP;
+            }
         }
+
         return base.GetCostAP(user);
     }
 }

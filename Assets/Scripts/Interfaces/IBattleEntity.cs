@@ -9,6 +9,6 @@ public interface IBattleEntity
     int maxAP { get; set; }
     Faction entityFaction { get; set; }
 
-    void ExecuteAction(ActionBase battleAction, BattleEntityBase[] target);
+    bool ExecuteAction(ActionBase battleAction, BattleEntityBase[] target);
     int EntityTakeDamage(BattleEntityBase user, DamageType damageType, ActionBase sourceAction = null);
 }

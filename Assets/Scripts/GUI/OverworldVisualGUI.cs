@@ -20,6 +20,7 @@ public class OverworldVisualGUI : BaseVisualGUI
 
     protected override List<ItemInstance> GetInventoryItems()
         => inventoryManager.GetAllItems();
+
     //---------------------BackpackGUI---------------------//
     protected override void OnOpenBackpack()
     {

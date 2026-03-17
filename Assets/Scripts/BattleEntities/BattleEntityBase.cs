@@ -32,17 +32,20 @@ public abstract class BattleEntityBase : IBattleEntity
     public Dictionary<DamageType, float> damageResistanceStats;
     public BuffComponent buffComponent = new BuffComponent();
 
-    public void ExecuteAction(ActionBase battleAction, BattleEntityBase[] target)
+    public Queue<DecisionAI> pendingDecisions = new Queue<DecisionAI>();
+
+    public bool ExecuteAction(ActionBase battleAction, BattleEntityBase[] target)
     {
         if (!battleAction.CanExecute(this, target))
         {
-            return;
+            return false;
         }
 
         int actualCost = battleAction.GetCostAP(this);
         EntityConsumeAP(actualCost);
 
         battleAction.Execute(this, target);
+        return true;
     }
 
     public int EntityTakeDamage(BattleEntityBase user, DamageType damageType, ActionBase sourceAction = null)
@@ -130,6 +133,8 @@ public class BuffComponent
 
     public BattleEntityBase owner;
 
+    public static event Action<BattleEntityBase> OnQueueInvalidated;
+
     public void AddBuff(BuffBase buffData)
     {
         // 检查是否已有同类Buff（叠加或刷新）
@@ -179,6 +184,8 @@ public class BuffComponent
             newBuff.OnApply(owner, newBuff);
             _activeBuffs.Add(newBuff);
         }
+        if (buffData.invalidatesActionQueue)
+            OnQueueInvalidated?.Invoke(owner);  // 通知需要重建
         OnBuffChanged?.Invoke();
     }
 
@@ -189,6 +196,8 @@ public class BuffComponent
         {
             HandleBuffExpired(buff);
         }
+        if (buffData.invalidatesActionQueue)
+            OnQueueInvalidated?.Invoke(owner);
     }
 
     // 回合结束时由 TurnManager 调用

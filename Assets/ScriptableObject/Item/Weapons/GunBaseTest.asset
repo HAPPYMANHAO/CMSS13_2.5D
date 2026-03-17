@@ -39,7 +39,7 @@ MonoBehaviour:
   burstCount: 3
   fireInterval: 0.25
   baseAccuracy: 0.5
-  recoil: 50
+  recoil: 10
   reloadAmmoAP: 10
   bothHandAccuracyBonus: 0.5
-  bothHandRecoilReduce: 0
+  bothHandRecoilReduce: 0.5
