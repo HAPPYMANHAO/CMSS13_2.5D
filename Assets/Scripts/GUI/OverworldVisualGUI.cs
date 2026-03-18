@@ -14,8 +14,39 @@ public class OverworldVisualGUI : BaseVisualGUI
     [SerializeField] private HealthBarControllerGUI[] healthBarsGUI;
 
     private InventoryManager inventoryManager;
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        PartyManager.OnPartyMemberUpdated += UpdateGUI;
+    }
 
-    protected override IHandsOwner GetCurrentPlayer()
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        PartyManager.OnPartyMemberUpdated -= UpdateGUI;
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+        inventoryManager = FindFirstObjectByType<InventoryManager>();
+        containerGUI.pratyManager = partyManager;
+        interactionController.targetSelectorGUI = targetSelectorGUI;
+        UpdateGUI();
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            interactionController.TryInteract(targetSelectorGUI.GetCurrentTarget());
+        }
+    }
+
+
+    public override IHandsOwner GetCurrentPlayer()
         => partyManager.currentPlayerEntity;
 
     protected override List<ItemInstance> GetInventoryItems()
@@ -32,56 +63,23 @@ public class OverworldVisualGUI : BaseVisualGUI
     {
         UpdateHandVisuals();
         containerGUI.UpdateItemContainerGUI(GetInventoryItems());
-    }
 
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-        PartyManager.OnPartyMemberUpdated += UpdateHandVisuals;
-    }
-
-    protected override void OnDisable()
-    {
-        base.OnDisable();
-        PartyManager.OnPartyMemberUpdated -= UpdateHandVisuals;
-    }
-
-    protected override void Start()
-    {
-        base.Start();
-        inventoryManager = FindFirstObjectByType<InventoryManager>();
-        containerGUI.pratyManager = partyManager;
-        interactionController.targetSelectorGUI = targetSelectorGUI;
-        UpdateHandVisuals();
-    }
-
-    protected override void Update()
-    {
-        base.Update();
-
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-            interactionController.TryInteract(targetSelectorGUI.GetCurrentTarget());
+        foreach (var healthBar in healthBarsGUI)
+        {
+            if (healthBar.owner != null)
+            {
+                healthBar.UpdateHealthBar();
+            } 
+        }
     }
 
     //---------------------HealthBarGUI------------------------//
-
-    public void BindHealthBar(PartyBattleEntity entity)
-    {
-        for (int i = 0; i < healthBarsGUI.Length; i++)
-        {
-            if (healthBarsGUI[i].owner == null || string.IsNullOrEmpty(healthBarsGUI[i].owner.memberName))
-            {
-                healthBarsGUI[i].HealthBarBind(entity);
-                break;
-            }
-        }
-    }
 
     public void BindHealthBar(CurrentPartyMemberInfo memberInfo)
     {
         for (int i = 0; i < healthBarsGUI.Length; i++)
         {
-            if (healthBarsGUI[i].ownerOverworld == null || string.IsNullOrEmpty(healthBarsGUI[i].ownerOverworld.memberName))
+            if (healthBarsGUI[i].owner == null)
             {
                 healthBarsGUI[i].HealthBarBind(memberInfo);
                 break;

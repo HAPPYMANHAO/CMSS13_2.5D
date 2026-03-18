@@ -24,6 +24,7 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  canUseInOverworld: 1
   healAmount: 30
   references:
     version: 2

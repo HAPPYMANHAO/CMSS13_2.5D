@@ -73,7 +73,7 @@ public class ItemContainerGUI : MonoBehaviour
     }
     private void HandBackgroundButtonPressed()
     {
-        ItemInstance itemInHand = battleEntityManager.currentPlayerEntity.GetCurrentActiveHandItem();
+        ItemInstance itemInHand = battleVisualGUI.GetCurrentPlayer().GetCurrentActiveHandItem();
         if (itemInHand != null)
         {
             inventoryManager.AddItem(itemInHand);
@@ -85,9 +85,9 @@ public class ItemContainerGUI : MonoBehaviour
 
     private void HandleItemClicked(ItemInstance item)
     {
-        var gun = battleEntityManager.currentPlayerEntity.GetCurrentActiveHandItem() as GunInstance;
+        var gun = battleVisualGUI.GetCurrentPlayer().GetCurrentActiveHandItem() as GunInstance;
 
-        // 情况1：手里有枪，点击的是匹配弹药 → 装弹
+        // 手里有枪，点击的是匹配弹药 → 装弹
         if (gun != null && item is StackableItemInstance ammoStack
             && ammoStack.itemData is AmmoBase ammo
             && ammo.ammoType == gun.GunData.acceptedAmmoType)
@@ -100,7 +100,7 @@ public class ItemContainerGUI : MonoBehaviour
             return;
         }
 
-        ItemInstance itemInHand = battleEntityManager.currentPlayerEntity.GetCurrentActiveHandItem();
+        ItemInstance itemInHand = battleVisualGUI.GetCurrentPlayer().GetCurrentActiveHandItem();
         if (itemInHand != null) return;
 
         if (item.itemData is HoldableBase)

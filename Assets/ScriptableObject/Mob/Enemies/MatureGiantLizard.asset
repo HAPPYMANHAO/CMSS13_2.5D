@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyInfo
   enemyMaturityLevel: 1
   enemyName: GiantLizard
+  charaterProfile: {fileID: 1847345601, guid: cfddbc93242686943a226a6c3b212201, type: 3}
   baseHealth: 350
   MaxAP: 60
   eachTurnRecoveredAP: 15
@@ -24,29 +25,29 @@ MonoBehaviour:
   enemyBattleVisualPerfab: {fileID: 8061482746390470737, guid: bf81f737200d36e49a11a487a34dc671, type: 3}
   armorStats:
   - armorType: 0
-    _armorValue: 0
-    _armorIntegrity: 0
+    armorValue: 0
+    armorIntegrity: 0
   - armorType: 1
-    _armorValue: 50
-    _armorIntegrity: 0.5
+    armorValue: 0
+    armorIntegrity: 0
   - armorType: 2
-    _armorValue: 0
-    _armorIntegrity: 0
+    armorValue: 0
+    armorIntegrity: 0
   - armorType: 3
-    _armorValue: 0
-    _armorIntegrity: 0
+    armorValue: 0
+    armorIntegrity: 0
   - armorType: 4
-    _armorValue: 0
-    _armorIntegrity: 0
+    armorValue: 0
+    armorIntegrity: 0
   damageResistanceStats:
   - resistType: 0
-    _damageResist: 0
+    damageResist: 0
   - resistType: 1
-    _damageResist: 0
+    damageResist: 0
   - resistType: 2
-    _damageResist: 0
+    damageResist: 0
   - resistType: 3
-    _damageResist: 0
+    damageResist: 0
   - resistType: 4
-    _damageResist: 0
+    damageResist: 0
   entityAI: {fileID: 11400000, guid: 4004377941b2a364fab57732fd3c69d5, type: 2}

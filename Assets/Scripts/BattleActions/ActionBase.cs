@@ -11,6 +11,10 @@ public abstract class ActionBase : ScriptableObject, IBattleAction
 
     [SerializeField] public LocalizedString actionLogTemplate;
     public static System.Action<string> OnActionLogged;
+
+    [Header("Overworld Usage")]
+    // 这个 Action 是否可以在大地图使用
+    public bool canUseInOverworld = false;
     public string actionName
     {
         get => _actionName;
@@ -22,9 +26,15 @@ public abstract class ActionBase : ScriptableObject, IBattleAction
         get => _costAP;
         set => _costAP = value;
     }
-
+    // ── 战斗入口────────────────────────────
     public abstract bool CanExecute(BattleEntityBase user, BattleEntityBase[] target);
     public abstract void Execute(BattleEntityBase user, BattleEntityBase[] target);
+
+    // ── 大地图入口────────────────────
+    // 返回 false 表示"此 Action 不支持大地图使用"
+    public virtual bool CanExecuteInOverworld(CurrentPartyMemberInfo user) => false;
+
+    public virtual void ExecuteInOverworld(CurrentPartyMemberInfo user, InventoryManager inventory) { }
 
     public virtual int GetCostAP(BattleEntityBase user) => _costAP;
     public virtual float GetActionDelay(BattleEntityBase user) => actionDelay;

@@ -3085,7 +3085,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 370779991ad483349bc4da8a62753f66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameStateManager
-  currentGameState: 0
+  currentGameState: 1
 --- !u!4 &880507774
 Transform:
   m_ObjectHideFlags: 0
@@ -3311,6 +3311,50 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 946981767}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &958248500
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 958248502}
+  - component: {fileID: 958248501}
+  m_Layer: 0
+  m_Name: OverworldActionController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &958248501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 958248500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8315ea3e3c53a747936848e2bea7168, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OverworldActionController
+--- !u!4 &958248502
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 958248500}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 573.6567, y: 0, z: 1211.4056}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &976227379
 GameObject:
   m_ObjectHideFlags: 0
@@ -4536,6 +4580,7 @@ MonoBehaviour:
   defaultMember: {fileID: 11400000, guid: 5ee539f250e4f6d479cbbac397530b91, type: 2}
   currentPlayerEntity:
     memberName: 
+    charaterProfile: {fileID: 0}
     currentLevel: 0
     currentHealth: 0
     maxHealth: 0
@@ -5314,6 +5359,18 @@ PrefabInstance:
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1334487052926021101, guid: 6bf73bdeeb405fd41a4c82b8c469d705, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1334487052926021101, guid: 6bf73bdeeb405fd41a4c82b8c469d705, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1334487052926021101, guid: 6bf73bdeeb405fd41a4c82b8c469d705, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1334487052926021101, guid: 6bf73bdeeb405fd41a4c82b8c469d705, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -5343,11 +5400,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1334487052926021101, guid: 6bf73bdeeb405fd41a4c82b8c469d705, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 740
+      value: 720
       objectReference: {fileID: 0}
     - target: {fileID: 1334487052926021101, guid: 6bf73bdeeb405fd41a4c82b8c469d705, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -520
+      value: -300
       objectReference: {fileID: 0}
     - target: {fileID: 1334487052926021101, guid: 6bf73bdeeb405fd41a4c82b8c469d705, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -5975,9 +6032,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OverworldTargetSelectorGUI
   overworldCamera: {fileID: 330585545}
+  combinedMask:
+    serializedVersion: 2
+    m_Bits: 1280
   interactableLayer:
     serializedVersion: 2
     m_Bits: 256
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 1024
   currentTargetCollider: {fileID: 0}
 --- !u!4 &1689913664
 Transform:
@@ -7594,7 +7657,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1334487052926021101, guid: 6bf73bdeeb405fd41a4c82b8c469d705, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1334487052926021101, guid: 6bf73bdeeb405fd41a4c82b8c469d705, type: 3}
       propertyPath: m_LocalRotation.w
@@ -7614,11 +7677,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1334487052926021101, guid: 6bf73bdeeb405fd41a4c82b8c469d705, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 740
+      value: 720
       objectReference: {fileID: 0}
     - target: {fileID: 1334487052926021101, guid: 6bf73bdeeb405fd41a4c82b8c469d705, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -430
+      value: -450
       objectReference: {fileID: 0}
     - target: {fileID: 1334487052926021101, guid: 6bf73bdeeb405fd41a4c82b8c469d705, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -7742,7 +7805,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1334487052926021101, guid: 6bf73bdeeb405fd41a4c82b8c469d705, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1334487052926021101, guid: 6bf73bdeeb405fd41a4c82b8c469d705, type: 3}
       propertyPath: m_LocalRotation.w
@@ -7762,11 +7825,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1334487052926021101, guid: 6bf73bdeeb405fd41a4c82b8c469d705, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 740
+      value: 720
       objectReference: {fileID: 0}
     - target: {fileID: 1334487052926021101, guid: 6bf73bdeeb405fd41a4c82b8c469d705, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -610
+      value: -450
       objectReference: {fileID: 0}
     - target: {fileID: 1334487052926021101, guid: 6bf73bdeeb405fd41a4c82b8c469d705, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -8992,6 +9055,7 @@ SceneRoots:
   - {fileID: 1910474094}
   - {fileID: 1345322129}
   - {fileID: 1689913664}
+  - {fileID: 958248502}
   - {fileID: 1301128336}
   - {fileID: 628923883}
   - {fileID: 1358020058}

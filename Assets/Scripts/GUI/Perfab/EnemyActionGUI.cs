@@ -17,5 +17,6 @@ public class EnemyActionGUI : MonoBehaviour
     public void Setup(EnemyBattleEntity enemy, ActionBase action)
     {
         UITextMeshPro.text = enemy.memberName;
+        profile.sprite = enemy.charaterProfile;
     }
 }

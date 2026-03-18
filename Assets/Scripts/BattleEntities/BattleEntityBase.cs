@@ -7,8 +7,9 @@ using UnityEngine;
 [System.Serializable]
 public abstract class BattleEntityBase : IBattleEntity
 {
-    public string memberName;
-    public int currentHealth;
+    public string memberName { get; set; }
+    public Sprite charaterProfile;
+    public int currentHealth { get; set; }
     public int maxHealth { get; set; }
     public int healthDead { get; set; }
     public int currentAP { get; set; }
@@ -198,6 +199,18 @@ public class BuffComponent
         }
         if (buffData.invalidatesActionQueue)
             OnQueueInvalidated?.Invoke(owner);
+    }
+
+    public void RemoveAllBuff()
+    {
+        if (_activeBuffs.Count > 0)
+        {
+            foreach (var buff in _activeBuffs)
+            {
+                buff.OnRemove(owner, buff);
+            }
+            _activeBuffs.Clear();
+        }
     }
 
     // 回合结束时由 TurnManager 调用

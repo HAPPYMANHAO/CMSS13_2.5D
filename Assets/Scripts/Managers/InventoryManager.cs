@@ -50,6 +50,10 @@ public class InventoryManager : MonoBehaviour
             Debug.LogWarning("[InventoryManager] AddItem: item 为 null。");
             return false;
         }
+        if (item.isBothHandsUsing)
+        {
+            item.isBothHandsUsing = false;
+        }
 
         if (item is StackableItemInstance stackable)
             return AddStackable(stackable);

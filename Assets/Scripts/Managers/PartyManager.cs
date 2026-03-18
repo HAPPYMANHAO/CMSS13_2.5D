@@ -69,7 +69,6 @@ public class PartyManager : MonoBehaviour
         member.SetHealth(partyBattleEntity.currentHealth);
         member.leftHandEquipment.item = partyBattleEntity.leftHandEquipment.item;   // 回写手部
         member.rightHandEquipment.item = partyBattleEntity.rightHandEquipment.item;
-        OnPartyMemberUpdated?.Invoke();
         member.isDead = partyBattleEntity.EntityIsDead();
         overworldVisual?.UpdateGUI();
     }
@@ -83,22 +82,28 @@ public class PartyManager : MonoBehaviour
     {
         return playerPosition;
     }
+    
+    public static void PartyMemberUpdated()
+    {
+        OnPartyMemberUpdated.Invoke();
+    }
 }
 
 [System.Serializable]
-public class CurrentPartyMemberInfo : IHandsOwner
+public class CurrentPartyMemberInfo : IHandsOwner, IEquipmentOwner, IHealthAndAPComponent
 {
-    public string memberName;
+    public string memberName { get; set; }
+    public Sprite charaterProfile;
     public int currentLevel;
-    public int currentHealth;
-    public int maxHealth;
-    public int maxAP;
+    public int currentHealth { get; set; }
+    public int maxHealth { get; set; }
+    public int maxAP { get; set; }
     public int eachTurnRecoveredAP;
-    public int currentAP;
+    public int currentAP { get; set; }
     public int currentEXP;
     public int maxEXP;
     public int healthCRIT;
-    public int healthCRITShock;
+    public int healthCRITShock { get; set; }
     public int healthDead;
 
     public bool isDead = false;
@@ -116,6 +121,7 @@ public class CurrentPartyMemberInfo : IHandsOwner
     public HandSlot rightHandEquipment { get; set; } = new HandSlot();
     public EntityHandsSlot currentActiveHand { get; set; } = EntityHandsSlot.Left;
 
+    public event Action OnApChanged;
     public event Action OnHealthChanged;
     public static event Action OnEquipmentChanged;
     // ── 手操作 ────────────────────────────────────
@@ -178,7 +184,7 @@ public class CurrentPartyMemberInfo : IHandsOwner
         return false;
     }
 
-    private bool TryEquipArmor(ItemInstance item, EquipmentSlotType slot)
+    public bool TryEquipArmor(ItemInstance item, EquipmentSlotType slot)
     {
         // 如果槽位已有装备，先卸下
         if (protectionSlots.TryGetValue(slot, out var existing) && existing != null)
@@ -192,7 +198,7 @@ public class CurrentPartyMemberInfo : IHandsOwner
         return true;
     }
 
-    private bool TryEquipStorage(StorageItemInstance item, EquipmentSlotType slot)
+    public bool TryEquipStorage(StorageItemInstance item, EquipmentSlotType slot)
     {
         if (storageSlots.TryGetValue(slot, out var existing) && existing != null)
         {
@@ -264,6 +270,7 @@ public class CurrentPartyMemberInfo : IHandsOwner
     public CurrentPartyMemberInfo(PartyMemberInfo partyMember)
     {
         this.memberName = partyMember.memberName;
+        this.charaterProfile = partyMember.charaterProfile;
         this.currentLevel = partyMember.startLevel;
         this.maxHealth = partyMember.baseHealth;
         this.currentHealth = this.maxHealth;

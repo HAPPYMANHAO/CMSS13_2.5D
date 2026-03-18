@@ -1,12 +1,16 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class OverworldTargetSelectorGUI : MonoBehaviour
 {
     [SerializeField] private Camera overworldCamera;
+    [SerializeField] private LayerMask combinedMask; //两个可交互层
     [SerializeField] private LayerMask interactableLayer;
+    [SerializeField] private LayerMask playerLayer;
 
     private RaycastHit[] currentHits;
+    public bool isPlayer { get; private set; } // 标记是否为玩家
 
     public IInteractable currentTarget { get; private set; }
     public Collider currentTargetCollider;
@@ -16,7 +20,8 @@ public class OverworldTargetSelectorGUI : MonoBehaviour
         Vector2 mousePos = Mouse.current.position.ReadValue();
         Ray mouseRay = overworldCamera.ScreenPointToRay(mousePos);
 
-        currentHits = Physics.RaycastAll(mouseRay, 100f, interactableLayer);
+        currentHits = Physics.RaycastAll(mouseRay, 100f, combinedMask);
+       
         CheckTarget();
     }
 
@@ -51,11 +56,20 @@ public class OverworldTargetSelectorGUI : MonoBehaviour
 
             if (interactable != null)
             {
+                if(isPlayer = closestHit.collider.gameObject.layer == playerLayer)
+                {
+                    isPlayer = true;
+                }
+                else
+                {
+                    isPlayer = false;
+                }
                 SelectTarget(interactable);
             }
             else
             {
-                currentTarget = null;       
+                isPlayer = false;
+                currentTarget = null;
                 currentTargetCollider = null;
             }
         }

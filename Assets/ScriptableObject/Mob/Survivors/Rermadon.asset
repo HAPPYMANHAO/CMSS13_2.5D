@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Rermadon
   m_EditorClassIdentifier: Assembly-CSharp::PartyMemberInfo
   memberName: Rermadon
+  charaterProfile: {fileID: 1346871050, guid: cfddbc93242686943a226a6c3b212201, type: 3}
   startLevel: 1
   baseHealth: 100
   MaxAP: 100

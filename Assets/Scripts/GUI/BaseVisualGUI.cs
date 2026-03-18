@@ -7,7 +7,7 @@ using static UnityEngine.EventSystems.EventTrigger;
 public abstract class BaseVisualGUI : MonoBehaviour
 {
 
-    protected abstract IHandsOwner GetCurrentPlayer();
+    public abstract IHandsOwner GetCurrentPlayer();
     protected abstract List<ItemInstance> GetInventoryItems();
     protected abstract void OnOpenBackpack();   
 
@@ -126,8 +126,14 @@ public abstract class BaseVisualGUI : MonoBehaviour
 
         bool isBoth = IsBothHandsUsing();
 
-        leftHandButtonGUI.handButton.interactable = !isBoth;
-        rightHandButtonGUI.handButton.interactable = !isBoth;
+        if (player.currentActiveHand == EntityHandsSlot.Right)
+        {
+            leftHandButtonGUI.handButton.interactable = !isBoth;
+        }
+        else if (player.currentActiveHand == EntityHandsSlot.Left)
+        {
+            rightHandButtonGUI.handButton.interactable = !isBoth;
+        }       
     }
 
     private void UpdateSingleHandVisual(HandControllerGUI handGUI, ItemInstance item)
@@ -160,12 +166,21 @@ public abstract class BaseVisualGUI : MonoBehaviour
             if(player is PartyBattleEntity)
             {
                 var entity = player as PartyBattleEntity;
+                if (CheckAnotherHandOccupied(player))
+                {
+                    return;
+                }
+
                 if (!weapon.CanBothHandUse(entity)) return;
                 item.OnBothHandUse();
                 entity.EntityConsumeAP(weapon.enterBothHandsUseCostAP);
             }
             else if(player is CurrentPartyMemberInfo)
             {
+                if (CheckAnotherHandOccupied(player))
+                {
+                    return;
+                }
                 if (!weapon.allowUseOfBothHands) return;
                 item.OnBothHandUse();
             }
@@ -174,6 +189,18 @@ public abstract class BaseVisualGUI : MonoBehaviour
         UpdateHandVisuals();
     }
 
+    private bool CheckAnotherHandOccupied(IHandsOwner entity)
+    {
+        if (entity.currentActiveHand == EntityHandsSlot.Right && !entity.leftHandEquipment.IsEmpty)
+        {
+            return true;
+        }
+        else if (entity.currentActiveHand == EntityHandsSlot.Left && !entity.rightHandEquipment.IsEmpty)
+        {
+            return true;
+        }
+        return false;
+    }
     private bool IsBothHandsUsing()
     {
         var player = GetCurrentPlayer();

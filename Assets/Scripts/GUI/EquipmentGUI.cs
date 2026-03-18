@@ -9,14 +9,23 @@ public class EquipmentGUI : MonoBehaviour
     [SerializeField] private List<SlotUI> storageSlots;
     private InventoryManager inventoryManager;
     private PartyManager partyManager;
+    private BattleEntityManager battleEntityManager;
     [SerializeField] private Button menuButton;
 
     private bool isEquipmentMenuOpen = false;
-
     private void Start()
     {
-        inventoryManager = InventoryManager.instance;
-        partyManager = PartyManager.instance;
+        inventoryManager = InventoryManager.instance; 
+        BattleEntityManager entityManager = FindFirstObjectByType<BattleEntityManager>();
+        if (entityManager != null)
+        {
+            battleEntityManager = entityManager;
+        }
+        else
+        {
+            partyManager = PartyManager.instance;
+        }
+        
 
         CurrentPartyMemberInfo.OnEquipmentChanged += Refresh;
 
@@ -32,7 +41,32 @@ public class EquipmentGUI : MonoBehaviour
         }
 
         menuButton.onClick.AddListener(HandlemenuButtonClicked);
-        Refresh();
+
+        if(GameStateManager.instance.currentGameState == GameState.Battle)
+        {
+            BattleEntityManager.OnPartyEntitiesSpawned += Refresh;
+        }
+        else
+        {
+            Refresh();
+        }
+    }
+
+    private void OnDisable()
+    {
+        BattleEntityManager.OnPartyEntitiesSpawned -= Refresh;
+    }
+
+    private IEquipmentOwner GetCurrentPlayer()
+    {
+        if(battleEntityManager != null)
+        {
+            return battleEntityManager.currentPlayerEntity as IEquipmentOwner;
+        }
+        else
+        {
+            return partyManager.currentPlayerEntity as IEquipmentOwner;
+        }
     }
 
     public void HandlemenuButtonClicked()
@@ -49,7 +83,7 @@ public class EquipmentGUI : MonoBehaviour
 
     private void Refresh()
     {
-        var player = partyManager.currentPlayerEntity;
+        var player = GetCurrentPlayer();
         foreach (var slot in slots)
         {
             var equipped = player.GetEquipped(slot.slotType);
@@ -88,7 +122,7 @@ public class EquipmentGUI : MonoBehaviour
     //TODO
     private void HandleSlotClicked(EquipmentSlotType slotType)
     {
-        var player = partyManager.currentPlayerEntity;
+        var player = GetCurrentPlayer();
         var currentEquipped = player.GetEquipped(slotType);
 
         if (currentEquipped != null)

@@ -1,71 +1,78 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using TMPro;
 using UnityEngine;
+
+
 
 public class HealthBarControllerGUI : MonoBehaviour
 {
     [SerializeField] private UnityEngine.UI.Image overlayCRIT;
     private Animator animatorCRIT;
     private UnityEngine.UI.Image healthBarImage;
-    private TextMeshProUGUI APValue;
+    [SerializeField] private TextMeshProUGUI APValue;
+    [SerializeField] private TextMeshProUGUI HPValue;
+    [SerializeField] private UnityEngine.UI.Image profile;
+    [SerializeField] private TextMeshProUGUI charaterName;
 
     public List<HealthBarEntry> healthBarDefine;
 
-    public PartyBattleEntity owner;
-    public CurrentPartyMemberInfo ownerOverworld;
+    public IHealthAndAPComponent owner;
 
     private bool IsCritAnimationActive = false;
 
     private void Awake()
     {
         healthBarImage = this.GetComponent<UnityEngine.UI.Image>();
-        APValue = this.transform.Find("PlayerAPValue").GetComponent<TextMeshProUGUI>();
         animatorCRIT = overlayCRIT.GetComponent<Animator>();
+    }
+
+    public void UpdateHealthBar()
+    {
+
+            UpdateHealth(owner.currentHealth, owner.maxHealth, owner.healthCRITShock);
+            UpdateAP();
     }
 
     public void HealthBarBind(PartyBattleEntity entity)
     {
         if (owner != null)
         {
-            owner.OnHealthChanged -= HandleHealthUpdate;
+            owner.OnHealthChanged -= UpdateHealthBar;
             owner.OnApChanged -= HandleUpdateAP;
         }
 
         this.owner = entity;
-        //绑定health bar GUI和AP value GUI
-        owner.OnHealthChanged += HandleHealthUpdate;
+        owner.OnHealthChanged += UpdateHealthBar;
         owner.OnApChanged += HandleUpdateAP;
+
+        profile.sprite = entity.charaterProfile;
+        charaterName.text = entity.memberName;
 
         this.gameObject.SetActive(true);
         overlayCRIT.gameObject.SetActive(false);
-        HandleHealthUpdate();
-        UpdateAP();
+        UpdateHealthBar();
     }
 
     public void HealthBarBind(CurrentPartyMemberInfo memberInfo)
     {
-        if (ownerOverworld != null)
+        if (owner != null)
         {
-            ownerOverworld.OnHealthChanged -= HandleHealthUpdateOverworld;
+            owner.OnHealthChanged -= UpdateHealthBar;
+            owner.OnApChanged -= HandleUpdateAP;
         }
 
-        this.ownerOverworld = memberInfo;
-        //绑定health bar GUI
-        ownerOverworld.OnHealthChanged += HandleHealthUpdateOverworld;
+        
+        this.owner = memberInfo;
+        owner.OnHealthChanged += UpdateHealthBar;
+        APValue.text = $"<size=100%>{"--"}</size>\n<size=80%>/{"--"}</size>";//不需要在overworld显示AP
 
+        charaterName.text = memberInfo.memberName;
+        profile.sprite = memberInfo.charaterProfile;
+        
         this.gameObject.SetActive(true);
-        APValue.gameObject.SetActive(false);//不需要在overworld显示AP
-        overlayCRIT.gameObject.SetActive(false);
-        HandleHealthUpdateOverworld();
-    }
-
-    private void HandleHealthUpdate()
-    {
-        UpdateHealth(owner.currentHealth, owner.maxHealth,owner.healthCRITShock);
-    }
-    private void HandleHealthUpdateOverworld()
-    { 
-        UpdateHealth(ownerOverworld.currentHealth, ownerOverworld.maxHealth, ownerOverworld.healthCRITShock);
+        
+        UpdateHealthBar();
     }
 
     private void HandleUpdateAP()
@@ -76,8 +83,16 @@ public class HealthBarControllerGUI : MonoBehaviour
     public void UpdateHealth(int currentHealth, int maxHealth, int healthCRITShock)
     {
         bool healthCRIT = currentHealth < 0;//没有血条在0以下的精灵，血条CRIT条件始终设置为 < 0
-        bool healthShock = currentHealth < healthCRITShock;
-
+        bool healthShock = currentHealth < healthCRITShock;  
+        if (GameStateManager.instance.currentGameState == GameState.Battle)
+        {
+            HPValue.text = $"<size=100%>{owner.currentHealth}</size>\n<size=80%>/{owner.maxHealth}</size>";
+        }
+        else if (GameStateManager.instance.currentGameState == GameState.Overworld)
+        {
+            HPValue.text = $"<size=100%>{owner.currentHealth}</size>\n<size=80%>/{owner.maxHealth}</size>";
+            APValue.text = $"<size=100%>{"--"}</size>\n<size=80%>/{"--"}</size>";//不需要在overworld显示AP
+        }
         if (healthCRIT != IsCritAnimationActive)
         {
             IsCritAnimationActive = healthCRIT;
@@ -87,10 +102,6 @@ public class HealthBarControllerGUI : MonoBehaviour
         if (IsCritAnimationActive)
         {
             animatorCRIT.speed = healthShock ? 2.0f : 1.0f;
-        }
-        else
-        {
-            animatorCRIT.speed = 1.0f;
         }
 
         if (!IsCritAnimationActive)
@@ -110,20 +121,27 @@ public class HealthBarControllerGUI : MonoBehaviour
 
     private void UpdateAP()
     {
-        APValue.text = owner.currentAP.ToString() + "/" + owner.maxAP.ToString();
+        if(owner is CurrentPartyMemberInfo)
+        {
+            APValue.text = $"<size=100%>{"--"}</size>\n<size=80%>/{"--"}</size>";//不需要在overworld显示AP
+        }
+        else
+        {
+            APValue.text = $"<size=100%>{owner.currentAP}</size>\n<size=80%>/{owner.maxAP}</size>";
+        } 
     }
 
     private void OnDestroy()
     {
         if (owner != null)
         {
-            owner.OnHealthChanged -= HandleHealthUpdate;
+            owner.OnHealthChanged -= UpdateHealthBar;
             owner.OnApChanged -= HandleUpdateAP;
         }
     }
 
     private void OnDisable()
     {
-        if (ownerOverworld != null) ownerOverworld.OnHealthChanged -= HandleHealthUpdateOverworld;
+        if (owner != null) owner.OnHealthChanged -= UpdateHealthBar;
     }
 }

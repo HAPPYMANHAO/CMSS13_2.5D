@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyInfo
   enemyMaturityLevel: 0
   enemyName: GiantLizard
+  charaterProfile: {fileID: 1847345601, guid: cfddbc93242686943a226a6c3b212201, type: 3}
   baseHealth: 260
   MaxAP: 50
   eachTurnRecoveredAP: 15
   meleeStrength: 18
-  rangedStrenth: 0
+  rangedStrength: 0
   armorPenetration: 0
   healthDead: 0
   enemyBattleVisualPerfab: {fileID: 8061482746390470737, guid: bf81f737200d36e49a11a487a34dc671, type: 3}

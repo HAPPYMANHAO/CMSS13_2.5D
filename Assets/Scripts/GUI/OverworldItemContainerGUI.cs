@@ -75,7 +75,7 @@ public class OverworldItemContainerGUI : MonoBehaviour
     }
     private void HandBackgroundButtonPressed()
     {
-        ItemInstance itemInHand = pratyManager.currentPlayerEntity.GetCurrentActiveHandItem();
+        ItemInstance itemInHand = overworldVisualGUI.GetCurrentPlayer().GetCurrentActiveHandItem();
         if (itemInHand != null)
         {
             inventoryManager.AddItem(itemInHand);
@@ -84,10 +84,24 @@ public class OverworldItemContainerGUI : MonoBehaviour
         }
 
     }
-
     private void HandleItemClicked(ItemInstance item)
     {
-        ItemInstance itemInHand = pratyManager.currentPlayerEntity.GetCurrentActiveHandItem();
+        var gun = overworldVisualGUI.GetCurrentPlayer().GetCurrentActiveHandItem() as GunInstance;
+
+        // 手里有枪，点击的是匹配弹药 → 装弹
+        if (gun != null && item is StackableItemInstance ammoStack
+            && ammoStack.itemData is AmmoBase ammo
+            && ammo.ammoType == gun.GunData.acceptedAmmoType)
+        {
+            int loaded = gun.Reload(ammoStack);
+            if (ammoStack.IsEmpty)
+                inventoryManager.RemoveItem(ammoStack);
+            UpdateCurrentGUI();
+            // Log
+            return;
+        }
+
+        ItemInstance itemInHand = overworldVisualGUI.GetCurrentPlayer().GetCurrentActiveHandItem();
         if (itemInHand != null) return;
 
         if (item.itemData is HoldableBase)

@@ -65,6 +65,7 @@ public class EnemyManager : MonoBehaviour
 public class CurrentEnemyInfo
 {
     public string memberName;
+    public Sprite charaterProfile;
     public EnemyMaturityLevel enemyMaturityLevel;
     public int currentHealth;
     public int maxHealth;
@@ -85,6 +86,7 @@ public class CurrentEnemyInfo
     {
         this.enemyMaturityLevel = enemy.enemyMaturityLevel;
         this.memberName = enemy.enemyName;
+        this.charaterProfile = enemy.charaterProfile;
         this.maxHealth = enemy.baseHealth;
         this.currentHealth = this.maxHealth;
         this.healthDead = enemy.healthDead;

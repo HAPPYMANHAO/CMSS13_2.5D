@@ -48,14 +48,14 @@ public class GameSceneManager : MonoBehaviour
     }
     public IEnumerator ChangeToOverworldScene()
     {
+        gameStateManager.currentGameState = GameState.Overworld;
         Scene overworld = SceneManager.GetSceneByName(SceneName.OVER_WORLD);
 
         if (overworld.IsValid())
         {
             SceneManager.SetActiveScene(overworld);
         }
-
-        gameStateManager.currentGameState = GameState.Overworld;
+        
         yield return SceneManager.UnloadSceneAsync(SceneName.BATTLE);
 
         overworldCamera.gameObject.SetActive(true);

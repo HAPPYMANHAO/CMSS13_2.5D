@@ -7,6 +7,7 @@ public class EnemyInfo : ScriptableObject
 {
     public EnemyMaturityLevel enemyMaturityLevel;
     public string enemyName;
+    public Sprite charaterProfile;
     public int baseHealth;
     public int MaxAP;
     public int eachTurnRecoveredAP;

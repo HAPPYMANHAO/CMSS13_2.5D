@@ -8,6 +8,7 @@ using static PartyMemberInfo;
 public class PartyMemberInfo : ScriptableObject
 {
     public string memberName;
+    public Sprite charaterProfile;
     public int startLevel;
     public int baseHealth;
     public int MaxAP;

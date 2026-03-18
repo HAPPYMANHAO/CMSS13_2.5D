@@ -23,7 +23,7 @@ public class BattleEntityManager : MonoBehaviour
     private BattleVisualGUI battleVisualGUI;
 
     public PartyBattleEntity currentPlayerEntity;
-    public event Action OnPartyEntitiesSpawned;
+    public static event Action OnPartyEntitiesSpawned;
 
     private void Start()
     {
@@ -162,10 +162,10 @@ public class BattleEntityManager : MonoBehaviour
 //----------------------------Class----------------------------//
 //----------------BattleEntity Class/
 [System.Serializable]
-public class PartyBattleEntity : BattleEntityBase, IHandsOwner
+public class PartyBattleEntity : BattleEntityBase, IHandsOwner, IEquipmentOwner, IHealthAndAPComponent
 {
     public int healthCRIT;
-    public int healthCRITShock;
+    public int healthCRITShock { get; set; }
     public int currentLevel;
 
     public Dictionary<SkillType, int> skills;
@@ -177,7 +177,41 @@ public class PartyBattleEntity : BattleEntityBase, IHandsOwner
     public EquipmentSlot armorEquipment { get; set; } = new EquipmentSlot();
 
     public EntityHandsSlot currentActiveHand { get; set; } = EntityHandsSlot.Left;
+    // 存储槽（背包/腰带/口袋）
+    public Dictionary<EquipmentSlotType, StorageItemInstance> storageSlots;
+    public Dictionary<EquipmentSlotType, ItemInstance> protectionSlots;
 
+    // ── 装备操作 ────────────────────────────────────
+    public bool TryEquip(ItemInstance item)
+    {
+        // 不允许在战斗时更换装备
+        return false;
+    }
+
+    public bool TryEquipArmor(ItemInstance item, EquipmentSlotType slot)
+    {
+        // 不允许在战斗时更换装备
+        return false;
+    }
+
+    public bool TryEquipStorage(StorageItemInstance item, EquipmentSlotType slot)
+    {
+        // 不允许在战斗时更换装备
+        return false;
+    }
+
+    public ItemInstance UnequipSlot(EquipmentSlotType slot)
+    {
+        // 不允许在战斗时更换装备
+        return null;
+    }
+
+    public ItemInstance GetEquipped(EquipmentSlotType slot)
+    {
+        if (protectionSlots.TryGetValue(slot, out var item)) return item;
+        if (storageSlots.TryGetValue(slot, out var storage)) return storage;
+        return null;
+    }
     public ItemInstance GetCurrentActiveHandItem()
     {
         return currentActiveHand == EntityHandsSlot.Left ? leftHandEquipment?.item : rightHandEquipment?.item;
@@ -215,6 +249,7 @@ public class PartyBattleEntity : BattleEntityBase, IHandsOwner
     public PartyBattleEntity(CurrentPartyMemberInfo memberInfo)
     {
         memberName = memberInfo.memberName;
+        charaterProfile = memberInfo.charaterProfile;
         currentLevel = memberInfo.currentLevel;
         currentHealth = memberInfo.currentHealth;
         maxHealth = memberInfo.maxHealth;
@@ -236,6 +271,9 @@ public class PartyBattleEntity : BattleEntityBase, IHandsOwner
         rightHandEquipment.item = memberInfo.rightHandEquipment.item;
         currentActiveHand = memberInfo.currentActiveHand == EntityHandsSlot.Left
             ? EntityHandsSlot.Left : EntityHandsSlot.Right;
+
+        storageSlots = memberInfo.storageSlots;
+        protectionSlots = memberInfo.protectionSlots;
     }
 
     public bool PartyMemberIsCrit()
@@ -281,6 +319,7 @@ public class EnemyBattleEntity : BattleEntityBase
     public EnemyBattleEntity(CurrentEnemyInfo enemyInfo)
     {
         memberName = enemyInfo.memberName;
+        charaterProfile = enemyInfo.charaterProfile;
         currentEnemyLevel = enemyInfo.enemyMaturityLevel;
         healthDead = 0;//敌人会在生命值归零时被击败 enemy will be defeated once their HP reach zero.
         maxHealth = enemyInfo.maxHealth;

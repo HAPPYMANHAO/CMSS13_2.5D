@@ -39,9 +39,7 @@ public class StorageItemInstance : ItemInstance
 
     public void RemoveAllItem()
     {
-
         _storedItems.Clear();
-
     }
 
     public List<ItemInstance> GetAllItems()

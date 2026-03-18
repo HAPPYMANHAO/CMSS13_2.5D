@@ -27,6 +27,27 @@ public class HealAction : ActionBase
         }
     }
 
+    public override bool CanExecuteInOverworld(CurrentPartyMemberInfo user)
+    {
+        // 没满血才能用
+        return (user.currentHealth < user.maxHealth) && !user.isDead;
+    }
+
+    public override void ExecuteInOverworld(CurrentPartyMemberInfo user,
+                                            InventoryManager inventory)
+    {
+        user.RevoverHealth(healAmount);
+
+        var handItem = user.GetCurrentActiveHandItem() as StackableItemInstance;
+        if (handItem != null)
+        {
+            if (handItem.IsEmpty)
+                user.SentHoldItemToInventory();
+        }
+
+        PartyManager.PartyMemberUpdated();
+    }
+
     public void UpdateActionLog(BattleEntityBase userEntity, BattleEntityBase target, int amount)
     {
         var handleLog = actionLogTemplate.GetLocalizedStringAsync(new

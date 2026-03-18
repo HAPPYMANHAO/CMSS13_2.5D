@@ -114,6 +114,10 @@ public class BattleTurnManager : MonoBehaviour
     {
         if (_battleEndTriggered) return;
         _battleEndTriggered = true;
+        foreach (var entity in battleEntityManager.partyEntities)
+        {
+            entity.buffComponent.RemoveAllBuff();
+        }
         battleEntityManager.SavePartyStats();
         gameSceneManager.ExitBattle();
     }
@@ -124,6 +128,7 @@ public class BattleTurnManager : MonoBehaviour
     {
         isEndingTurn = false;
         battleVisualGUI.isPlayerCanExecuteAction = true;
+        battleVisualGUI.isPlayerTurn = true;
         //恢复所有实体AP
         if (currentTurn != 1)
         {
@@ -153,10 +158,6 @@ public class BattleTurnManager : MonoBehaviour
         foreach (var enemy in battleEntityManager.enemyEntities)
         {
             enemy.pendingDecisions.Clear();
-            if (enemy.EntityIsDead())
-            {
-                return;
-            }
 
             int projectedAP = enemy.currentAP;
 
@@ -189,6 +190,8 @@ public class BattleTurnManager : MonoBehaviour
         {
             return;
         }
+        battleVisualGUI.isPlayerTurn = false;
+
         isEndingTurn = true;
         StartCoroutine(SetPlayerAutoAction());
     }

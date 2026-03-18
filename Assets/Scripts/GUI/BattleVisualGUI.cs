@@ -16,12 +16,14 @@ public class BattleVisualGUI : BaseVisualGUI
     [SerializeField] private AccuracyDisplayGUI accuracyDisplay;
     [SerializeField] protected EnemyActionQueueGUI enemyActionQueueGUI;
 
+    public bool isPlayerTurn = false;
+
     public static Action OnPlayerEndTurn;
 
     private Coroutine _autoFireCoroutine;
 
     // ── 实现基类的抽象方法 ──
-    protected override IHandsOwner GetCurrentPlayer()
+    public override IHandsOwner GetCurrentPlayer()
         => battleEntityManager.currentPlayerEntity;
 
     protected override List<ItemInstance> GetInventoryItems()
@@ -46,13 +48,13 @@ public class BattleVisualGUI : BaseVisualGUI
     protected override void OnEnable()
     {
         if (battleEntityManager != null)
-            battleEntityManager.OnPartyEntitiesSpawned += UpdateHandVisuals;
+            BattleEntityManager.OnPartyEntitiesSpawned += UpdateHandVisuals;
     }
 
     protected override void OnDisable()
     {
         if (battleEntityManager != null)
-            battleEntityManager.OnPartyEntitiesSpawned -= UpdateHandVisuals;
+            BattleEntityManager.OnPartyEntitiesSpawned -= UpdateHandVisuals;
     }
 
     protected override void Update()
@@ -114,7 +116,7 @@ public class BattleVisualGUI : BaseVisualGUI
     private void TryExecuteAction()
     {
         var target = targetSelectorGUI.GetCurrentTarget();
-        if (target != null && isPlayerCanExecuteAction)
+        if (target != null && IsPlayerCanDoAct())
         {
             var gun = GetGunInHand();
             bool isActionExecuted = battleEntityManager.PlayerComfirmTarget(target);
@@ -128,7 +130,7 @@ public class BattleVisualGUI : BaseVisualGUI
 
     private IEnumerator AutoFireRoutine(GunInstance gun)
     {
-        while (!gun.IsEmpty && isPlayerCanExecuteAction)
+        while (!gun.IsEmpty && IsPlayerCanDoAct())
         {
             TryExecuteAction();
             yield return new WaitForSeconds(gun.GunData.fireInterval);
@@ -141,7 +143,7 @@ public class BattleVisualGUI : BaseVisualGUI
         int shots = gun.GunData.burstCount;
         for (int i = 0; i < shots && !gun.IsEmpty; i++)
         {
-            if (!isPlayerCanExecuteAction) yield break;
+            if (!IsPlayerCanDoAct()) yield break;
             TryExecuteAction();
             yield return new WaitForSeconds(gun.GunData.fireInterval);
         }
@@ -149,6 +151,11 @@ public class BattleVisualGUI : BaseVisualGUI
 
     private GunInstance GetGunInHand()
         => battleEntityManager.currentPlayerEntity?.GetCurrentActiveHandItem() as GunInstance;
+
+    private bool IsPlayerCanDoAct()
+    {
+        return isPlayerTurn && isPlayerCanExecuteAction;
+    }
 
     //---------------------HealthBarGUI------------------------//
 
