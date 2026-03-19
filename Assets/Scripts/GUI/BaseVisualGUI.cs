@@ -7,13 +7,12 @@ using static UnityEngine.EventSystems.EventTrigger;
 public abstract class BaseVisualGUI : MonoBehaviour
 {
 
-    public abstract IHandsOwner GetCurrentPlayer();
-    protected abstract List<ItemInstance> GetInventoryItems();
-    protected abstract void OnOpenBackpack();   
-
+    public abstract IHandsOwner GetCurrentPlayer();  
+    [SerializeField] protected ItemContainerGUI containerGUI;
     [SerializeField] protected HandControllerGUI rightHandButtonGUI;
     [SerializeField] protected HandControllerGUI leftHandButtonGUI;
     [SerializeField] protected Button backpackGUI;
+    protected InventoryManager inventoryManager;
 
     public bool isPlayerCanExecuteAction = true;
     public float playerActionDelayTimer = 0f;
@@ -32,6 +31,7 @@ public abstract class BaseVisualGUI : MonoBehaviour
 
     protected virtual void Start()
     {
+        inventoryManager = InventoryManager.instance;
         changeActiveHand = InputSystem.actions.FindAction(CustomInputString.CHANGE_ACTIVE_HAND);
         activeHoldItem = InputSystem.actions.FindAction(CustomInputString.ACTIVE_HOLD_ITEM);
         leftHandButtonGUI.handButton.onClick.AddListener(SelectLeftHand);
@@ -56,6 +56,12 @@ public abstract class BaseVisualGUI : MonoBehaviour
             }
         }
     }
+    //-------------------Container-----------------------//
+    public void ContainerUpdate(IStorage storage)
+    {
+        containerGUI.UpdateCurrentGUI(storage);
+    }
+
 
     //--------------------Hand GUI----------------------//
 
@@ -93,6 +99,11 @@ public abstract class BaseVisualGUI : MonoBehaviour
 
     public void UpdateHandVisuals()
     {
+        UpdateHandVisuals(false);
+    }
+
+    public void UpdateHandVisuals(bool playEnterAnimation)
+    {
         var player = GetCurrentPlayer();
         if (player == null) return;
        
@@ -121,8 +132,12 @@ public abstract class BaseVisualGUI : MonoBehaviour
             }
         }
 
-        UpdateSingleHandVisual(leftHandButtonGUI, player.leftHandEquipment?.item);
-        UpdateSingleHandVisual(rightHandButtonGUI, player.rightHandEquipment?.item);
+        // 判断哪个手需要播放动画
+        bool animateLeft = playEnterAnimation && player.currentActiveHand == EntityHandsSlot.Left;
+        bool animateRight = playEnterAnimation && player.currentActiveHand == EntityHandsSlot.Right;
+
+        UpdateSingleHandVisual(leftHandButtonGUI, player.leftHandEquipment?.item, animateLeft);
+        UpdateSingleHandVisual(rightHandButtonGUI, player.rightHandEquipment?.item, animateRight);
 
         bool isBoth = IsBothHandsUsing();
 
@@ -136,12 +151,20 @@ public abstract class BaseVisualGUI : MonoBehaviour
         }       
     }
 
-    private void UpdateSingleHandVisual(HandControllerGUI handGUI, ItemInstance item)
+    private void UpdateSingleHandVisual(HandControllerGUI handGUI, ItemInstance item, bool playAnimation = false)
     {
         if (item != null)
         {
-            handGUI.EnableHoldItemSprite();
-            handGUI.holdItemImage.sprite = item.itemData.icon;
+            if (playAnimation)
+            {
+                // 播放进入动画
+                handGUI.SetItemIconWithAnimation(item.itemData.icon);
+            }
+            else
+            {
+                handGUI.EnableHoldItemSprite();
+                handGUI.holdItemImage.sprite = item.itemData.icon;
+            }
         }
         else
         {
@@ -206,6 +229,14 @@ public abstract class BaseVisualGUI : MonoBehaviour
         var player = GetCurrentPlayer();
         var item = player?.GetCurrentActiveHandItem();
         return item != null && item.isBothHandsUsing;
+    }
+    //--------------------Storage------------------
+    protected virtual List<ItemInstance> GetInventoryItems()
+    => inventoryManager.GetAllItems();
+    protected virtual void OnOpenBackpack()
+    {
+        containerGUI.gameObject.SetActive(true);
+        containerGUI.UpdateCurrentGUI(inventoryManager);
     }
 }
 

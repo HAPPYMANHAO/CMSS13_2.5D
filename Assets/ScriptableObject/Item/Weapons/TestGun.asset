@@ -14,6 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeaponBase
   itemName: Test Gun
   icon: {fileID: -503791159, guid: ee9f6a5afda6ce04da734eddcd547d4b, type: 3}
+  description: 
+  isStackable: 0
+  maxStackSize: 1
+  itemVolume: 3
   _providedActions:
   - {fileID: 11400000, guid: 4837b7034eaecea43999da1c3ce5fed8, type: 2}
   primaryDamageType: 1
@@ -21,6 +25,10 @@ MonoBehaviour:
   meleeDamage: 10
   armorPenetration: 0
   damageModifiers: []
+  enterBothHandsUseCostAP: 0
+  bothHandsUseDamage: 0
+  bothHandsUseCostAP: 0
+  bothHandsUseArmorPiercing: 0
   allowUseOfBothHands: 0
   holdInRightHandSprite: {fileID: 0}
   holdInLeftHandSprite: {fileID: 0}

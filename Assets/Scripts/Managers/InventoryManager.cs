@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class InventoryManager : MonoBehaviour
+public class InventoryManager : MonoBehaviour, IStorage
 {
 
     // 库存槽列表，每格是一个 ItemInstance（可堆叠或不可堆叠）
     private readonly List<ItemInstance> _slots = new List<ItemInstance>();
 
     // ── 事件 Events ────────────────────────────────────────────────────
-    public static event Action<ItemInstance> OnItemAdded;
-    public static event Action<ItemInstance> OnItemRemoved;
-    public static event Action OnInventoryChanged;
+    public event Action<ItemInstance> OnItemAdded;
+    public event Action<ItemInstance> OnItemRemoved;
+    public event Action OnInventoryChanged;
 
     // ── 只读属性 Read-only properties ──────────────────────────────────
     public int SlotCount => _slots.Count;

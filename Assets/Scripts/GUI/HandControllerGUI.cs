@@ -1,5 +1,5 @@
 ﻿using TMPro;
-using Unity.VisualScripting;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,6 +15,12 @@ public class HandControllerGUI : MonoBehaviour
 
     public Button handButton;
     public Image baseSprite;
+
+    [Header("Animation Settings")]
+    [SerializeField] private float itemEnterDuration = 0.3f;
+    [SerializeField] private float itemEnterDistance = 50f;
+    private const float HAND_UI_OFFSET = 80f;
+    [SerializeField] private Ease itemEnterEase = Ease.OutBack;
 
     private void Start()
     {
@@ -61,5 +67,34 @@ public class HandControllerGUI : MonoBehaviour
         {
             quantityText.gameObject.SetActive(false);
         }
+    }
+
+    /// <summary>
+    /// 播放物品进入手的动画（从下到上）
+    /// </summary>
+    public void PlayItemEnterAnimation()
+    {
+        if (holdItemImage == null) return;
+
+        // 初始位置（从下方开始）
+        Vector2 startPos = new Vector2(0, -itemEnterDistance);
+        holdItemImage.rectTransform.anchoredPosition = startPos;
+
+        // 执行动画移动到原点
+        holdItemImage.rectTransform
+            .DOAnchorPos(Vector2.zero, itemEnterDuration)
+            .SetEase(itemEnterEase);
+    }
+
+    /// <summary>
+    /// 设置物品图标并播放进入动画
+    /// </summary>
+    public void SetItemIconWithAnimation(Sprite icon)
+    {
+        if (holdItemImage == null) return;
+
+        holdItemImage.sprite = icon;
+        EnableHoldItemSprite();
+        PlayItemEnterAnimation();
     }
 }

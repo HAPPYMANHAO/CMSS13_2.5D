@@ -42,21 +42,34 @@ public class LootContainerGUI : MonoBehaviour
     {
         if (_currentContainer != null)
             _currentContainer.OnLootChanged -= Refresh;
-        InventoryManager.OnInventoryChanged -= Refresh;
+        if (inventoryManager != null)
+            inventoryManager.OnInventoryChanged -= Refresh;
 
         _currentContainer = container;
         _currentInteractor = interactor;
         container.OnLootChanged += Refresh;
-        InventoryManager.OnInventoryChanged += Refresh;
+        if (inventoryManager != null)
+            inventoryManager.OnInventoryChanged += Refresh;
         gameObject.SetActive(true);
         Refresh();
     }
 
     private void OnDisable()
     {
+        // 取消订阅所有事件
         if (_currentContainer != null)
             _currentContainer.OnLootChanged -= Refresh;
-        InventoryManager.OnInventoryChanged -= Refresh;
+        if (inventoryManager != null)
+            inventoryManager.OnInventoryChanged -= Refresh;
+    }
+    
+    private void OnEnable()
+    {
+        // 重新订阅事件（如果已有容器）
+        if (_currentContainer != null)
+            _currentContainer.OnLootChanged += Refresh;
+        if (inventoryManager != null)
+            inventoryManager.OnInventoryChanged += Refresh;
     }
 
     private void OnDestroy()
@@ -66,12 +79,16 @@ public class LootContainerGUI : MonoBehaviour
 
     private void Refresh()
     {
+        // 检查对象是否已被销毁
+        if (this == null || gameObject == null || _currentContainer == null) return;
+        
         BuildList(contentTransform, _currentContainer.GetLoot(), HandleLootItemClicked);
     }
 
     private void BuildList(Transform parent, List<ItemInstance> items, System.Action<ItemInstance> onClick)
     {
-        if (this == null) return;
+        // 检查对象是否已被销毁
+        if (this == null || gameObject == null || contentTransform == null) return;
 
         foreach (Transform child in contentTransform)
         {
@@ -93,13 +110,25 @@ public class LootContainerGUI : MonoBehaviour
 
     private void HandleLootItemClicked(ItemInstance item)
     {
-        if (inventoryManager.AddItem(item))
-            _currentContainer.TakeItem(item);
+        // 检查对象是否已被销毁
+        if (this == null || gameObject == null) return;
+        
+        if (inventoryManager != null && _currentContainer != null && item != null)
+        {
+            if (inventoryManager.AddItem(item))
+                _currentContainer.TakeItem(item);
+        }
     }
 
     private void HandleTakeAll()
     {
-        _currentContainer.TakeAll(inventoryManager);
+        // 检查对象是否已被销毁
+        if (this == null || gameObject == null) return;
+        
+        if (inventoryManager != null && _currentContainer != null)
+        {
+            _currentContainer.TakeAll(inventoryManager);
+        }
     }
 
     private void HandlePlayerOpenLootContainer(ItemContainerBase container, CurrentPartyMemberInfo interactor)

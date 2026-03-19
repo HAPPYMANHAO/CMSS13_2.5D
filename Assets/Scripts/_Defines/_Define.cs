@@ -23,6 +23,20 @@ public static class SceneName
     public const string BATTLE = "BattleScene";
 }
 
+public static class ItemVolume
+{
+    public const int Volume_TINY = 1;
+    public const int Volume_SMALL = 2;
+    public const int Volume_NORMAL = 3;
+    public const int Volume_BULKY = 6;
+    public const int Volume_HUGE = 10;
+}
+public static class ContainerThreshold
+{
+    public const float CONTAINER_ALMOST_FULL_80 = 0.8f;
+    public const float CONTAINER_FULL_100 = 1;
+}
+
 //-----------------------枚举enum-----------------------//
 //----------/成熟度 敌人的等级Maturity, Enemy's Level
 public enum EnemyMaturityLevel

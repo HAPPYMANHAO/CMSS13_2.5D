@@ -8,10 +8,8 @@ using UnityEngine.UI;
 public class BattleVisualGUI : BaseVisualGUI
 {
     [SerializeField] private BattleEntityManager battleEntityManager;
-    private InventoryManager inventoryManager;
     [SerializeField] private HealthBarControllerGUI[] healthBarsGUI;
     [SerializeField] private TargetSelectorGUI targetSelectorGUI;
-    [SerializeField] private ItemContainerGUI containerGUI;
     [SerializeField] public Button playerEndTurnButtonGUI;
     [SerializeField] private AccuracyDisplayGUI accuracyDisplay;
     [SerializeField] protected EnemyActionQueueGUI enemyActionQueueGUI;
@@ -26,21 +24,12 @@ public class BattleVisualGUI : BaseVisualGUI
     public override IHandsOwner GetCurrentPlayer()
         => battleEntityManager.currentPlayerEntity;
 
-    protected override List<ItemInstance> GetInventoryItems()
-        => inventoryManager.GetAllItems();
-
     //---------------------BackpackGUI---------------------//
-    protected override void OnOpenBackpack()
-    {
-        containerGUI.gameObject.SetActive(true);
-        containerGUI.UpdateItemContainerGUI(GetInventoryItems());
-    }
+    
 
     protected override void Start()
     {
         base.Start(); // 执行基类的按钮绑定等通用初始化
-        inventoryManager = FindFirstObjectByType<InventoryManager>();
-        containerGUI.battleEntityManager = battleEntityManager;
         playerEndTurnButtonGUI.onClick.AddListener(HandleEndTurnClick);
         UpdateHandVisuals();
     }

@@ -8,24 +8,13 @@ public class EquipmentGUI : MonoBehaviour
     [SerializeField] private List<SlotUI> slots;
     [SerializeField] private List<SlotUI> storageSlots;
     private InventoryManager inventoryManager;
-    private PartyManager partyManager;
-    private BattleEntityManager battleEntityManager;
     [SerializeField] private Button menuButton;
+    [SerializeField] private BaseVisualGUI visualGUI;
 
     private bool isEquipmentMenuOpen = false;
     private void Start()
     {
-        inventoryManager = InventoryManager.instance; 
-        BattleEntityManager entityManager = FindFirstObjectByType<BattleEntityManager>();
-        if (entityManager != null)
-        {
-            battleEntityManager = entityManager;
-        }
-        else
-        {
-            partyManager = PartyManager.instance;
-        }
-        
+        inventoryManager = InventoryManager.instance;       
 
         CurrentPartyMemberInfo.OnEquipmentChanged += Refresh;
 
@@ -59,14 +48,7 @@ public class EquipmentGUI : MonoBehaviour
 
     private IEquipmentOwner GetCurrentPlayer()
     {
-        if(battleEntityManager != null)
-        {
-            return battleEntityManager.currentPlayerEntity as IEquipmentOwner;
-        }
-        else
-        {
-            return partyManager.currentPlayerEntity as IEquipmentOwner;
-        }
+        return visualGUI.GetCurrentPlayer() as IEquipmentOwner;
     }
 
     public void HandlemenuButtonClicked()
@@ -118,20 +100,24 @@ public class EquipmentGUI : MonoBehaviour
         }
     }
 
-    // 点击槽位：如果有装备就卸下到背包
+    // 点击槽位：如果有装备就卸下到背包，如果是存储就打开它
     //TODO
     private void HandleSlotClicked(EquipmentSlotType slotType)
     {
         var player = GetCurrentPlayer();
         var currentEquipped = player.GetEquipped(slotType);
-
-        if (currentEquipped != null)
+        if (currentEquipped != null && currentEquipped is StorageItemInstance)
+        {
+            var storageItem = (StorageItemInstance)currentEquipped;
+            visualGUI.ContainerUpdate(storageItem);
+        }
+        else 
         {
             // 卸下 → 放回背包
             player.UnequipSlot(slotType);
             inventoryManager.AddItem(currentEquipped);
         }
-
+        
         Refresh();
         PartyManager.PartyUpdated();
     }

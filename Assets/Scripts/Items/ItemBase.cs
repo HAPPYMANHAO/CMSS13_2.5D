@@ -14,6 +14,8 @@ public abstract class ItemBase : ScriptableObject
     [Tooltip("最大堆叠数量（仅当 isStackable 为 true 时有效）。Max stack size (only when isStackable is true).")]
     [SerializeField] public int maxStackSize = 1;
 
+    [Header("Volume")]
+    [SerializeField] public ItemVolume itemVolume = ItemVolume.Normal;
     public virtual ItemInstance CreateInstance()
     {
         if (isStackable && this is IStackableData)
@@ -30,6 +32,15 @@ public abstract class ItemBase : ScriptableObject
             maxStackSize = 1;
         else
             maxStackSize = Mathf.Max(1, maxStackSize);
+    }
+
+    public enum ItemVolume
+    {
+        Tiny,   //int = 1
+        Samll,  //int = 2
+        Normal, //int = 3
+        Bulky,  //int = 6
+        Huge    //int = 10
     }
 #endif
 }

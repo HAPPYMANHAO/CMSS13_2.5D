@@ -220,7 +220,7 @@ public class CurrentPartyMemberInfo : IHandsOwner, IEquipmentOwner, IHealthAndAP
         }
         if (storageSlots.TryGetValue(slot, out var storage) && storage != null)
         {
-            foreach (var storageItem in storage.StoredItems)
+            foreach (var storageItem in storage.Slots)
             {
                 InventoryManager.instance.AddItem(storageItem);
             }

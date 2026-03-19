@@ -17,6 +17,7 @@ MonoBehaviour:
   description: 
   isStackable: 0
   maxStackSize: 1
+  itemVolume: 3
   slotType: 2
   armorBonuses:
   - armorStats:

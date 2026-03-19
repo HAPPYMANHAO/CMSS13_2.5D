@@ -19,6 +19,8 @@ public class ItemInstance
     public string ItemName => itemData.itemName;
     public Sprite Icon => itemData.icon;
 
+    public ItemBase.ItemVolume volume => itemData.itemVolume;
+
     public bool isBothHandsUsing = false;
 
     public virtual ActionBase GetCurrentAction()

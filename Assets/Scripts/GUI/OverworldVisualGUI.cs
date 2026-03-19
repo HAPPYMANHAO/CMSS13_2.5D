@@ -9,11 +9,8 @@ public class OverworldVisualGUI : BaseVisualGUI
 {
     [SerializeField] private PartyManager partyManager;
     [SerializeField] private PlayerInteractionController interactionController;
-    [SerializeField] private OverworldItemContainerGUI containerGUI;
     [SerializeField] private OverworldTargetSelectorGUI targetSelectorGUI;
     [SerializeField] private HealthBarControllerGUI[] healthBarsGUI;
-
-    private InventoryManager inventoryManager;
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -29,8 +26,6 @@ public class OverworldVisualGUI : BaseVisualGUI
     protected override void Start()
     {
         base.Start();
-        inventoryManager = FindFirstObjectByType<InventoryManager>();
-        containerGUI.pratyManager = partyManager;
         interactionController.targetSelectorGUI = targetSelectorGUI;
         UpdateGUI();
     }
@@ -49,21 +44,9 @@ public class OverworldVisualGUI : BaseVisualGUI
     public override IHandsOwner GetCurrentPlayer()
         => partyManager.currentPlayerEntity;
 
-    protected override List<ItemInstance> GetInventoryItems()
-        => inventoryManager.GetAllItems();
-
-    //---------------------BackpackGUI---------------------//
-    protected override void OnOpenBackpack()
-    {
-        containerGUI.gameObject.SetActive(true);
-        containerGUI.UpdateItemContainerGUI(GetInventoryItems());
-    }
-
     public void UpdateGUI()
     {
         UpdateHandVisuals();
-        containerGUI.UpdateItemContainerGUI(GetInventoryItems());
-
         foreach (var healthBar in healthBarsGUI)
         {
             if (healthBar.owner != null)
