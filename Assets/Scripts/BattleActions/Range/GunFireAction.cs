@@ -1,8 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 [CreateAssetMenu(menuName = "Battle/Actions/GunAction")]
 public class GunFireAction : ActionBase
 {
+    // 射击事件 - 用于触发相机震动等效果
+    public static event Action OnGunFired;
+
     public override bool CanExecute(BattleEntityBase user, BattleEntityBase[] targets)
     {
         if (user is not PartyBattleEntity party) return false;
@@ -25,6 +29,9 @@ public class GunFireAction : ActionBase
             gun.ConsumeAmmo();
             user.battleVisual.RightLightOn();
             gun.AddRecoil((PartyBattleEntity)user);
+            
+            // 触发射击事件
+            OnGunFired?.Invoke();
         }
     }
 

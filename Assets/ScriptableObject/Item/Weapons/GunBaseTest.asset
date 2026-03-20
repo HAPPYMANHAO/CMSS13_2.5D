@@ -33,14 +33,14 @@ MonoBehaviour:
   holdInRightHandSprite: {fileID: 0}
   holdInLeftHandSprite: {fileID: 0}
   holdInBothHandsSprite: {fileID: 0}
-  apPerShot: 10
+  apPerShot: 5
   acceptedAmmoType: 1
   magazineCapacity: 30
   availableFireModes: 0100000000000000
   burstCount: 3
   fireInterval: 0.25
   baseAccuracy: 0.5
-  recoil: 10
+  recoil: 25
   reloadAmmoAP: 10
   bothHandAccuracyBonus: 0.5
   bothHandRecoilReduce: 0.5

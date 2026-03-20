@@ -99,7 +99,6 @@ public class ItemContainerGUI : MonoBehaviour
         if (itemInHand != null)
         {
             bool allowPutIn = currentContainer.AddItem(itemInHand);
-            Debug.Log(allowPutIn);
             if (allowPutIn)
             {
                 visualGUI.GetCurrentPlayer().SentHoldItemToInventory();
@@ -200,10 +199,12 @@ public class ItemContainerGUI : MonoBehaviour
         if (gameObject.activeInHierarchy && currentContainer != null)
             currentContainer.OnInventoryChanged += HandleInventoryChanged;
         
-        // 更新背景颜色（仅存储容器）
+        // 更新背景颜色
         if (isItemStorage)
             UpdateBackgroundButtonColor();
-        
+        else
+            BackgroundTipColor.color = Color.black;
+
         UpdateItemContainerGUI(currentContainer.GetAllItems());
         visualGUI.UpdateHandVisuals();
     }

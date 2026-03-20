@@ -55,7 +55,7 @@ public class PlayerEventTrigger : MonoBehaviour
                 {
                     partyManager.SetPlayerPosition(this.transform.position);
                     stepInDangerArea = 0;
-                    StartCoroutine(gameSceneManager.EnterBattle());
+                    gameSceneManager.EnterBattle();
                 }
             }
         }
